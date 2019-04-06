@@ -10,6 +10,7 @@ class Member(User):
         return self.first_name + ' ' + self.last_name
 
 class MemberContact(models.Model):
+    id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
     postal = models.CharField(max_length=200, blank=True, verbose_name='Postal Address')
     phone = models.CharField(max_length=15, blank=True, verbose_name='Telephone(Mobile)')
@@ -18,10 +19,28 @@ class MemberContact(models.Model):
     def __str__(self):
         return str(self.member)
 
-class MemberResidence(models.Model):
+class MemberAge(models.Model):
+    id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
-    residence = models.CharField(max_length=200, blank=True, verbose_name='Residence/Estate')
-    road = models.CharField(max_length=200, blank=True, verbose_name='Road/Street')
+    d_o_b = models.DateField()
+
+class MemberMaritalStatus(models.Model):
+    STATUS = (
+        ('M', 'Married'),
+        ('S', 'Single'),
+    )
+    member = models.OneToOneField(Member, on_delete=models.CASCADE)
+    status = models.CharField(max_length=2, null=True, choices=STATUS)
+
+class MemberResidence(models.Model):
+    id = models.AutoField(primary_key=True)
+    member = models.OneToOneField(Member, on_delete=models.CASCADE)
+    town = models.CharField(max_length=200, blank=True, verbose_name='town')
+    road = models.CharField(max_length=200, blank=True, verbose_name='Road')
+    street = models.CharField(max_length=200, blank=True, verbose_name='street')
+    village_estate = models.CharField(max_length=200, blank=True, verbose_name='village/estate')
+    description = models.CharField(max_length=200, blank=True, verbose_name='description')
+     
 
     def __str__(self):
         return str(self.member)
@@ -31,6 +50,7 @@ class Role(models.Model):
     '''
         roles that the members can have in the church
     '''
+    id = models.AutoField(primary_key=True)
     role = models.CharField(max_length=20, default = "member")
     description = models.TextField(max_length=200)
 
@@ -44,6 +64,7 @@ class MemberRole(models.Model):
     '''
         a member and the role they have , defualts to just 'member'
     '''
+    id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
     role = models.ForeignKey(Role,on_delete=models.CASCADE,default = Role.get_role)
 
@@ -51,6 +72,13 @@ class Family(models.Model):
     '''
     a family  in church
     '''
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length = 50)
     head = models.ForeignKey(Member,on_delete= models.CASCADE,blank = True,related_name="familyHeads")
-    members = models.ManyToManyField(Member,blank = True,related_name= "members")
+
+class FamilyMember(models.Model):
+    '''
+        a member in a family
+    '''
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    family = models.ForeignKey(Family,on_delete=models.CASCADE)
