@@ -8,7 +8,6 @@ class Event(models.Model):
         the name and description of the event
     '''
     name = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
     slug = models.SlugField(unique=True, help_text='SEO friendly slug')
     description = models.TextField(help_text='Description of the event')
     date = models.DateTimeField(help_text='Date and Time of the event')
@@ -32,13 +31,20 @@ class ExpectedToAttendEvent(models.Model):
     cell_groups_coming = models.ManyToManyField(CellGroup,blank = True)
     ministries_coming = models.ManyToManyField(Ministry,blank = True)
 
+class EventAttendance(models.Model):
+    '''
+        members that attended an event
+    '''
+    event = models.ForeignKey(Event,on_delete=models.CASCADE)
+    attendees = models.ManyToManyField(Member,through='EventRoster')
+
 
 class EventRoster(models.Model):
     '''
         members that attended the event 
     '''
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    attendee_members = models.ManyToManyField(Member,blank = True)
+    event = models.ForeignKey(EventAttendance, on_delete=models.CASCADE)
+    attendee = models.ForeignKey(Member,on_delete = models.CASCADE,blank = True)
     
 
 
@@ -50,5 +56,5 @@ class EventPhoto(models.Model):
     '''
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     event = models.ForeignKey(Event,on_delete=models.CASCADE,null=True,blank=True)
-    event_attendees = models.ManyToManyField(EventRoster,blank=True)
+    event_attendees = models.ForeignKey(Member,on_delete= models.CASCADE,blank=True)
     photo = models.ImageField(upload_to='fellowships/', null=True)
