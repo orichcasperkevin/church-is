@@ -1,21 +1,27 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from member.models import (Member,MemberContact,MemberAge,MemberResidence,
                             MemberRole,Role,MemberMaritalStatus,Family,FamilyMember,)
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
+class UserSerializer(serializers.ModelSerializer):
 
-class MemberSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Member
-        fields = ('id','username','first_name','last_name')
+        model = User
+        fields = ('id','username', 'email',)
         extra_kwargs = {
             'username': {
                 'validators': [UnicodeUsernameValidator()],
-            },
-            'id': {
-                'read_only': False}
-            
+            }
         }
+
+class MemberSerializer(serializers.ModelSerializer):
+    member = UserSerializer()
+    class Meta:
+        model = Member
+        fields = ('member',)
+        extra_kwargs = {'id': {'read_only': False}}
+
 
 class MemberContactSerializer(serializers.ModelSerializer):
     member = MemberSerializer()

@@ -2,12 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-class Member(User):
-    class Meta:
-        proxy = True
-
-    def __str__(self):
-        return self.first_name + ' ' + self.last_name
+class Member(models.Model):
+    member = models.ForeignKey(User,on_delete=models.CASCADE)
+        
 
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
