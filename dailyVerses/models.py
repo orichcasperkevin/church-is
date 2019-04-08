@@ -22,11 +22,32 @@ class ExpectedToReceiveVerse(models.Model):
         who is expected to receive the verse
     '''
     verse = models.ForeignKey(Verse, on_delete=models.CASCADE)
-    who_will_receive = models.ManyToManyField(Member,blank = True)
-    church_groups_receiving = models.ManyToManyField(ChurchGroup,blank = True)
-    fellowships_receiving = models.ManyToManyField(Fellowship,blank = True)
-    cell_groups_receiving = models.ManyToManyField(CellGroup,blank = True)
-    ministries_receiving = models.ManyToManyField(Ministry,blank = True)
+    who_will_receive = models.ManyToManyField(Member, through = 'ReceipientMember',blank = True)
+    church_groups_receiving = models.ManyToManyField(ChurchGroup,through='ReceipientGroup',blank = True)
+    fellowships_receiving = models.ManyToManyField(Fellowship,through='ReceipientFellowship',blank = True)
+    cell_groups_receiving = models.ManyToManyField(CellGroup,through='ReceipientCellGroup',blank = True)
+    ministries_receiving = models.ManyToManyField(Ministry,through='ReceipientMinistry',blank = True)
+
+class ReceipientMember(models.Model):
+    verse = models.ForeignKey(ExpectedToReceiveVerse, on_delete=models.CASCADE)
+    receipient_member = models.ForeignKey(Member, on_delete = models.CASCADE)
+
+class ReceipientGroup(models.Model):
+    verse = models.ForeignKey(ExpectedToReceiveVerse, on_delete=models.CASCADE)
+    receipient_group = models.ForeignKey(ChurchGroup, on_delete = models.CASCADE)
+
+class ReceipientFellowship(models.Model):
+    verse = models.ForeignKey(ExpectedToReceiveVerse, on_delete=models.CASCADE)
+    receipient_fellowship = models.ForeignKey(Fellowship, on_delete = models.CASCADE)
+
+class ReceipientCellGroup(models.Model):
+    verse = models.ForeignKey(ExpectedToReceiveVerse, on_delete=models.CASCADE)
+    receipient_ceel_group = models.ForeignKey(CellGroup, on_delete = models.CASCADE)
+
+class ReceipientMinistry(models.Model):
+    verse = models.ForeignKey(ExpectedToReceiveVerse, on_delete=models.CASCADE)
+    receipient_ministry = models.ForeignKey(Ministry, on_delete = models.CASCADE)
+
 
 
     
