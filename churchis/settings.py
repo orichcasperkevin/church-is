@@ -25,7 +25,7 @@ SECRET_KEY = 'k7$rp)xc049%hoi5#p(hd9e^1gf@&%&co3^%+r^zq58uo(vy*h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'news',
     'services',
     'events',
-    
+
 
 ]
 
@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ORIGIN_ALLOW_ALL = True 
 
 ROOT_URLCONF = 'churchis.urls'
 

@@ -19,15 +19,21 @@ class MemberList(generics.ListCreateAPIView):
         create a new member
     '''
     queryset = Member.objects.all()
-    serializer_class = MemberSerializer     
+    serializer_class = MemberSerializer
+
+class MemberWhereFirstNameLikePattern(APIView):
+    def get(self,request,pattern):
+        result = Member.objects.filter(member__first_name__icontains=pattern)
+        data = MemberSerializer(result,many=True).data
+        return Response(data)
 
 class MemberContactList(generics.ListCreateAPIView):
     '''
         get:
-        return list of member contacts 
+        return list of member contacts
     '''
     queryset = MemberContact.objects.all()
-    serializer_class = MemberContactSerializer                   
+    serializer_class = MemberContactSerializer
 
 class MemberAgeList(generics.ListCreateAPIView):
     '''
@@ -35,7 +41,7 @@ class MemberAgeList(generics.ListCreateAPIView):
         return list of member dates of birth
     '''
     queryset = MemberAge.objects.all()
-    serializer_class = MemberAgeSerializer 
+    serializer_class = MemberAgeSerializer
 
 class MemberResidenceList(generics.ListCreateAPIView):
     '''
