@@ -4,7 +4,15 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Member(models.Model):
     member = models.ForeignKey(User,on_delete=models.CASCADE)
-        
+    GENDER = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('R', 'Rather not say'),
+    )
+    gender = models.CharField(max_length=2, null=True, blank=True, choices=GENDER)
+
+
+
 
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
@@ -25,6 +33,8 @@ class MemberMaritalStatus(models.Model):
     STATUS = (
         ('M', 'Married'),
         ('S', 'Single'),
+        ('D', 'Divorced'),
+        ('W', 'Widowed'),
     )
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
     status = models.CharField(max_length=2, null=True, choices=STATUS)
@@ -37,7 +47,7 @@ class MemberResidence(models.Model):
     street = models.CharField(max_length=200, blank=True, verbose_name='street')
     village_estate = models.CharField(max_length=200, blank=True, verbose_name='village/estate')
     description = models.CharField(max_length=200, blank=True, verbose_name='description')
-     
+
 
     def __str__(self):
         return str(self.member)
@@ -67,13 +77,14 @@ class MemberRole(models.Model):
 
 class Family(models.Model):
     '''
-    a family  in church
+        a family  in church
     '''
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length = 50)
     head = models.ForeignKey(Member,on_delete= models.CASCADE,blank = True,related_name="familyHeads")
+    members = models.ManyToManyField(Member,through='FamilyMembership')
 
-class FamilyMember(models.Model):
+class FamilyMembership(models.Model):
     '''
         a member in a family
     '''
