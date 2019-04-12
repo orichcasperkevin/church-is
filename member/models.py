@@ -69,11 +69,18 @@ class Role(models.Model):
 
 class MemberRole(models.Model):
     '''
-        a member and the role they have , defualts to just 'member'
+        a member and the roles they have ,
     '''
     id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role,on_delete=models.CASCADE,default = Role.get_role)
+    roles = models.ManyToManyField(Role,through = 'RoleMembership')
+
+class RoleMembership(models.Model):
+    '''
+        a membership roster for used for adding members to a role
+    '''
+    member = models.ForeignKey(MemberRole, on_delete = models.CASCADE)
+    role = models.ForeignKey(Role, on_delete = models.CASCADE)
 
 class Family(models.Model):
     '''
@@ -83,6 +90,7 @@ class Family(models.Model):
     name = models.CharField(max_length = 50)
     head = models.ForeignKey(Member,on_delete= models.CASCADE,blank = True,related_name="familyHeads")
     members = models.ManyToManyField(Member,through='FamilyMembership')
+
 
 class FamilyMembership(models.Model):
     '''

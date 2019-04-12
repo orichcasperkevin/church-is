@@ -19,8 +19,8 @@ class addMember(APIView):
     def post(self,request):
 
         first_name = request.data.get("first_name")
-        username = '@'+first_name.lower()
         last_name = request.data.get("last_name")
+        username = '@'+first_name.lower()+last_name.lower()
         email = request.data.get("email")
         gender = request.data.get("gender")
 

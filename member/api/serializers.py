@@ -38,7 +38,7 @@ class CreateMemberSerializer(serializers.ModelSerializer):
 
 
 class MemberContactSerializer(serializers.ModelSerializer):
-    member = UserSerializer()
+    member = MemberSerializer()
     class Meta:
         model = MemberContact
         fields = ('id','member', 'postal','phone','contact')
@@ -54,7 +54,7 @@ class MemberAgeSerializer(serializers.ModelSerializer):
         extra_kwargs = {'id': {'read_only': False}}
 
 class MemberMaritalStatusSerializer(serializers.ModelSerializer):
-    member = UserSerializer()
+    member = MemberSerializer()
     class Meta:
         model = MemberMaritalStatus
         fields = ('id','member', 'status')
@@ -62,7 +62,7 @@ class MemberMaritalStatusSerializer(serializers.ModelSerializer):
         extra_kwargs = {'id': {'read_only': False}}
 
 class MemberResidenceSerializer(serializers.ModelSerializer):
-    member = UserSerializer()
+    member = MemberSerializer()
     class Meta:
         model = MemberResidence
         fields = ('id','member', 'town', 'road', 'street', 'village_estate', 'description')
@@ -70,7 +70,7 @@ class MemberResidenceSerializer(serializers.ModelSerializer):
         extra_kwargs = {'id': {'read_only': False}}
 
 class FamilySerializer(serializers.ModelSerializer):
-    head = UserSerializer()
+    head = MemberSerializer()
     class Meta:
         model = Family
         fields = ('id','name','head','members')
@@ -79,7 +79,7 @@ class FamilySerializer(serializers.ModelSerializer):
 
 class FamilyMembershipSerializer(serializers.ModelSerializer):
     family = FamilySerializer()
-    member = UserSerializer()
+    member = MemberSerializer()
     class Meta:
         model = FamilyMembership
         fields = ('id','family','member')
@@ -93,10 +93,9 @@ class RoleSerializer(serializers.ModelSerializer):
         extra_kwargs = {'id': {'read_only': False}}
 
 class MemberRoleSerializer(serializers.ModelSerializer):
-    role = RoleSerializer()
-    member = UserSerializer()
+    member = MemberSerializer()
     class Meta:
         model = MemberRole
-        fields = ('id','member', 'role')
+        fields = ('id','member', 'roles')
         depth = 1
         extra_kwargs = {'id': {'read_only': False}}
