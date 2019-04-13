@@ -12,6 +12,16 @@ from member.api.serializers import (UserSerializer,MemberSerializer,CreateMember
                                     MemberResidenceSerializer,MemberRoleSerializer,
                                     RoleSerializer,MemberMaritalStatusSerializer,
                                     FamilySerializer,FamilyMembershipSerializer,)
+class GetMemberWithId(APIView):
+        '''
+            get:
+            get a member with id <id>
+        '''
+        def get(self,request,id):
+            contact = Member.objects.filter(member__id = id)
+
+            data = MemberSerializer(contact,many=True).data
+            return Response(data)
 
 class GetContactForMemberWithId(APIView):
         '''

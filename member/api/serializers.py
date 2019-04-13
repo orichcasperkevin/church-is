@@ -74,7 +74,7 @@ class FamilySerializer(serializers.ModelSerializer):
     class Meta:
         model = Family
         fields = ('id','name','head','members')
-        depth = 1
+        depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 
 class FamilyMembershipSerializer(serializers.ModelSerializer):
