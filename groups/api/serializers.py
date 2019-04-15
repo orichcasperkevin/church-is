@@ -8,7 +8,7 @@ from groups.models import (Fellowship,FellowshipMeeting,FellowshipMeetingRoster,
 class FellowshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fellowship
-        fields = ('id','name', 'description','fellowship_members',)
+        fields = ('id','name', 'description','number_of_members',)
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 
@@ -22,7 +22,7 @@ class FellowshipMeetingSerializer(serializers.ModelSerializer):
 class CellGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = CellGroup
-        fields = ('id','name', 'description','minister','cell_group_members',)
+        fields = ('id','name', 'description','minister','number_of_members')
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 
@@ -36,7 +36,7 @@ class CellGroupMeetingSerializer(serializers.ModelSerializer):
 class ChurchGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChurchGroup
-        fields = ('id','name', 'description','group_members',)
+        fields = ('id','name', 'description','number_of_members',)
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 
@@ -50,7 +50,7 @@ class ChurchGroupMeetingSerializer(serializers.ModelSerializer):
 class MinistrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Ministry
-        fields = ('id','name', 'description','ministry_members',)
+        fields = ('id','name', 'description','number_of_members',)
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 

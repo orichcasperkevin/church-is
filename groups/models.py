@@ -12,6 +12,13 @@ class Fellowship(models.Model):
     description = models.TextField(blank=True)
     fellowship_members = models.ManyToManyField(Member, through = 'FellowshipMembership', blank = True)
 
+    @property
+    def number_of_members(self):
+        number = 0
+        for data in self.fellowship_members.all():
+            number = number + 1
+        return number
+
     def __str__(self):
         return self.name
 
@@ -24,7 +31,7 @@ class FellowshipMembership(models.Model):
     fellowship_member = models.ForeignKey(Member,on_delete=models.CASCADE)
     role = models.ForeignKey(Role,on_delete=models.CASCADE)
     date_joined = models.DateField(auto_now_add=True)
-    
+
 
 
 class FellowshipMeeting(models.Model):
@@ -36,7 +43,7 @@ class FellowshipMeeting(models.Model):
     location = models.CharField(max_length=200, help_text='The location of the host')
     date = models.DateField(help_text='The visit date')
     fellowship_meeting_attendees = models.ManyToManyField(Member, through = 'FellowshipMeetingRoster')
-    
+
 
 
 class FellowshipMeetingRoster(models.Model):
@@ -45,13 +52,13 @@ class FellowshipMeetingRoster(models.Model):
     '''
     fellowship_meeting = models.ForeignKey(FellowshipMeeting, on_delete=models.CASCADE)
     attendee = models.ForeignKey(Member,blank = True,on_delete=models.CASCADE)
-    
+
 
 
 class FellowshipPhoto(models.Model):
     '''
         the photos of grouped under a fellowship,
-        can be tagged as belonging to a certain fellowship meeting that the attended  
+        can be tagged as belonging to a certain fellowship meeting that the attended
         can also be tagged as belonging or containing a certain member or members
     '''
     fellowship = models.ForeignKey(Fellowship, on_delete=models.CASCADE)
@@ -69,6 +76,11 @@ class CellGroup(models.Model):
     minister = models.ForeignKey(Member,  on_delete = models.CASCADE,help_text='minister in charge',related_name="cell_group_minister")
     cell_group_members = models.ManyToManyField(Member,through = 'CellGroupMembership',related_name='cell_group_members',blank = True)
 
+    def number_of_members(self):
+        number = 0
+        for data in self.cell_group_members.all():
+            number = number + 1
+        return number
 
     def __str__(self):
         return self.name
@@ -87,7 +99,7 @@ class CellGroupMembership(models.Model):
 
 class CellGroupMeeting(models.Model):
     '''
-        a cell group as hosted by a member on a date 
+        a cell group as hosted by a member on a date
     '''
     id = models.AutoField(primary_key = True)
     cell_group = models.ForeignKey(CellGroup, on_delete=models.CASCADE)
@@ -95,7 +107,7 @@ class CellGroupMeeting(models.Model):
     location = models.CharField(max_length=200, help_text='The location of the host')
     date = models.DateField(help_text='The visit date')
     attendees = models.ManyToManyField(Member, through='CellGroupMeetingRoster')
-    
+
 
 
 class CellGroupMeetingRoster(models.Model):
@@ -111,7 +123,7 @@ class CellGroupMeetingRoster(models.Model):
 class CellGroupPhoto(models.Model):
     '''
         the photos grouped under a cell group,
-        can be tagged as belonging to a certain cellGroup meeting that was attended 
+        can be tagged as belonging to a certain cellGroup meeting that was attended
         can also be tagged as belonging or containing a certain member or members
     '''
     cell_group = models.ForeignKey(CellGroup, on_delete=models.CASCADE)
@@ -127,6 +139,11 @@ class ChurchGroup(models.Model):
     description = models.TextField(blank=True)
     group_members = models.ManyToManyField(Member, through = 'ChurchGroupMembership',blank = True)
 
+    def number_of_members(self):
+        number = 0
+        for data in self.group_members.all():
+            number = number + 1
+        return number
     def __str__(self):
         return self.name
 
@@ -150,22 +167,22 @@ class GroupMeeting(models.Model):
     location = models.CharField(max_length=200, help_text='The location of the meeting')
     date = models.DateField(help_text='The visit date')
     attendees = models.ManyToManyField(Member, through='GroupMeetingRoster')
-    
+
 
 
 class GroupMeetingRoster(models.Model):
     '''
-        a member that attended the group meeting 
+        a member that attended the group meeting
     '''
     group_meeting = models.ForeignKey(GroupMeeting, on_delete=models.CASCADE)
     attendee = models.ForeignKey(Member,on_delete=models.CASCADE)
-    
+
 
 
 class GroupPhoto(models.Model):
     '''
         the photos of grouped under a group,
-        can be tagged as belonging to a certain fellowship meeting that the attended  
+        can be tagged as belonging to a certain fellowship meeting that the attended
         can also be tagged as belonging or containing a certain member or members
     '''
     group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
@@ -181,6 +198,12 @@ class Ministry(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     ministry_members = models.ManyToManyField(Member, through = "MinistryMembership",blank = True)
+
+    def number_of_members(self):
+        number = 0
+        for data in self.ministry_members.all():
+            number = number + 1
+        return number
 
     def __str__(self):
         return self.name
@@ -214,13 +237,13 @@ class MinistryMeetingRoster(models.Model):
     '''
     ministry_meeting = models.ForeignKey(MinistryMeeting, on_delete=models.CASCADE)
     attendee = models.ForeignKey(Member,blank = True,on_delete=models.CASCADE)
-    
+
 
 
 class ministryPhoto(models.Model):
     '''
         the photos of grouped under a group,
-        can be tagged as belonging to a certain fellowship meeting that the attended  
+        can be tagged as belonging to a certain fellowship meeting that the attended
         can also be tagged as belonging or containing a certain member or members
     '''
     group = models.ForeignKey(Ministry, on_delete=models.CASCADE)
