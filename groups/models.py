@@ -28,7 +28,7 @@ class FellowshipMembership(models.Model):
     '''
     id = models.AutoField(primary_key = True)
     fellowship = models.ForeignKey(Fellowship,on_delete=models.CASCADE)
-    fellowship_member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
     role = models.ForeignKey(Role,on_delete=models.CASCADE)
     date_joined = models.DateField(auto_now_add=True)
 
@@ -91,7 +91,7 @@ class CellGroupMembership(models.Model):
     '''
     id = models.AutoField(primary_key = True)
     CellGroup = models.ForeignKey(CellGroup,on_delete=models.CASCADE)
-    cell_group_member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
     role = models.ForeignKey(Role,on_delete=models.CASCADE)
     date_joined = models.DateField(auto_now_add=True)
 
@@ -153,7 +153,7 @@ class ChurchGroupMembership(models.Model):
     '''
     id = models.AutoField(primary_key = True)
     church_group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE)
-    church_group_member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
     role = models.ForeignKey(Role,on_delete=models.CASCADE)
     date_joined = models.DateField(auto_now_add=True)
 
@@ -197,11 +197,11 @@ class Ministry(models.Model):
     '''
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    ministry_members = models.ManyToManyField(Member, through = "MinistryMembership",blank = True)
+    members = models.ManyToManyField(Member, through = "MinistryMembership",blank = True)
 
     def number_of_members(self):
         number = 0
-        for data in self.ministry_members.all():
+        for data in self.members.all():
             number = number + 1
         return number
 
@@ -215,7 +215,7 @@ class MinistryMembership(models.Model):
     '''
     id = models.AutoField(primary_key = True)
     ministry = models.ForeignKey(Ministry,on_delete=models.CASCADE)
-    ministry_member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
     role = models.ForeignKey(Role,on_delete=models.CASCADE)
     date_joined = models.DateField(auto_now_add=True)
 
