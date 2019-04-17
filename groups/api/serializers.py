@@ -20,10 +20,10 @@ class FellowshipMembershipSerializer(serializers.ModelSerializer):
         depth = 1
 
 class FellowshipMeetingSerializer(serializers.ModelSerializer):
+    host = MemberSerializer()
     class Meta:
         model = FellowshipMeeting
-        fields = ('id','fellowship', 'host','location','date','fellowship_meeting_attendees')
-        depth = 2
+        fields = ('id','host','location','date','number_of_attendees')
         extra_kwargs = {'id': {'read_only': False}}
 
 class CellGroupSerializer(serializers.ModelSerializer):
@@ -43,7 +43,7 @@ class CellGroupMembershipSerializer(serializers.ModelSerializer):
 class CellGroupMeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = CellGroupMeeting
-        fields = ('id','cell_group', 'host','location','date','attendees')
+        fields = ('id','host','location','date','number_of_attendees')
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 
@@ -64,7 +64,7 @@ class ChurchGroupMembershipSerializer(serializers.ModelSerializer):
 class ChurchGroupMeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupMeeting
-        fields = ('id','group', 'host','location','date','attendees')
+        fields = ('id','host','location','date','number_of_attendees')
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 
@@ -85,6 +85,6 @@ class MinistryMembershipSerializer(serializers.ModelSerializer):
 class MinistryMeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = MinistryMeeting
-        fields = ('id','ministry', 'host','location','date','attendees')
+        fields = ('id','host','location','date','number_of_attendees')
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}

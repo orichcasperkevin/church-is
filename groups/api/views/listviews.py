@@ -19,12 +19,14 @@ class FellowshipList(generics.ListCreateAPIView):
     queryset = Fellowship.objects.all()
     serializer_class = FellowshipSerializer
 
-class FellowshipMeetingList(generics.ListCreateAPIView):
+class FellowshipMeetingList(APIView):
     '''
-        a list of fellowship meetings
+        a list of fellowship meetings with for a fellowship with Id <id>
     '''
-    queryset = FellowshipMeeting.objects.all()
-    serializer_class = FellowshipMeetingSerializer
+    def get(self,request,id):
+        fellowship_meeting = FellowshipMeeting.objects.filter(fellowship_id = id)
+        data = FellowshipMeetingSerializer(fellowship_meeting,many=True).data
+        return Response(data)
 
 class CellGroupList(generics.ListCreateAPIView):
     '''
@@ -33,12 +35,15 @@ class CellGroupList(generics.ListCreateAPIView):
     queryset = CellGroup.objects.all()
     serializer_class = CellGroupSerializer
 
-class CellGroupMeetingList(generics.ListCreateAPIView):
+class CellGroupMeetingList(APIView):
     '''
-        a list of cell grou[] meetings
+        a list of cell groups meetings with for a cellGroup with Id <id>
     '''
-    queryset = CellGroupMeeting.objects.all()
-    serializer_class = CellGroupMeetingSerializer
+    def get(self,request,id):
+        cell_group_meeting = CellGroupMeeting.objects.filter(cell_group_id = id)
+        data = CellGroupMeetingSerializer(cell_group_meeting,many=True).data
+        return Response(data)
+
 
 class ChurchGroupList(generics.ListCreateAPIView):
     '''
@@ -47,12 +52,15 @@ class ChurchGroupList(generics.ListCreateAPIView):
     queryset = ChurchGroup.objects.all()
     serializer_class = ChurchGroupSerializer
 
-class ChurchGroupMeetingList(generics.ListCreateAPIView):
+class ChurchGroupMeetingList(APIView):
     '''
-        a list of church group meetings
+        a list of church_group meetings with for a church_group with Id <id>
     '''
-    queryset = GroupMeeting.objects.all()
-    serializer_class = ChurchGroupMeetingSerializer
+    def get(self,request,id):
+        church_group_meeting = GroupMeeting.objects.filter(group_id = id)
+        data = ChurchGroupMeetingSerializer(church_group_meeting,many=True).data
+        return Response(data)
+
 
 class MinistryList(generics.ListCreateAPIView):
     '''
@@ -61,9 +69,11 @@ class MinistryList(generics.ListCreateAPIView):
     queryset = Ministry.objects.all()
     serializer_class = MinistrySerializer
 
-class MinistryMeetingList(generics.ListCreateAPIView):
+class MinistryMeetingList(APIView):
     '''
-        a list of ministry meetings
+        a list of ministry meetings  for a ministry with Id <id>
     '''
-    queryset = MinistryMeeting.objects.all()
-    serializer_class = MinistryMeetingSerializer
+    def get(self,request,id):
+        ministry_meeting = MinistryMeeting.objects.filter(ministry_id = id)
+        data = MinistryMeetingSerializer(ministry_meeting,many=True).data
+        return Response(data)

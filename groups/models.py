@@ -42,8 +42,14 @@ class FellowshipMeeting(models.Model):
     host = models.ForeignKey(Member,on_delete=models.CASCADE,related_name='hosts', help_text='Names of the host being visited.')
     location = models.CharField(max_length=200, help_text='The location of the host')
     date = models.DateField(help_text='The visit date')
-    fellowship_meeting_attendees = models.ManyToManyField(Member, through = 'FellowshipMeetingRoster')
+    attendees = models.ManyToManyField(Member, through = 'FellowshipMeetingRoster')
 
+    @property
+    def number_of_attendees(self):
+        number = 0
+        for data in self.attendees.all():
+            number = number + 1
+        return number
 
 
 class FellowshipMeetingRoster(models.Model):
@@ -108,7 +114,12 @@ class CellGroupMeeting(models.Model):
     date = models.DateField(help_text='The visit date')
     attendees = models.ManyToManyField(Member, through='CellGroupMeetingRoster')
 
-
+    @property
+    def number_of_attendees(self):
+        number = 0
+        for data in self.attendees.all():
+            number = number + 1
+        return number
 
 class CellGroupMeetingRoster(models.Model):
     '''
@@ -168,6 +179,12 @@ class GroupMeeting(models.Model):
     date = models.DateField(help_text='The visit date')
     attendees = models.ManyToManyField(Member, through='GroupMeetingRoster')
 
+    @property
+    def number_of_attendees(self):
+        number = 0
+        for data in self.attendees.all():
+            number = number + 1
+        return number
 
 
 class GroupMeetingRoster(models.Model):
@@ -229,7 +246,13 @@ class MinistryMeeting(models.Model):
     location = models.CharField(max_length=200, help_text='The location of the meeting')
     date = models.DateField(help_text='The visit date')
     attendees = models.ManyToManyField(Member,through='MinistryMeetingRoster')
-
+    
+    @property
+    def number_of_attendees(self):
+        number = 0
+        for data in self.attendees.all():
+            number = number + 1
+        return number
 
 class MinistryMeetingRoster(models.Model):
     '''
