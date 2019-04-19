@@ -18,15 +18,19 @@ urlpatterns = [
    #detailviews
     path('fellowship/<int:id>/', detailviews.GetFellowshipWithId.as_view()),
     path('fellowship-members/<int:id>/', detailviews.GetMembersOfFellowshipWithId.as_view()),
+    path('fellowships-for-a-member/<int:id>/', detailviews.GetFellowshipsAMemberBelongsTo.as_view()),
     path('fellowship-members-match-pattern/<int:id>/<slug:pattern>/', detailviews.GetMembersOfFellowshipWithID_MatchPattern.as_view()),
 
     path('ministry/<int:id>/', detailviews.GetMinistryWithId.as_view()),
+    path('ministries-for-a-member/<int:id>/', detailviews.GetMinistriesMemberBelongsTo.as_view()),
     path('ministry-members/<int:id>/', detailviews.GetMembersOfMinistryWithId.as_view()),
 
     path('church-group/<int:id>/', detailviews.GetChurchGroupWithId.as_view()),
+    path('church-groups-for-a-member/<int:id>/', detailviews.GetChurchGroupsAMemberBelongsTo.as_view()),
     path('church-group-members/<int:id>/', detailviews.GetMembersOfChurchGroupWithId.as_view()),
 
     path('cell-group/<int:id>/', detailviews.GetCellGroupWithId.as_view()),
+    path('cell-groups-for-a-member/<int:id>/', detailviews.GetCellGroupsAMemberBelongsTo.as_view()),
     path('cell-group-members/<int:id>/', detailviews.GetMembersOfCellGroupWithId.as_view()),
 
 

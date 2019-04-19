@@ -16,10 +16,11 @@ class FellowshipSerializer(serializers.ModelSerializer):
 
 
 class FellowshipMembershipSerializer(serializers.ModelSerializer):
+
     member = MemberSerializer()
     class Meta:
         model = FellowshipMembership
-        fields = ('member','role','date_joined')
+        fields = ('fellowship','member','role','date_joined')
         depth = 1
 
 class AddMemberToFellowshipSerializer(serializers.ModelSerializer):
@@ -68,7 +69,7 @@ class CellGroupMembershipSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
     class Meta:
         model = CellGroupMembership
-        fields = ('member','role','date_joined')
+        fields = ('cell_group','member','role','date_joined')
         depth = 1
 
 class AddMemberToCellGroupSerializer(serializers.ModelSerializer):
@@ -117,7 +118,7 @@ class ChurchGroupMembershipSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
     class Meta:
         model = ChurchGroupMembership
-        fields = ('member','role','date_joined')
+        fields = ('church_group','member','role','date_joined')
         depth = 1
 
 class AddMemberToChurchGroupSerializer(serializers.ModelSerializer):
@@ -166,7 +167,7 @@ class MinistryMembershipSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
     class Meta:
         model = MinistryMembership
-        fields = ('member','role','date_joined')
+        fields = ('ministry','member','role','date_joined')
         depth = 1
 
 class AddMemberToMinistrySerializer(serializers.ModelSerializer):
