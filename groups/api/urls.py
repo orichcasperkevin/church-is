@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import listviews,detailviews
+from .views import listviews,detailviews,addviews
 #TODO add delete views
 urlpatterns = [
    #listing
@@ -29,6 +29,9 @@ urlpatterns = [
     path('cell-group/<int:id>/', detailviews.GetCellGroupWithId.as_view()),
     path('cell-group-members/<int:id>/', detailviews.GetMembersOfCellGroupWithId.as_view()),
 
+
+  #urls to add views
+    path('add-member-to-group/', addviews.AddMemberToGroup.as_view()),
 
 ]
 

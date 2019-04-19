@@ -35,7 +35,7 @@ class addMember(APIView):
             member = member
         serializer = UserSerializer(member)
         member = serializer.data
-
+    
         data = {'member':member,'gender':gender}
         serializer = CreateMemberSerializer(data=data)
         if serializer.is_valid():

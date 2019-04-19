@@ -79,7 +79,6 @@ class CellGroup(models.Model):
     '''
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    minister = models.ForeignKey(Member,  on_delete = models.CASCADE,help_text='minister in charge',related_name="cell_group_minister")
     cell_group_members = models.ManyToManyField(Member,through = 'CellGroupMembership',related_name='cell_group_members',blank = True)
 
     def number_of_members(self):
@@ -96,7 +95,7 @@ class CellGroupMembership(models.Model):
         members of a cell group
     '''
     id = models.AutoField(primary_key = True)
-    CellGroup = models.ForeignKey(CellGroup,on_delete=models.CASCADE)
+    cell_group = models.ForeignKey(CellGroup,on_delete=models.CASCADE)
     member = models.ForeignKey(Member,on_delete=models.CASCADE)
     role = models.ForeignKey(Role,on_delete=models.CASCADE)
     date_joined = models.DateField(auto_now_add=True)
@@ -246,7 +245,7 @@ class MinistryMeeting(models.Model):
     location = models.CharField(max_length=200, help_text='The location of the meeting')
     date = models.DateField(help_text='The visit date')
     attendees = models.ManyToManyField(Member,through='MinistryMeetingRoster')
-    
+
     @property
     def number_of_attendees(self):
         number = 0
