@@ -28,7 +28,7 @@ class GetMembersOfFellowshipWithId(APIView):
         get the members of a particular fellowship
     '''
     def get(self,request,id):
-        fellowship_membership = FellowshipMembership.objects.filter(fellowship_id = id)
+        fellowship_membership = FellowshipMembership.objects.filter(fellowship_id = id).order_by('-date_joined')
         data = FellowshipMembershipSerializer(fellowship_membership,many=True).data
         return Response(data)
 
@@ -38,7 +38,7 @@ class GetFellowshipsAMemberBelongsTo(APIView):
         get all the felloships that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        fellowship_membership = FellowshipMembership.objects.filter(member_id = id)
+        fellowship_membership = FellowshipMembership.objects.filter(member_id = id).order_by('-date_joined')
         data = FellowshipMembershipSerializer(fellowship_membership,many=True).data
         return Response(data)
 
@@ -68,7 +68,7 @@ class GetMembersOfCellGroupWithId(APIView):
         get the members of a particular cell group
     '''
     def get(self,request,id):
-        cell_group_membership = CellGroupMembership.objects.filter(CellGroup_id = id)
+        cell_group_membership = CellGroupMembership.objects.filter(cell_group_id = id).order_by('-date_joined')
         data =CellGroupMembershipSerializer(cell_group_membership,many=True).data
         return Response(data)
 
@@ -78,7 +78,7 @@ class GetCellGroupsAMemberBelongsTo(APIView):
         get all the cell-groups that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        cell_group_membership = CellGroupMembership.objects.filter(member_id = id)
+        cell_group_membership = CellGroupMembership.objects.filter(member_id = id).order_by('-date_joined')
         data = CellGroupMembershipSerializer(cell_group_membership,many=True).data
         return Response(data)
 
@@ -98,7 +98,7 @@ class GetMembersOfMinistryWithId(APIView):
         get the members of a particular ministry
     '''
     def get(self,request,id):
-        ministry_membership = MinistryMembership.objects.filter(ministry_id = id)
+        ministry_membership = MinistryMembership.objects.filter(ministry_id = id).order_by('-date_joined')
         data =MinistryMembershipSerializer(ministry_membership,many=True).data
         return Response(data)
 
@@ -108,7 +108,7 @@ class GetMinistriesMemberBelongsTo(APIView):
         get all the ministries that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        ministry_membership = MinistryMembership.objects.filter(member_id = id)
+        ministry_membership = MinistryMembership.objects.filter(member_id = id).order_by('-date_joined')
         data = MinistryMembershipSerializer(ministry_membership,many=True).data
         return Response(data)
 
@@ -129,7 +129,7 @@ class GetMembersOfChurchGroupWithId(APIView):
         get the members of a particular church group
     '''
     def get(self,request,id):
-        church_group_membership = ChurchGroupMembership.objects.filter(church_group_id = id)
+        church_group_membership = ChurchGroupMembership.objects.filter(church_group_id = id).order_by('-date_joined')
         data =ChurchGroupMembershipSerializer(church_group_membership,many=True).data
         return Response(data)
 
@@ -139,6 +139,6 @@ class GetChurchGroupsAMemberBelongsTo(APIView):
         get all the church_groups that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        church_group_membership = ChurchGroupMembership.objects.filter(member_id = id)
+        church_group_membership = ChurchGroupMembership.objects.filter(member_id = id).order_by('-date_joined')
         data = ChurchGroupMembershipSerializer(church_group_membership,many=True).data
         return Response(data)

@@ -53,7 +53,7 @@ class AddMemberToGroup(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if (group_type == 'cell_group'):
+        if (group_type == 'cell-group'):
             queryset = CellGroup.objects.filter(id = group_id)
             group = []
             for group in queryset:
@@ -83,7 +83,7 @@ class AddMemberToGroup(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if (group_type == 'church_group'):
+        if (group_type == 'church-group'):
             queryset = ChurchGroup.objects.filter(id = group_id)
             group = []
             for group in queryset:
