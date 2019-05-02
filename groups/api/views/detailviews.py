@@ -38,7 +38,7 @@ class GetFellowshipsAMemberBelongsTo(APIView):
         get all the felloships that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        fellowship_membership = FellowshipMembership.objects.filter(member_id = id).order_by('-date_joined')
+        fellowship_membership = FellowshipMembership.objects.filter(member__member_id = id).order_by('-date_joined')
         data = FellowshipMembershipSerializer(fellowship_membership,many=True).data
         return Response(data)
 
@@ -78,7 +78,7 @@ class GetCellGroupsAMemberBelongsTo(APIView):
         get all the cell-groups that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        cell_group_membership = CellGroupMembership.objects.filter(member_id = id).order_by('-date_joined')
+        cell_group_membership = CellGroupMembership.objects.filter(member__member_id = id).order_by('-date_joined')
         data = CellGroupMembershipSerializer(cell_group_membership,many=True).data
         return Response(data)
 
@@ -108,7 +108,7 @@ class GetMinistriesMemberBelongsTo(APIView):
         get all the ministries that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        ministry_membership = MinistryMembership.objects.filter(member_id = id).order_by('-date_joined')
+        ministry_membership = MinistryMembership.objects.filter(member__member_id = id).order_by('-date_joined')
         data = MinistryMembershipSerializer(ministry_membership,many=True).data
         return Response(data)
 
@@ -139,6 +139,6 @@ class GetChurchGroupsAMemberBelongsTo(APIView):
         get all the church_groups that a member with id <id> belongs to
     '''
     def get(self,request,id):
-        church_group_membership = ChurchGroupMembership.objects.filter(member_id = id).order_by('-date_joined')
+        church_group_membership = ChurchGroupMembership.objects.filter(member__member_id = id).order_by('-date_joined')
         data = ChurchGroupMembershipSerializer(church_group_membership,many=True).data
         return Response(data)

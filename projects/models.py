@@ -15,6 +15,7 @@ from member.models import Member
 
 class Project(models.Model):
     """Church undertaking project"""
+    id = models.AutoField(primary_key = True)
     church_group = models.ManyToManyField(ChurchGroup, help_text='The church groups this project belongs to.')
     name = models.CharField(max_length=100, help_text='The name of the project')
     start = models.DateField(verbose_name='Starting Date', help_text='Start date of the project')
@@ -22,13 +23,22 @@ class Project(models.Model):
     description = models.TextField(help_text='Description of the project')
     required_amount = models.DecimalField(max_digits=15, decimal_places=2,
                                           validators=[MinValueValidator(Decimal('0.00'))], default=Decimal('0.00'))
-    raised_amount = models.DecimalField(max_digits=15, decimal_places=2,
-                                        help_text='This is cumulatively added when members bring in contributions or '
-                                                  'contribution from another place, e.g a fundraising',
-                                        validators=[MinValueValidator(Decimal('0.00'))], default=Decimal('0.00'))
+    @property
+    def raised_amount(self):
+        '''
+          This is cumulatively added when members bring in contributions or
+          service their pledges.
+        '''
+        project_id = self.id
+        queryset = PledgePayment.objects.filter(pledge__project_id=project_id)
+        raised_amount = 0
+        for payment in queryset:
+            raised_amount += payment.payment_amount
 
-    def __str__(self):
-        return str(self.name)
+        queryset = Contribution.objects.filter(project_id=pledge_id)
+        for contribution in queryset:
+            raised_amount += contribution.amount
+        return raised_amount
 
     @property
     def remaining_amount(self):
@@ -40,26 +50,29 @@ class Project(models.Model):
         percent = floatformat(percent, 2)
         return str(percent) + '%'
 
+class contribution(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='projects')
+    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.CASCADE,related_name='members')
+    names = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=15,blank=True)
+    anonymous = models.BooleanField(default=False)
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='contribution_recorded_bys')
+    recorded_at = models.DateTimeField(auto_now_add=True)
 
 class Pledge(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.CASCADE,
-                               help_text='If the person pledging is church member,Select them from the '
-                                         'list,If not record their names. '
-                                         'You can\'t record a name and also have a member.Record only one.')
-    names = models.CharField(max_length=100, blank=True,
-                             help_text='If the person pledging is not a church member, record their names.'
-                                       ' You can\'t record a name and also have a member.Record only one.')
-    phone = models.CharField(max_length=15,
-                             help_text='If the person pledging is not a member, record their phone number',
-                             blank=True)
+    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.CASCADE)
+    names = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=15,blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date = models.DateField(verbose_name='Pledge Payment Date')
-    details = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='pledge_recorded_by')
     recorded_at = models.DateTimeField(auto_now_add=True)
-    payed_on = models.DateField(null=True)
-    payed_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
-    payed = models.BooleanField(default=False, verbose_name='payment complete')
-    payment_recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='payment_by')
-    narration = models.TextField(blank=True)
+
+class PledgePayment(models.Model):
+    Pledge = models.ForeignKey(Project,on_delete=models.CASCADE)
+    payment_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    payment_on = models.DateField(null=True)
+    payment_recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='payment_recorded_by')
+    recorded_at = models.DateTimeField(auto_now_add=True)
