@@ -14,7 +14,6 @@ class FellowshipSerializer(serializers.ModelSerializer):
         extra_kwargs = {'id': {'read_only': True}}
 
 
-
 class FellowshipMembershipSerializer(serializers.ModelSerializer):
 
     member = MemberSerializer()

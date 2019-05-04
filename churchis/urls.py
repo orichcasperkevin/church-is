@@ -20,6 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/members/', include('member.api.urls')),
     path('api/groups/', include('groups.api.urls')),
-    path('api/events/', include('events.api.urls')),
+    path('api/projects/', include('projects.api.urls')),
     path('api/daily-verses/', include('dailyVerses.api.urls')),
 ]
