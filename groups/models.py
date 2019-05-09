@@ -1,6 +1,7 @@
 from django.db import models
 from member.models import Member,Role
 
+from datetime import date
 
 # Create your models here.
 class Fellowship(models.Model):
@@ -154,8 +155,7 @@ class ChurchGroup(models.Model):
         for data in self.group_members.all():
             number = number + 1
         return number
-    def __str__(self):
-        return self.name
+
 
 class ChurchGroupMembership(models.Model):
     '''

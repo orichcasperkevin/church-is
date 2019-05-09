@@ -87,7 +87,7 @@ class Family(models.Model):
         a family  in church
     '''
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length = 50)
+    name = models.CharField(max_length = 50,blank=True,null=True)
     head = models.ForeignKey(Member,on_delete= models.CASCADE,blank = True,related_name="familyHeads")
     members = models.ManyToManyField(Member,through='FamilyMembership')
 
