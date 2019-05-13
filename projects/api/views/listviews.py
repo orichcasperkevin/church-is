@@ -13,6 +13,15 @@ class ProjectList(generics.ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
+class ProjectWithID(APIView):
+    '''
+        get project with id <id>
+    '''
+    def get(self,request,id):
+        project = Project.objects.filter(id = id)
+        data = ProjectSerializer(project,many=True).data
+        return Response(data)
+
 class ContributionsForAProject(APIView):
         '''
         contributions made by members for a project with id <id>
@@ -24,10 +33,10 @@ class ContributionsForAProject(APIView):
 
 class ContributionsByAMember(APIView):
         '''
-        contributions made by member with id <id> for project with id <project_id>
+        contributions made by member with id <id>
         '''
-        def get(self,request,id,project_id):
-            contribution = Contribution.objects.filter(project_id = project_id,member__member_id = id)
+        def get(self,request,id):
+            contribution = Contribution.objects.filter(member__member_id = id)
             data = ContributionSerializer(contribution,many=True).data
             return Response(data)
 
@@ -42,10 +51,10 @@ class PledgesForAProject(APIView):
 
 class PledgesByAmember(APIView):
         '''
-        pledges made by member with id <id> for project with id <project_id>
+        pledges made by member with id <id>
         '''
-        def get(self,request,id,project_id):
-            pledge = Pledge.objects.filter(project_id = project_id,member__member_id = id)
+        def get(self,request,id):
+            pledge = Pledge.objects.filter(member__member_id = id)
             data = PledgeSerializer(pledge,many=True).data
             return Response(data)
 

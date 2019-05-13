@@ -36,7 +36,7 @@ class Offering(models.Model):
         for data in Offering.objects.filter(date__year=year):
             total = total + data.amount
         return total
-        
+
 class Tithe(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
@@ -45,16 +45,17 @@ class Tithe(models.Model):
 
     @property
     def total_this_month(self):
-        total = 0
-        for data in Tithe.objects.filter(date__month=month):
-            total = total + data.amount
+        total = 0.00
+        for data in Tithe.objects.filter(member_id = self.member_id, date__month=month):
+            total = total + float(data.amount)
         return total
 
     @property
     def total_this_year(self):
-        total = 0
-        for data in Tithe.objects.filter(date__year=year):
-            total = total + data.amount
+        total = 0.00
+        for data in Tithe.objects.filter(member_id=self.member_id, date__year=year):
+            total = total + float(data.amount)
+        return total
 
 class IncomeType(models.Model):
     type_name = models.CharField(max_length=100,

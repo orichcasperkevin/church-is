@@ -5,11 +5,13 @@ from .views import listviews
 urlpatterns = [
    #listing
     path('project-list/', listviews.ProjectList.as_view()),
+    path('project-with-id/<int:id>/', listviews.ProjectWithID.as_view()),
+
     path('contribution-for-project/<int:id>/',listviews.ContributionsForAProject.as_view()),
-    path('contribution-for-project/<int:project_id>/by-member/<int:id>/',listviews.ContributionsByAMember.as_view()),
+    path('contributions-by-member/<int:id>/',listviews.ContributionsByAMember.as_view()),
 
     path('pledges-for-project/<int:id>/',listviews.PledgesForAProject.as_view()),
-    path('pledges-for-project/<int:project_id>/by-member/<int:id>/',listviews.PledgesByAmember.as_view()),
+    path('pledges-by-member/<int:id>/',listviews.PledgesByAmember.as_view()),
 
     path('pledge-payment-for-project/<int:id>/',listviews.PledgesForAProject.as_view()),
     path('pledge-payment-for-project/<int:project_id>/by-member/<int:id>/',listviews.PledgePaymentForAMember.as_view()),
