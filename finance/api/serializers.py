@@ -5,6 +5,7 @@ from member.api.serializers import MemberSerializer
 from finance.models import (Offering,Tithe,Income,IncomeType,Expenditure,ExpenditureType,)
 
 class OfferingSerializer(serializers.ModelSerializer):
+    member = MemberSerializer()
     recorded_by = MemberSerializer()
     class Meta:
         model = Offering

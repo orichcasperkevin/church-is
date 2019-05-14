@@ -25,16 +25,16 @@ class Offering(models.Model):
 
     @property
     def total_this_month(self):
-        total = 0
-        for data in Offering.objects.filter(date__month=month):
-            total = total + data.amount
+        total = 0.00
+        for data in Offering.objects.filter(member_id = self.member_id, date__month=month):
+            total = total + float(data.amount)
         return total
 
     @property
     def total_this_year(self):
-        total = 0
-        for data in Offering.objects.filter(date__year=year):
-            total = total + data.amount
+        total = 0.00
+        for data in Offering.objects.filter(member_id=self.member_id, date__year=year):
+            total = total + float(data.amount)
         return total
 
 class Tithe(models.Model):

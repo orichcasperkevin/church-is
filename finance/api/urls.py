@@ -5,11 +5,17 @@ from .views import listviews
 urlpatterns = [
    #listing
     path('income-type-list/', listviews.IncomeTypeList.as_view()),
+    path('income-stats/', listviews.IncomeStats.as_view()),
     path('expenditure-type-list/', listviews.ExpenditureTypeList.as_view()),
     path('tithe-for-member/<int:id>/',listviews.TitheForMember.as_view()),
-    path('tithe-by-members-this-month/',listviews.TitheThisMonth.as_view()),
 
-    path('offering-list/',listviews.OfferingThisMonth.as_view()),
+    path('tithe-by-members-this-month/',listviews.TitheThisMonth.as_view()),
+    path('tithe-stats/',listviews.TitheStats.as_view()),
+
+    path('offerings-by-members-this-month/',listviews.OfferingThisMonth.as_view()),
+    path('offering-stats/',listviews.OfferingStats.as_view()),
+    path('offerings-by-member/<int:id>/',listviews.OfferingByMember.as_view()),
+
 
 
 ]
