@@ -24,8 +24,6 @@ class Sermon(models.Model):
     featured_image = models.ImageField(upload_to='sermons/')
     website = models.BooleanField(default=True, help_text='Publish on the website')
 
-    def __str__(self):
-        return self.title
 
     class Meta:
         ordering = ('-date',)

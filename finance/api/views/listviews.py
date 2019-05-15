@@ -60,7 +60,7 @@ class TitheForMember(APIView):
         data = TitheSerializer(tithe,many=True).data
         return Response(data)
 
-class TitheForMemberStats(APIView):
+class TitheStatsForMember(APIView):
     '''
         Tithe statistics for a member
     '''
@@ -105,6 +105,16 @@ class OfferingByMember(APIView):
     '''
     def get(self,request,id):
         offering  = Offering.objects.filter(member__member_id = id)
+        data = OfferingSerializer(offering,many=True).data
+        return Response(data)
+
+
+class OfferingStatsForMember(APIView):
+    '''
+        offerings stats for member with id <id>
+    '''
+    def get(self,request,id):
+        offering  = Offering.objects.filter(member__member_id = id)[:1]
         data = OfferingSerializer(offering,many=True).data
         return Response(data)
 
