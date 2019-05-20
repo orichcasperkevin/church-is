@@ -8,14 +8,11 @@ from groups.models import CellGroup,ChurchGroup,Ministry,Fellowship
 
 
 class Verse(models.Model):
-    text = models.TextField(help_text='The actual reading')
     verse = models.CharField(max_length=200, help_text='The verse in the Bible')
+    text = models.TextField(help_text='The actual reading')
+    lesson = models.TextField(help_text='a lesson or moral from the verse')
     day = models.DateField(default=timezone.now)
-
-    def __str__(self):
-        return str(self.verse) + ' on ' + str(self.day)
-
-
+    by = models.ForeignKey(Member,on_delete = models.CASCADE,blank = True,null = True)
 
 class ExpectedToReceiveVerse(models.Model):
     '''
@@ -47,7 +44,3 @@ class ReceipientCellGroup(models.Model):
 class ReceipientMinistry(models.Model):
     verse = models.ForeignKey(ExpectedToReceiveVerse, on_delete=models.CASCADE)
     receipient_ministry = models.ForeignKey(Ministry, on_delete = models.CASCADE)
-
-
-
-    

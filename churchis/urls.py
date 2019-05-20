@@ -23,4 +23,7 @@ urlpatterns = [
     path('api/projects/', include('projects.api.urls')),
     path('api/finance/', include('finance.api.urls')),
     path('api/daily-verses/', include('dailyVerses.api.urls')),
+    path('api/news/', include('news.api.urls')),
+    path('api/sermons/', include('sermons.api.urls')),
+    path('api/services/', include('services.api.urls')),
 ]

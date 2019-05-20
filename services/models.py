@@ -8,8 +8,6 @@ class Service(models.Model):
     name = models.CharField(max_length=150, help_text='Name of the church service')
     date = models.DateField(help_text='The day of the service')
     class Meta:
-        verbose_name = 'Service'
-        verbose_name_plural = 'Services'
         ordering = ('-date',)
 
 

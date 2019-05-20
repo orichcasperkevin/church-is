@@ -21,7 +21,7 @@ class Sermon(models.Model):
     date = models.DateField(default=timezone.now)
     preached_by_member = models.ForeignKey(Member, on_delete=models.CASCADE, blank = True)
     preached_by = models.CharField(max_length=50, blank =True)
-    featured_image = models.ImageField(upload_to='sermons/')
+    featured_image = models.ImageField(upload_to='sermons/',blank=True)
     website = models.BooleanField(default=True, help_text='Publish on the website')
 
 

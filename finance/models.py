@@ -26,7 +26,7 @@ class Offering(models.Model):
     @property
     def total_this_month(self):
         total = 0.00
-        for data in Offering.objects.filter(member_id = self.member_id, date__month=month):
+        for data in Offering.objects.filter(member_id = self.member_id, date__month=month, date__year = year):
             total = total + float(data.amount)
         return total
 
@@ -46,7 +46,7 @@ class Tithe(models.Model):
     @property
     def total_this_month(self):
         total = 0.00
-        for data in Tithe.objects.filter(member_id = self.member_id, date__month=month):
+        for data in Tithe.objects.filter(member_id = self.member_id, date__month=month, date__year = year):
             total = total + float(data.amount)
         return total
 
@@ -65,7 +65,7 @@ class IncomeType(models.Model):
     @property
     def total_this_month(self):
         total = 0
-        for data in Income.objects.filter(type_id=self.id,date__month=month ):
+        for data in Income.objects.filter(type_id=self.id,date__month=month, date__year = year ):
             total = total + data.amount
         return total
     @property
@@ -85,7 +85,7 @@ class Income(models.Model):
     @property
     def total_overall_income_this_month(self):
         total = 0
-        for data in Income.objects.filter(date__month=month):
+        for data in Income.objects.filter(date__month=month, date__year=year):
             total = total + data.amount
         return total
     @property
@@ -103,7 +103,7 @@ class ExpenditureType(models.Model):
     @property
     def total_this_month(self):
         total = 0
-        for data in Expenditure.objects.filter(type_id=self.id,date__month=month ):
+        for data in Expenditure.objects.filter(type_id=self.id,date__month=month,date__year=year ):
             total = total + data.amount
         return total
     @property
@@ -123,7 +123,7 @@ class Expenditure(models.Model):
     @property
     def total_overall_expenditure_this_month(self):
         total = 0
-        for data in Expenditure.objects.filter(date__month=month):
+        for data in Expenditure.objects.filter(date__month=month,date__year=year):
             total = total + data.amount
         return total
     @property
