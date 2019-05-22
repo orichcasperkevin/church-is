@@ -17,6 +17,7 @@ urlpatterns = [
     path('pledge-payment-for-project/<int:project_id>/by-member/<int:id>/',listviews.PledgePaymentForAMember.as_view()),
 
     path('add-contribution-to-project/',addviews.AddContribution.as_view()),
+    path('add-pledge-to-project/',addviews.AddPledge.as_view()),
 
 
 ]

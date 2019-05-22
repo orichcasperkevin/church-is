@@ -14,11 +14,31 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class PledgeSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
+    project = ProjectSerializer()
+    recorded_by = MemberSerializer()
     class Meta:
         model = Pledge
-        fields = ('project','member', 'names','phone','amount','recorded_by','recorded_at','amount_so_far','remaining_amount','percentage_funded')
+        fields = ('project','member', 'names','phone','amount','date','recorded_by','recorded_at','amount_so_far','remaining_amount','percentage_funded')
         depth = 1
         extra_kwargs = {'id': {'read_only': True}}
+
+    def create(self,validated_data):
+
+
+        project_data = validated_data.pop('project')
+        project = {}
+        project = Project.objects.get( id = project_data["id"])
+
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( id = member_data["member"]["id"])
+
+        recording_member_data = validated_data.pop('recorded_by')
+        recorded_by = {}
+        recorded_by = Member.objects.get( id = member_data["member"]["id"])
+
+        pledge = Pledge.objects.create(project=project,member=member,recorded_by=recorded_by,**validated_data)
+        return pledge
 
 class ContributionSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
