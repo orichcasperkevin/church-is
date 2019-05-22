@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import listviews
+from .views import listviews,addviews
 #TODO add delete views
 urlpatterns = [
    #listing
@@ -15,6 +15,8 @@ urlpatterns = [
 
     path('pledge-payment-for-project/<int:id>/',listviews.PledgesForAProject.as_view()),
     path('pledge-payment-for-project/<int:project_id>/by-member/<int:id>/',listviews.PledgePaymentForAMember.as_view()),
+
+    path('add-contribution-to-project/',addviews.AddContribution.as_view()),
 
 
 ]

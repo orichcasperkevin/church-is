@@ -8,7 +8,10 @@ from projects.api.serializers import (ProjectSerializer,ContributionSerializer,P
 
 class ProjectList(generics.ListCreateAPIView):
     '''
+        get:
         a list of Projects
+        post:
+        add a project
     '''
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer

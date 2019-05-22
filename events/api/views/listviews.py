@@ -17,7 +17,7 @@ class EventList(generics.ListCreateAPIView):
 class ExpectedToAttendEventList(APIView):
     '''
         get:
-        a list of those expected to attend an event with id <id> 
+        a list of those expected to attend an event with id <id>
     '''
     def get(self,request,id):
         event = ExpectedToAttendEvent.objects.get(event_id = id)
@@ -27,7 +27,7 @@ class ExpectedToAttendEventList(APIView):
 class EventAttendanceList(APIView):
     '''
         get:
-        a list of those attended an event with id <id> 
+        a list of those attended an event with id <id>
     '''
     def get(self,request,id):
         event = EventAttendance.objects.get(event_id = id)

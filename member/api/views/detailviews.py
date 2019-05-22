@@ -29,7 +29,7 @@ class GetContactForMemberWithId(APIView):
             get a contact for a member with id <id>
         '''
         def get(self,request,id):
-            contact = MemberContact.objects.filter(member__id = id)
+            contact = MemberContact.objects.filter(member__member__id = id)
 
             data = MemberContactSerializer(contact,many=True).data
             return Response(data)
@@ -41,7 +41,7 @@ class GetAgeForMemberWithId(APIView):
             and date of birth
         '''
         def get(self,request,id):
-            age = MemberAge.objects.get(member__id = id)
+            age = MemberAge.objects.get(member__member__id = id)
 
             today = date.today()
             data = today.year - age.d_o_b.year - ((today.month, today.day) < (age.d_o_b.month, age.d_o_b.day))
@@ -59,7 +59,7 @@ class GetResidenceForMemberWithId(APIView):
             get a residence for a member with id <id>
         '''
         def get(self,request,id):
-            residence = MemberResidence.objects.filter(member__id = id)
+            residence = MemberResidence.objects.filter(member__member__id = id)
 
             data = MemberResidenceSerializer(residence,many=True).data
             return Response(data)
@@ -69,7 +69,7 @@ class GetMaritalStatusForMemberWithId(APIView):
             get marital status for a member with id <id>
         '''
         def get(self,request,id):
-            residence = MemberMaritalStatus.objects.filter(member__id = id)
+            residence = MemberMaritalStatus.objects.filter(member__member__id = id)
 
             data = MemberMaritalStatusSerializer(residence,many=True).data
             return Response(data)
@@ -79,7 +79,7 @@ class GetRoleForMemberWithId(APIView):
             get roles for a member with id <id>
         '''
         def get(self,request,id):
-            role = MemberRole.objects.filter(member__id = id)
+            role = MemberRole.objects.filter(member__member__id = id)
 
             data = MemberRoleSerializer(role,many=True).data
             return Response(data)
@@ -89,7 +89,7 @@ class GetFamilyForMemberWithId(APIView):
             get the family members of the family the member belongs to
         '''
         def get(self,request,id):
-            family_membership = FamilyMembership.objects.filter(member__id = id)
+            family_membership = FamilyMembership.objects.filter(member__member__id = id)
 
             data = FamilyMembershipSerializer(family_membership,many=True).data
             return Response(data)

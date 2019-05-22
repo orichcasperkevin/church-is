@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+
+from member.models import (Member,)
 from member.api.serializers import MemberSerializer
 from projects.models import (Project,Pledge,Contribution,PledgePayment)
 
@@ -8,7 +10,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ('id','church_group','name','start','stop','description','required_amount','raised_amount','remaining_amount','percentage_funded')
         depth = 1
-        extra_kwargs = {'id': {'read_only': True}}
+        extra_kwargs = {'id': {'read_only': False}}
 
 class PledgeSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
@@ -21,11 +23,31 @@ class PledgeSerializer(serializers.ModelSerializer):
 class ContributionSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
     recorded_by = MemberSerializer()
+    project = ProjectSerializer()
     class Meta:
         model = Contribution
-        fields = ('project','member','names','phone','amount','recorded_by','recorded_at')
+        fields = ('project','anonymous','member','names','phone','amount','recorded_by','recorded_at')
         depth = 2
-        extra_kwargs = {'id': {'read_only': True}}
+        extra_kwargs = {'id': {'read_only': False}}
+
+    def create(self,validated_data):
+
+
+        project_data = validated_data.pop('project')
+        project = {}
+        project = Project.objects.get( id = project_data["id"])
+
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( id = member_data["member"]["id"])
+
+        recording_member_data = validated_data.pop('recorded_by')
+        recorded_by = {}
+        recorded_by = Member.objects.get( id = member_data["member"]["id"])
+
+        contribution = Contribution.objects.create(project=project,member=member,recorded_by=recorded_by,**validated_data)
+        return contribution
+
 
 class PledgePaymentSerializer(serializers.ModelSerializer):
     class Meta:

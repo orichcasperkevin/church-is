@@ -8,7 +8,7 @@ class ServiceSerializer(serializers.ModelSerializer):
     church_group = ChurchGroupSerializer()
     class Meta:
         model = Service
-        fields = ('church_group','name','date')
+        fields = ('church_group','name')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 
@@ -16,6 +16,6 @@ class ServiceItemSerializer(serializers.ModelSerializer):
     service = ServiceSerializer()
     class Meta:
         model = ServiceItem
-        fields = ('service','action','value','start','end')
+        fields = ('service','action','value','date','venue','start','end')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}

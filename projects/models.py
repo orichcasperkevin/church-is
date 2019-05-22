@@ -16,7 +16,7 @@ from member.models import Member
 class Project(models.Model):
     """Church undertaking project"""
     id = models.AutoField(primary_key = True)
-    church_group = models.ManyToManyField(ChurchGroup, help_text='The church groups this project belongs to.')
+    church_group = models.ManyToManyField(ChurchGroup, blank=True)
     name = models.CharField(max_length=100, help_text='The name of the project')
     start = models.DateField(verbose_name='Starting Date', help_text='Start date of the project')
     stop = models.DateField(verbose_name='Completion Date', help_text='Completion date of the project')
@@ -94,4 +94,3 @@ class PledgePayment(models.Model):
     payment_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     payment_recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='payment_recorded_by')
     payment_recorded_on = models.DateTimeField(auto_now_add=True)
-    
