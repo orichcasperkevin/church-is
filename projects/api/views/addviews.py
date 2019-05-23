@@ -3,8 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from member.models import (Member,)
-from projects.models import (Project,)
-from projects.api.serializers import (ProjectSerializer,ContributionSerializer,PledgeSerializer)
+from projects.models import (Project,Pledge)
+from projects.api.serializers import (ProjectSerializer,ContributionSerializer,PledgeSerializer,
+                                        PledgePaymentSerializer,)
 
 from member.api.serializers import MemberSerializer
 
@@ -93,6 +94,41 @@ class AddPledge(APIView):
                         'phone':phone,'amount':amount,'recorded_by':recording_member}
 
             serializer = PledgeSerializer(data=data)
+            if serializer.is_valid():
+                created = serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class AddPledgePayment(APIView):
+    '''
+        post:
+        add a pledge payment by a member to a project
+    '''
+    def post(self,request):
+
+            pledge_id = request.data.get("pledge_id")
+
+            queryset = Pledge.objects.filter(id = pledge_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = PledgeSerializer(data)
+            pledge = serializer.data
+
+            recording_member_id = request.data.get("recording_member_id")
+            queryset = Member.objects.filter(member_id=recording_member_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = MemberSerializer(data)
+            recording_member = serializer.data
+
+            payment_amount = request.data.get("amount")
+
+
+            data = {'pledge':pledge,'payment_amount':payment_amount,'payment_recorded_by':recording_member}
+
+            serializer = PledgePaymentSerializer(data=data)
             if serializer.is_valid():
                 created = serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
