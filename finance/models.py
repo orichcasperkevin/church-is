@@ -1,7 +1,7 @@
 from django.db import models
 
 from groups.models import ChurchGroup
-from member.models import Member,Family
+from member.models import Member
 
 # Create your models here.
 from datetime import date
@@ -19,7 +19,6 @@ class Offering(models.Model):
     name_if_not_member = models.CharField(max_length=50,blank=True,null=True)
     church_group = models.ManyToManyField(ChurchGroup,blank=True)
     member = models.ForeignKey(Member,on_delete=models.CASCADE,blank=True,null=True)
-    family = models.ForeignKey(Family,on_delete=models.CASCADE,blank=True,null=True)
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='offering_recorded_by')
 
@@ -40,7 +39,7 @@ class Offering(models.Model):
 class Tithe(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    date = models.DateField()
+    date = models.DateField(auto_now_add = True)
     narration = models.TextField(blank=True)
 
     @property

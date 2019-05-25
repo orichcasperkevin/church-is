@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import listviews
+from .views import listviews,addviews
 #TODO add delete views
 urlpatterns = [
    #listing
@@ -17,6 +17,9 @@ urlpatterns = [
     path('offering-stats-for-member/<int:id>/',listviews.OfferingStatsForMember.as_view()),
     path('offering-stats/',listviews.OfferingStats.as_view()),
     path('offerings-by-member/<int:id>/',listviews.OfferingByMember.as_view()),
+
+    path('add-tithe-for-member/',addviews.addTithe.as_view()),
+    path('add-offering/',addviews.addOffering.as_view()),
 
 
 

@@ -31,11 +31,11 @@ class PledgeSerializer(serializers.ModelSerializer):
 
         member_data = validated_data.pop('member')
         member = {}
-        member = Member.objects.get( id = member_data["member"]["id"])
+        member = Member.objects.get( member_id = member_data["member"]["id"])
 
         recording_member_data = validated_data.pop('recorded_by')
         recorded_by = {}
-        recorded_by = Member.objects.get( id = member_data["member"]["id"])
+        recorded_by = Member.objects.get( member_id = member_data["member"]["id"])
 
         pledge = Pledge.objects.create(project=project,member=member,recorded_by=recorded_by,**validated_data)
         return pledge
@@ -59,11 +59,11 @@ class ContributionSerializer(serializers.ModelSerializer):
 
         member_data = validated_data.pop('member')
         member = {}
-        member = Member.objects.get( id = member_data["member"]["id"])
+        member = Member.objects.get( member_id = member_data["member"]["id"])
 
         recording_member_data = validated_data.pop('recorded_by')
         recorded_by = {}
-        recorded_by = Member.objects.get( id = member_data["member"]["id"])
+        recorded_by = Member.objects.get( member_id = member_data["member"]["id"])
 
         contribution = Contribution.objects.create(project=project,member=member,recorded_by=recorded_by,**validated_data)
         return contribution
@@ -87,7 +87,7 @@ class PledgePaymentSerializer(serializers.ModelSerializer):
 
         recording_member_data = validated_data.pop('payment_recorded_by')
         payment_recorded_by = {}
-        payment_recorded_by = Member.objects.get( id = recording_member_data["member"]["id"])
+        payment_recorded_by = Member.objects.get( member_id = recording_member_data["member"]["id"])
 
         pledge_payment = PledgePayment.objects.create(pledge=pledge,payment_recorded_by=payment_recorded_by,**validated_data)
         return pledge_payment
