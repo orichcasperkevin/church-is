@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'news',
     'services',
     'events',
+    'sms',
 
 
 ]
