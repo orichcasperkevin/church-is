@@ -13,8 +13,9 @@ africastalking.initialize(username, api_key)
 
 # Initialize a service e.g. SMS
 sms = africastalking.SMS
-feedback = {}
-
+'''
+    this class adapts africastalking api to the sms app.
+'''
 class ChurchSysMessenger():
     def __init__(self, sender_app,sending_member):
         self.sender_app = sender_app
@@ -22,6 +23,9 @@ class ChurchSysMessenger():
         self.message = " "
 
     def receipients_phone_numbers(self,receipient_member_ids):
+        '''
+            get the a list of phone numbers from a list of receipient ids
+        '''
         phone_numbers = []
         for data in receipient_member_ids:
             try:
@@ -33,7 +37,9 @@ class ChurchSysMessenger():
         return phone_numbers
 
     def record_members_who_received_sms(self,sent_messages):
-
+        '''
+            if message was sent, record the members who received it and on what status
+        '''
         for data in sent_messages['SMSMessageData']['Recipients']:
             contact = MemberContact.objects.get(phone = data['number'])
             member = contact.member
@@ -42,10 +48,16 @@ class ChurchSysMessenger():
             SmsReceipients.objects.create(sms=sms,receipient=member,cost=data['cost'], status=data['status'])
 
     def on_finish(self,error, response):
+        '''
+            callback function called on completion of the thread on which send_message() is running
+        '''
         if error is not None:
             raise error
         self.record_members_who_received_sms(response)
 
     def send_message(self,receipients,message):
+        '''
+        send message 
+        '''
             self.message = message
             sms.send(message, receipients, callback= self.on_finish)
