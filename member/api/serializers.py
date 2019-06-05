@@ -43,8 +43,17 @@ class MemberContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = MemberContact
         fields = ('id','member', 'postal','phone','contact')
-        depth = 1
-        extra_kwargs = {'id': {'read_only': False}}
+        depth = 2
+        extra_kwargs = {'id': {'read_only': True}}
+
+    def create(self,validated_data):
+
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( member_id = member_data["member"]["id"])
+
+        contact = MemberContact.objects.create(member=member,**validated_data)
+        return contact
 
 class MemberAgeSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
@@ -52,7 +61,16 @@ class MemberAgeSerializer(serializers.ModelSerializer):
         model = MemberAge
         fields = ('id','member', 'd_o_b')
         depth = 1
-        extra_kwargs = {'id': {'read_only': False}}
+        extra_kwargs = {'id': {'read_only': True}}
+
+    def create(self,validated_data):
+
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( member_id = member_data["member"]["id"])
+
+        age = MemberAge.objects.create(member=member,**validated_data)
+        return age
 
 class MemberMaritalStatusSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
@@ -60,7 +78,16 @@ class MemberMaritalStatusSerializer(serializers.ModelSerializer):
         model = MemberMaritalStatus
         fields = ('id','member', 'status')
         depth = 1
-        extra_kwargs = {'id': {'read_only': False}}
+        extra_kwargs = {'id': {'read_only': True}}
+
+    def create(self,validated_data):
+
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( member_id = member_data["member"]["id"])
+
+        marital_status = MemberMaritalStatus.objects.create(member=member,**validated_data)
+        return marital_status
 
 class MemberResidenceSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
@@ -68,8 +95,16 @@ class MemberResidenceSerializer(serializers.ModelSerializer):
         model = MemberResidence
         fields = ('id','member', 'town', 'road', 'street', 'village_estate', 'description')
         depth = 1
-        extra_kwargs = {'id': {'read_only': False}}
+        extra_kwargs = {'id': {'read_only': True}}
 
+    def create(self,validated_data):
+
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( member_id = member_data["member"]["id"])
+
+        residence = MemberResidence.objects.create(member=member,**validated_data)
+        return residence
 class FamilySerializer(serializers.ModelSerializer):
     head = MemberSerializer()
     class Meta:

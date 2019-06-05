@@ -111,14 +111,15 @@ class ChurchGroupSerializer(serializers.ModelSerializer):
         model = ChurchGroup
         fields = ('id','name', 'description','number_of_members',)
         depth = 2
-        extra_kwargs = {'id': {'read_only': True}}
+        extra_kwargs = {'id': {'read_only': False}}
 
 class ChurchGroupMembershipSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
     class Meta:
         model = ChurchGroupMembership
-        fields = ('church_group','member','role','date_joined')
+        fields = ('id','church_group','member','role','date_joined')
         depth = 1
+        extra_kwargs = {'id': {'read_only': False}}
 
 class AddMemberToChurchGroupSerializer(serializers.ModelSerializer):
         member = MemberSerializer()

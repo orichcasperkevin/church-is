@@ -146,6 +146,7 @@ class ChurchGroup(models.Model):
     '''
         the name and description of the group
     '''
+    id = models.AutoField(primary_key = True)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     group_members = models.ManyToManyField(Member, through = 'ChurchGroupMembership',blank = True)

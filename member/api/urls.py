@@ -20,6 +20,10 @@ urlpatterns = [
 
     #adding
     path('add-member/', addviews.addMember.as_view()),
+    path('add-member-contact/', addviews.AddMemberContact.as_view()),
+    path('add-member-d_o_b/', addviews.AddMemberD_O_B.as_view()),
+    path('add-member-residence/', addviews.AddMemberResidence.as_view()),
+    path('add-member-marital-status/', addviews.AddMemberMaritalStatus.as_view()),
 
 
 

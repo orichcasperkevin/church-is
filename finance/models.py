@@ -15,7 +15,7 @@ year = today.year
 class Offering(models.Model):
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(help_text='The Date of the offering collection')
-    anonymous = models.BooleanField(default=False)
+    anonymous = models.BooleanField(default=False,blank=True,null=True)
     name_if_not_member = models.CharField(max_length=50,blank=True,null=True)
     church_group = models.ManyToManyField(ChurchGroup,blank=True)
     member = models.ForeignKey(Member,on_delete=models.CASCADE,blank=True,null=True)
@@ -35,6 +35,10 @@ class Offering(models.Model):
         for data in Offering.objects.filter(member_id=self.member_id, date__year=year):
             total = total + float(data.amount)
         return total
+
+class GroupOffering(models.Model):
+    offering = models.ForeignKey(Offering,on_delete=models.CASCADE)
+    church_group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE)
 
 class Tithe(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
@@ -77,7 +81,7 @@ class IncomeType(models.Model):
 class Income(models.Model):
     type = models.ForeignKey(IncomeType, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='income_recorded_by')
 
@@ -115,7 +119,7 @@ class ExpenditureType(models.Model):
 class Expenditure(models.Model):
     type = models.ForeignKey(ExpenditureType, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='expenditure_recorded_by')
 

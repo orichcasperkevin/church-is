@@ -20,7 +20,6 @@ class ChurchSysMessenger():
     def __init__(self, sender_app,sending_member):
         self.sender_app = sender_app
         self.sending_member = sending_member
-        self.message = " "
 
     def receipients_phone_numbers(self,receipient_member_ids):
         '''
@@ -57,7 +56,6 @@ class ChurchSysMessenger():
 
     def send_message(self,receipients,message):
         '''
-        send message 
+            send message
         '''
-            self.message = message
-            sms.send(message, receipients, callback= self.on_finish)
+        sms.send(message, receipients, callback= self.on_finish)
