@@ -16,8 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 
+from rest_framework_simplejwt import views as jwt_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #jwt authentication
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    #end
     path('api/members/', include('member.api.urls')),
     path('api/groups/', include('groups.api.urls')),
     path('api/events/', include('events.api.urls')),

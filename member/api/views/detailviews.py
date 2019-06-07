@@ -18,6 +18,7 @@ class GetMemberWithId(APIView):
             get a member with id <id>
         '''
         def get(self,request,id):
+            print(request.session)
             contact = Member.objects.filter(member__id = id)
 
             data = MemberSerializer(contact,many=True).data
