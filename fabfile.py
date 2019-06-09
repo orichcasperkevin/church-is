@@ -66,12 +66,12 @@ def _create_main_webserver_files():
         run('cp church_is_supervisor /home/nanoafrika/')
         run('chmod u+x /home/nanoafrika/church_is_supervisor')
         run('touch /home/nanoafrika/logs/church_is.log')
-        sudo('church_is.conf /etc/supervisor/conf.d/')
+        sudo('cp church_is.conf /etc/supervisor/conf.d/')
         sudo('sudo supervisorctl reread')
         sudo('sudo supervisorctl update')
         sudo('sudo supervisorctl status church_is')
         sudo('cp nginx.template.conf /etc/nginx/sites-available/church_is')
-        sudo('ln -s /etc/nginx/sites-available/church_is /etc/nginx/sitechurch_iss-enabled/church_is')
+        sudo('ln -s /etc/nginx/sites-available/church_is /etc/nginx/sites-enabled/church_is')
         sudo('service nginx restart')
 
 
