@@ -6,11 +6,11 @@ from django.utils.timezone import now
 
 #TODO import each componet singly
 from member.models import (Member,MemberContact,MemberAge,
-                            MemberResidence,MemberRole,Role,
+                            MemberResidence,Role,
                             MemberMaritalStatus,Family,FamilyMembership,)
 
 from member.api.serializers import (MemberSerializer,MemberContactSerializer,MemberAgeSerializer,
-                                    MemberResidenceSerializer,MemberRoleSerializer,
+                                    MemberResidenceSerializer,
                                     RoleSerializer,MemberMaritalStatusSerializer,
                                     FamilySerializer,FamilyMembershipSerializer,)
 
@@ -61,7 +61,7 @@ class MemberFilteredByAge(APIView):
         max_date = date(current.year - max_age, current.month, current.day)
         members = MemberAge.objects.filter(d_o_b__gte=max_date,
                                 d_o_b__lte=min_date)
-                                
+
         data = MemberAgeSerializer(members,many=True).data
         return Response(data)
 
@@ -97,13 +97,6 @@ class RoleList(generics.ListCreateAPIView):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
-class MemberRoleList(generics.ListCreateAPIView):
-    '''
-        get:
-        return list of members and their roles
-    '''
-    queryset = MemberRole.objects.all()
-    serializer_class = MemberRoleSerializer
 
 class MemberMaritalStatusList(generics.ListCreateAPIView):
     '''

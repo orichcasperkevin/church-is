@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+
 from member.models import (Member,MemberContact,MemberAge,MemberResidence,
-                            MemberRole,Role,MemberMaritalStatus,Family,FamilyMembership,)
+                            Role,RoleMembership,MemberMaritalStatus,Family,FamilyMembership,)
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 class UserSerializer(serializers.ModelSerializer):
@@ -125,13 +126,28 @@ class FamilyMembershipSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = ('id','role', 'description')
+        fields = ('id','role', 'description','member_admin','site_admin','group_admin','projects_admin','event_admin','finance_admin')
         extra_kwargs = {'id': {'read_only': False}}
 
-class MemberRoleSerializer(serializers.ModelSerializer):
+class RoleMemberShipSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
+    role = RoleSerializer()
     class Meta:
-        model = MemberRole
-        fields = ('id','member', 'roles')
+        model = RoleMembership
+        fields = ('id','member', 'role')
         depth = 1
-        extra_kwargs = {'id': {'read_only': False}}
+        extra_kwargs = {'id': {'read_only': True}}
+
+    def create(self,validated_data):
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( member_id = member_data["member"]["id"])
+
+        role = {}
+        role_data = validated_data.pop('role')
+        role = Role.objects.get(**role_data)
+
+        role_membership = RoleMembership.objects.create(member=member,role=role, **validated_data)
+
+
+        return role_membership

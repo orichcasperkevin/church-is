@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 from datetime import date
 
 from member.models import (Member,MemberContact,MemberAge,
-                            MemberResidence,MemberRole,Role,
+                            MemberResidence,Role,RoleMembership,
                             MemberMaritalStatus,Family,FamilyMembership,)
 
 from member.api.serializers import (UserSerializer,MemberSerializer,CreateMemberSerializer,MemberContactSerializer,MemberAgeSerializer,
-                                    MemberResidenceSerializer,MemberRoleSerializer,
+                                    MemberResidenceSerializer,RoleMemberShipSerializer,
                                     RoleSerializer,MemberMaritalStatusSerializer,
                                     FamilySerializer,FamilyMembershipSerializer,)
 class GetMemberWithId(APIView):
@@ -74,16 +74,7 @@ class GetMaritalStatusForMemberWithId(APIView):
 
             data = MemberMaritalStatusSerializer(residence,many=True).data
             return Response(data)
-class GetRoleForMemberWithId(APIView):
-        '''
-            get:
-            get roles for a member with id <id>
-        '''
-        def get(self,request,id):
-            role = MemberRole.objects.filter(member__member__id = id)
 
-            data = MemberRoleSerializer(role,many=True).data
-            return Response(data)
 class GetFamilyForMemberWithId(APIView):
         '''
             get:
@@ -93,4 +84,14 @@ class GetFamilyForMemberWithId(APIView):
             family_membership = FamilyMembership.objects.filter(member__member__id = id)
 
             data = FamilyMembershipSerializer(family_membership,many=True).data
+            return Response(data)
+class GetRolesForMemberWithId(APIView):
+        '''
+            get:
+            get the role groups the member belongs to
+        '''
+        def get(self,request,id):
+            role_membership = RoleMembership.objects.filter(member__member__id = id)
+
+            data = RoleMemberShipSerializer(role_membership,many=True).data
             return Response(data)

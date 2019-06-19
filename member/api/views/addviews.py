@@ -2,17 +2,19 @@ from rest_framework import generics,status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-import random as r
 
 from member.models import (Member,MemberContact,MemberAge,
-                            MemberResidence,MemberRole,Role,
+                            MemberResidence,Role,
                             MemberMaritalStatus,Family,FamilyMembership,)
 
-from member.api.serializers import (UserSerializer,MemberSerializer,CreateMemberSerializer,MemberContactSerializer,MemberAgeSerializer,
-                                    MemberResidenceSerializer,MemberRoleSerializer,
+from member.api.serializers import (UserSerializer,MemberSerializer,CreateMemberSerializer,
+                                    MemberContactSerializer,MemberAgeSerializer,RoleMemberShipSerializer,
+                                    MemberResidenceSerializer,
                                     RoleSerializer,MemberMaritalStatusSerializer,
                                     FamilySerializer,FamilyMembershipSerializer,)
+from sms.africastalking.at import ChurchSysMessenger
 
+messenger = ChurchSysMessenger("create member","test member 2")
 class addMember(APIView):
     '''
 
@@ -25,9 +27,13 @@ class addMember(APIView):
         email = request.data.get("email")
         gender = request.data.get("gender")
 
-        user = User(first_name = first_name, username = username, last_name = last_name, email= email)
+        user = User(
+                    first_name = first_name,
+                    username = username,
+                    last_name = last_name,
+                    email= email
+                    )
         user.save()
-
         user_id = user.id
 
         queryset = User.objects.filter(id = user_id)
@@ -39,6 +45,7 @@ class addMember(APIView):
 
         data = {'member':member,'gender':gender}
         serializer = CreateMemberSerializer(data=data)
+
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -151,6 +158,56 @@ class AddMemberMaritalStatus(APIView):
             serializer = MemberMaritalStatusSerializer(data=data)
             if serializer.is_valid():
                 created = serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddRoleMemberShip(APIView):
+    '''
+        post:
+        add member role
+    '''
+    def post(self,request):
+
+            member_id = request.data.get("member_id")
+            queryset = Member.objects.filter(member_id=member_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = MemberSerializer(data)
+            member = serializer.data
+
+            role_id = request.data.get("role_id")
+            queryset = Role.objects.filter(id=role_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = RoleSerializer(data)
+            role = serializer.data
+
+            data = {'member':member,'role':role}
+
+            serializer = RoleMemberShipSerializer(data=data)
+            if serializer.is_valid():
+                created = serializer.save()
+
+                role = Role.objects.get(id=role_id)
+                member = Member.objects.get(member_id=member_id)
+                user = User.objects.get(id = member.member.id)
+                member_id = []
+                starter_password = "darkaster4413"
+                message = ' you have been admin of the Church MS, use ' + starter_password + ' as your starting password.'
+
+                if (role.site_adminstration):
+                    member_id.append(member.id)
+                    receipient = messenger.receipients_phone_numbers(member_id)
+
+                    user.set_password(starter_password)
+                    messenger.send_message(receipient,message)
+                    user.save()
+
+                else:
+                    pass
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

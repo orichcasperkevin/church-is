@@ -42,6 +42,14 @@ class IncomeStats(APIView):
         stat_dict["total_this_year"] = total_this_year
 
         return Response(stat_dict)
+class IncomeOfType(APIView):
+    '''
+        income of type with id <id>
+    '''
+    def get(self,request,id):
+        tithe  = Income.objects.filter( type_id = id)
+        data = IncomeSerializer(tithe,many=True).data
+        return Response(data)
 
 class ExpenditureTypeList(generics.ListCreateAPIView):
     '''

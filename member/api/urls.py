@@ -14,9 +14,9 @@ urlpatterns = [
     path('contact-for-member/<int:id>/', detailviews.GetContactForMemberWithId.as_view()),
     path('age-for-member/<int:id>/', detailviews.GetAgeForMemberWithId.as_view()),
     path('residence-for-member/<int:id>/', detailviews.GetResidenceForMemberWithId.as_view()),
-    path('roles-for-member/<int:id>/', detailviews.GetRoleForMemberWithId.as_view()),
     path('marital-status-for-member/<int:id>/', detailviews.GetMaritalStatusForMemberWithId.as_view()),
     path('family-for-member/<int:id>/', detailviews.GetFamilyForMemberWithId.as_view()),
+    path('roles-for-member/<int:id>/', detailviews.GetRolesForMemberWithId.as_view()),
 
     #adding
     path('add-member/', addviews.addMember.as_view()),
@@ -24,6 +24,7 @@ urlpatterns = [
     path('add-member-d_o_b/', addviews.AddMemberD_O_B.as_view()),
     path('add-member-residence/', addviews.AddMemberResidence.as_view()),
     path('add-member-marital-status/', addviews.AddMemberMaritalStatus.as_view()),
+    path('add-role-for-member/', addviews.AddRoleMemberShip.as_view()),
 
 
 

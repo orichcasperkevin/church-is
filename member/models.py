@@ -11,9 +11,6 @@ class Member(models.Model):
     )
     gender = models.CharField(max_length=2, null=True, blank=True, choices=GENDER)
 
-
-
-
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
@@ -52,12 +49,17 @@ class MemberResidence(models.Model):
     def __str__(self):
         return str(self.member)
 
-
 class Role(models.Model):
     '''
         roles that the members can have in the church
     '''
     id = models.AutoField(primary_key=True)
+    member_admin = models.BooleanField(default=False)
+    site_admin = models.BooleanField(default=False)
+    group_admin = models.BooleanField(default=False)
+    event_admin = models.BooleanField(default=False)
+    projects_admin =  models.BooleanField(default=False)
+    finance_admin = models.BooleanField(default=False)
     role = models.CharField(max_length=20, default = "member")
     description = models.TextField(max_length=200)
 
@@ -67,19 +69,12 @@ class Role(models.Model):
         '''
         return Role.objects.get(role = "member")
 
-class MemberRole(models.Model):
-    '''
-        a member and the roles they have ,
-    '''
-    id = models.AutoField(primary_key=True)
-    member = models.OneToOneField(Member, on_delete=models.CASCADE)
-    roles = models.ManyToManyField(Role,through = 'RoleMembership')
 
 class RoleMembership(models.Model):
     '''
         a membership roster for used for adding members to a role
     '''
-    member = models.ForeignKey(MemberRole, on_delete = models.CASCADE)
+    member = models.ForeignKey(Member, on_delete = models.CASCADE)
     role = models.ForeignKey(Role, on_delete = models.CASCADE)
 
 class Family(models.Model):

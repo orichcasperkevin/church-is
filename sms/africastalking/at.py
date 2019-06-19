@@ -8,6 +8,7 @@ from sms.models import SmsReceipients,Sms
 # Initialize SDK
 username = config('AFRICAS_TALKING_USERNAME')
 api_key = config('AFRICAS_TALKING_API_KEY')
+sender_id = config('AFRICAS_TALKING_SENDER_ID')
 
 africastalking.initialize(username, api_key)
 
@@ -32,7 +33,7 @@ class ChurchSysMessenger():
                 member_phone_number = contact.phone
                 phone_numbers.append(member_phone_number)
             except:
-                pass
+                return "error getting phone numbers"
         return phone_numbers
 
     def record_members_who_received_sms(self,sent_messages):
@@ -51,11 +52,11 @@ class ChurchSysMessenger():
             callback function called on completion of the thread on which send_message() is running
         '''
         if error is not None:
-            raise error
+            raise error            
         self.record_members_who_received_sms(response)
 
     def send_message(self,receipients,message):
         '''
             send message
         '''
-        sms.send(message, receipients, callback= self.on_finish)
+        sms.send(message, receipients, sender_id, callback= self.on_finish)

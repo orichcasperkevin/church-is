@@ -18,6 +18,8 @@ urlpatterns = [
     path('offering-stats/',listviews.OfferingStats.as_view()),
     path('offerings-by-member/<int:id>/',listviews.OfferingByMember.as_view()),
 
+    path('income-of-type/<int:id>/',listviews.IncomeOfType.as_view()),
+
     path('add-tithe-for-member/',addviews.addTithe.as_view()),
     path('add-offering/',addviews.addOffering.as_view()),
     path('add-group-offering/',addviews.addGroupOffering.as_view()),
