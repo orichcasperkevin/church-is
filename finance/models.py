@@ -15,7 +15,7 @@ year = today.year
 class Offering(models.Model):
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(help_text='The Date of the offering collection')
-    anonymous = models.BooleanField(default=False,blank=True,null=True)
+    anonymous = models.BooleanField(default=False)
     name_if_not_member = models.CharField(max_length=50,blank=True,null=True)
     church_group = models.ManyToManyField(ChurchGroup,blank=True)
     member = models.ForeignKey(Member,on_delete=models.CASCADE,blank=True,null=True)
