@@ -198,13 +198,13 @@ class AddRoleMemberShip(APIView):
                 starter_password = "darkaster4413"
                 message = ' you have been admin of the Church MS, use ' + starter_password + ' as your starting password.'
 
-                if (role.site_adminstration):
-                    member_id.append(member.id)
-                    receipient = messenger.receipients_phone_numbers(member_id)
-
-                    user.set_password(starter_password)
-                    messenger.send_message(receipient,message)
-                    user.save()
+                if (role.site_admin or role.member_admin or role.group_admin or role.event_admin or role.projects_admin or role.finance_admin ):
+                    if (not user.has_usable_password()):
+                        member_id.append(member.id)
+                        receipient = messenger.receipients_phone_numbers(member_id)
+                        user.set_password(starter_password)
+                        messenger.send_message(receipient,message)
+                        user.save()
 
                 else:
                     pass

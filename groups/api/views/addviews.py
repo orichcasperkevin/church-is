@@ -106,14 +106,14 @@ class AddMemberToGroup(APIView):
             role = serializer.data
 
             data = {'church_group':church_group,'member':member,'role':role}
-            serializer = AddMemberToChurchGroupSerializer(data=data)
+            serializer = AddMemberToChurchGroupSerializer(data=data)            
             if serializer.is_valid():
                 created = serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if (group_type == 'ministry'):
+        if (group_type == 'ministrie'):
             queryset = Ministry.objects.filter(id = group_id)
             group = []
             for group in queryset:

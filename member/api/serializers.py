@@ -127,7 +127,7 @@ class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
         fields = ('id','role', 'description','member_admin','site_admin','group_admin','projects_admin','event_admin','finance_admin')
-        extra_kwargs = {'id': {'read_only': False}}
+        extra_kwargs = {'id': {'read_only': True}}
 
 class RoleMemberShipSerializer(serializers.ModelSerializer):
     member = MemberSerializer()

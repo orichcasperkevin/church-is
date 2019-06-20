@@ -58,7 +58,7 @@ class Contribution(models.Model):
     phone = models.CharField(max_length=15,blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='contribution_recorded_bys')
-    recorded_at = models.DateTimeField(auto_now_add=True)
+    recorded_at = models.DateField(auto_now_add=True)
 
 class Pledge(models.Model):
     id = models.AutoField(primary_key = True)
