@@ -25,10 +25,18 @@ class addTithe(APIView):
         serializer = MemberSerializer(data)
         member = serializer.data
 
+        recording_member_id = request.data.get("recording_member_id")
+        queryset = Member.objects.filter(member_id = recording_member_id)
+        data = []
+        for data in queryset:
+            data = data
+        serializer = MemberSerializer(data)
+        recording_member = serializer.data
+
         amount = request.data.get("amount")
         narration = request.data.get("narration")
 
-        data = {'member':member,'amount':amount,'narration':narration}
+        data = {'member':member,'amount':amount,'narration':narration,'recorded_by':recording_member}
         serializer = TitheSerializer(data=data)
 
         if serializer.is_valid():
@@ -63,14 +71,6 @@ class addOffering(APIView):
         serializer = MemberSerializer(data)
         recording_member = serializer.data
 
-        church_group_id = request.data.get("church_group_id")
-        queryset = ChurchGroup.objects.filter(id = church_group_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = ChurchGroupSerializer(data)
-        church_group = serializer.data
-
         name_if_not_member = request.data.get("name_if_not_member")
         date = request.data.get("date")
         anonymous = request.data.get("anonymous")
@@ -79,7 +79,7 @@ class addOffering(APIView):
 
 
         data = {'member':member,'amount':amount,'date':date,'anonymous':anonymous,'name_if_not_member':name_if_not_member,
-                 'church_group':church_group,'recorded_by':recording_member}
+                 'recorded_by':recording_member}
         if (serializer_to_use == 0):
             serializer = OfferingSerializer(data=data)
         if (serializer_to_use == 1):

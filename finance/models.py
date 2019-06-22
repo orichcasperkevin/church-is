@@ -45,6 +45,7 @@ class Tithe(models.Model):
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(auto_now_add = True)
     narration = models.TextField(blank=True)
+    recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='tithe_recorded_by')
 
     @property
     def total_this_month(self):

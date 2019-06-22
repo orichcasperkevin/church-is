@@ -10,7 +10,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ('id','church_group','name','start','stop','description','required_amount','raised_amount','remaining_amount','percentage_funded')
         depth = 1
-        extra_kwargs = {'id': {'read_only': False}}
+        extra_kwargs = {'id': {'read_only': True}}
 
 class PledgeSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
@@ -22,12 +22,22 @@ class PledgeSerializer(serializers.ModelSerializer):
         depth = 1
         extra_kwargs = {'id': {'read_only': False}}
 
+class AddPledgeSerializer(serializers.ModelSerializer):
+    member = MemberSerializer()
+    project = ProjectSerializer()
+    recorded_by = MemberSerializer()
+    class Meta:
+        model = Pledge
+        fields = ('id','project','member','amount','date','recorded_by','recorded_at','amount_so_far','remaining_amount','percentage_funded')
+        depth = 1
+        extra_kwargs = {'id': {'read_only': True}}
+
     def create(self,validated_data):
 
 
         project_data = validated_data.pop('project')
         project = {}
-        project = Project.objects.get( id = project_data["id"])
+        project = Project.objects.get(**project_data)
 
         member_data = validated_data.pop('member')
         member = {}
@@ -35,7 +45,34 @@ class PledgeSerializer(serializers.ModelSerializer):
 
         recording_member_data = validated_data.pop('recorded_by')
         recorded_by = {}
-        recorded_by = Member.objects.get( member_id = member_data["member"]["id"])
+        recorded_by = Member.objects.get( member_id = recording_member_data["member"]["id"])
+
+        pledge = Pledge.objects.create(project=project,member=member,recorded_by=recorded_by,**validated_data)
+        return pledge
+
+class AddAnonymousPledgeSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
+    recorded_by = MemberSerializer()
+    class Meta:
+        model = Pledge
+        fields = ('id','project','member','amount','names','phone','date','recorded_by','recorded_at','amount_so_far','remaining_amount','percentage_funded')
+        depth = 1
+        extra_kwargs = {'id': {'read_only': True}}
+
+    def create(self,validated_data):
+
+
+        project_data = validated_data.pop('project')
+        project = {}
+        project = Project.objects.get(**project_data)
+
+        member_data = validated_data.pop('member')
+        member = {}
+        member = Member.objects.get( member_id = member_data["member"]["id"])
+
+        recording_member_data = validated_data.pop('recorded_by')
+        recorded_by = {}
+        recorded_by = Member.objects.get( member_id = recording_member_data["member"]["id"])
 
         pledge = Pledge.objects.create(project=project,member=member,recorded_by=recorded_by,**validated_data)
         return pledge
@@ -50,12 +87,22 @@ class ContributionSerializer(serializers.ModelSerializer):
         depth = 2
         extra_kwargs = {'id': {'read_only': False}}
 
+class AddContributionSerializer(serializers.ModelSerializer):
+    member = MemberSerializer()
+    recorded_by = MemberSerializer()
+    project = ProjectSerializer()
+    class Meta:
+        model = Contribution
+        fields = ('project','anonymous','member','amount','recorded_by','recorded_at')
+        depth = 2
+        extra_kwargs = {'id': {'read_only': False}}
+
     def create(self,validated_data):
 
 
         project_data = validated_data.pop('project')
         project = {}
-        project = Project.objects.get( id = project_data["id"])
+        project = Project.objects.get(**project_data)
 
         member_data = validated_data.pop('member')
         member = {}
@@ -63,11 +110,32 @@ class ContributionSerializer(serializers.ModelSerializer):
 
         recording_member_data = validated_data.pop('recorded_by')
         recorded_by = {}
-        recorded_by = Member.objects.get( member_id = member_data["member"]["id"])
+        recorded_by = Member.objects.get( member_id = recording_member_data["member"]["id"])
 
         contribution = Contribution.objects.create(project=project,member=member,recorded_by=recorded_by,**validated_data)
         return contribution
+class AddAnonymousContributionSerializer(serializers.ModelSerializer):
+    recorded_by = MemberSerializer()
+    project = ProjectSerializer()
+    class Meta:
+        model = Contribution
+        fields = ('project','anonymous','names','phone','amount','recorded_by','recorded_at')
+        depth = 2
+        extra_kwargs = {'id': {'read_only': False}}
 
+    def create(self,validated_data):
+
+
+        project_data = validated_data.pop('project')
+        project = {}
+        project = Project.objects.get(**project_data)
+
+        recording_member_data = validated_data.pop('recorded_by')
+        recorded_by = {}
+        recorded_by = Member.objects.get( member_id = recording_member_data["member"]["id"])
+
+        contribution = Contribution.objects.create(project=project,recorded_by=recorded_by,**validated_data)
+        return contribution
 
 class PledgePaymentSerializer(serializers.ModelSerializer):
     pledge = PledgeSerializer()

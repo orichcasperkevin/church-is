@@ -11,7 +11,7 @@ class Event(models.Model):
         the name and description of the event
     '''
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, help_text='SEO friendly slug')
+    slug = models.SlugField(help_text='SEO friendly slug')
     description = models.TextField(help_text='Description of the event')
     date = models.DateField(help_text='Date and Time of the event')
     added_on = models.DateTimeField(auto_now_add=True)

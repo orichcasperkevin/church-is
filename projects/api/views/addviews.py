@@ -4,8 +4,8 @@ from rest_framework.response import Response
 
 from member.models import (Member,)
 from projects.models import (Project,Pledge)
-from projects.api.serializers import (ProjectSerializer,ContributionSerializer,PledgeSerializer,
-                                        PledgePaymentSerializer,)
+from projects.api.serializers import (ProjectSerializer,ContributionSerializer,PledgeSerializer,AddContributionSerializer,
+                PledgePaymentSerializer,AddAnonymousContributionSerializer,AddAnonymousPledgeSerializer,AddPledgeSerializer)
 
 from member.api.serializers import MemberSerializer
 
@@ -41,14 +41,49 @@ class AddContribution(APIView):
             recording_member = serializer.data
 
             anonymous = request.data.get("anonymous")
+            amount = request.data.get("amount")
+
+            data = {'project':project,'member':member,'anonymous':anonymous,
+                    'amount':amount,'recorded_by':recording_member}
+
+            serializer = AddContributionSerializer(data=data)
+            if serializer.is_valid():
+                created = serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class AddAnonymousContribution(APIView):
+    '''
+        post:
+        add an anonymous contribution to a project
+    '''
+    def post(self,request):
+
+            project_id = request.data.get("project_id")
+            queryset = Project.objects.filter(id=project_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = ProjectSerializer(data)
+            project = serializer.data
+
+            recording_member_id = request.data.get("recording_member_id")
+            queryset = Member.objects.filter(member_id=recording_member_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = MemberSerializer(data)
+            recording_member = serializer.data
+
+            anonymous = request.data.get("anonymous")
             names = request.data.get("names")
             phone = request.data.get("phone")
             amount = request.data.get("amount")
 
-            data = {'project':project,'member':member,'anonymous':anonymous,'names':names,
+            data = {'project':project,'anonymous':anonymous,'names':names,
                         'phone':phone,'amount':amount,'recorded_by':recording_member}
 
-            serializer = ContributionSerializer(data=data)
+            serializer = AddAnonymousContributionSerializer(data=data)
             if serializer.is_valid():
                 created = serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -85,15 +120,50 @@ class AddPledge(APIView):
             serializer = MemberSerializer(data)
             recording_member = serializer.data
 
+            amount = request.data.get("amount")
+            date = request.data.get("date")
+
+            data = {'project':project,'member':member,'date':date,
+                    'amount':amount,'recorded_by':recording_member}
+
+            serializer = AddPledgeSerializer(data=data)
+            if serializer.is_valid():
+                created = serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddAnonymousPledge(APIView):
+    '''
+        post:
+        add a pledge by a non member to a project
+    '''
+    def post(self,request):
+            project_id = request.data.get("project_id")
+            queryset = Project.objects.filter(id=project_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = ProjectSerializer(data)
+            project = serializer.data
+
+            recording_member_id = request.data.get("recording_member_id")
+            queryset = Member.objects.filter(member_id=recording_member_id)
+            data = []
+            for data in queryset:
+                data = data
+            serializer = MemberSerializer(data)
+            recording_member = serializer.data
+
             names = request.data.get("names")
             phone = request.data.get("phone")
             amount = request.data.get("amount")
             date = request.data.get("date")
 
-            data = {'project':project,'member':member,'date':date,'names':names,
+            data = {'project':project,'date':date,'names':names,
                         'phone':phone,'amount':amount,'recorded_by':recording_member}
 
-            serializer = PledgeSerializer(data=data)
+            serializer = AddAnonymousPledgeSerializer(data=data)
             if serializer.is_valid():
                 created = serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)

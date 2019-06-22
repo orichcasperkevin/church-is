@@ -13,7 +13,7 @@ class ProjectList(generics.ListCreateAPIView):
         post:
         add a project
     '''
-    queryset = Project.objects.all()
+    queryset = Project.objects.all().order_by('-start')
     serializer_class = ProjectSerializer
 
 class ProjectWithID(APIView):
@@ -30,7 +30,7 @@ class ContributionsForAProject(APIView):
         contributions made by members for a project with id <id>
         '''
         def get(self,request,id):
-            contribution = Contribution.objects.filter(project_id = id)
+            contribution = Contribution.objects.filter(project_id = id).order_by('-recorded_at')
             data = ContributionSerializer(contribution,many=True).data
             return Response(data)
 
@@ -39,7 +39,7 @@ class ContributionsByAMember(APIView):
         contributions made by member with id <id>
         '''
         def get(self,request,id):
-            contribution = Contribution.objects.filter(member__member_id = id)
+            contribution = Contribution.objects.filter(member__member_id = id).order_by('-recorded_at')
             data = ContributionSerializer(contribution,many=True).data
             return Response(data)
 

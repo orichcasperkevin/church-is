@@ -11,6 +11,7 @@ urlpatterns = [
     path('filter-by-age/<int:min_age>/<int:max_age>/',listviews.MemberFilteredByAge.as_view()),
   #detail for a user
     path('member/<int:id>/', detailviews.GetMemberWithId.as_view()),
+    path('member/<slug:username>/', detailviews.GetMemberWithUsername.as_view()),
     path('contact-for-member/<int:id>/', detailviews.GetContactForMemberWithId.as_view()),
     path('age-for-member/<int:id>/', detailviews.GetAgeForMemberWithId.as_view()),
     path('residence-for-member/<int:id>/', detailviews.GetResidenceForMemberWithId.as_view()),

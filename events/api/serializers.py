@@ -6,7 +6,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id','name','description','slug','date','added_on','website','poster','location','past')
-        extra_kwargs = {'id': {'read_only': False}}
+        extra_kwargs = {'id': {'read_only': True}}
 
 class ExpectedToAttendEventSerializer(serializers.ModelSerializer):
     class Meta:

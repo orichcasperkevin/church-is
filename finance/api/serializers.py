@@ -57,9 +57,10 @@ class GroupOfferingSerializer(serializers.ModelSerializer):
 
 class TitheSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
+    recorded_by = MemberSerializer()
     class Meta:
         model = Tithe
-        fields = ('member','amount','date','narration','total_this_month','total_this_year')
+        fields = ('member','amount','date','narration','recorded_by','total_this_month','total_this_year')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 
@@ -69,7 +70,11 @@ class TitheSerializer(serializers.ModelSerializer):
         member = {}
         member = Member.objects.get( member_id = member_data["member"]["id"])
 
-        tithe = Tithe.objects.create(member=member,**validated_data)
+        recording_member_data = validated_data.pop('recorded_by')
+        recording_member = {}
+        recording_member = Member.objects.get( member_id = recording_member_data["member"]["id"])
+
+        tithe = Tithe.objects.create(member=member,recorded_by=recording_member,**validated_data)
         return tithe
 
 class IncomeTypeSerializer(serializers.ModelSerializer):

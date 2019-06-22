@@ -23,6 +23,18 @@ class GetMemberWithId(APIView):
 
             data = MemberSerializer(contact,many=True).data
             return Response(data)
+class GetMemberWithUsername(APIView):
+        '''
+            get:
+            get a member with username
+        '''
+        def get(self,request,username):
+            print(request.session)
+            member = Member.objects.filter(member__username = username)
+
+            data = MemberSerializer(member,many=True).data
+            return Response(data)
+
 
 class GetContactForMemberWithId(APIView):
         '''
