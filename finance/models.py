@@ -62,6 +62,7 @@ class Tithe(models.Model):
         return total
 
 class IncomeType(models.Model):
+    id = models.AutoField(primary_key=True)
     type_name = models.CharField(max_length=100,
                                  help_text='Other type of income apart from tithes,offertory or contribution')
     description = models.TextField(blank=True)

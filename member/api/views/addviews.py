@@ -195,7 +195,7 @@ class AddRoleMemberShip(APIView):
                 member = Member.objects.get(member_id=member_id)
                 user = User.objects.get(id = member.member.id)
                 member_id = []
-                starter_password = "darkaster4413"
+                starter_password = "nanocomputing-chms-initial"
                 message = ' you have been admin of the Church MS, use ' + starter_password + ' as your starting password.'
 
                 if (role.site_admin or role.member_admin or role.group_admin or role.event_admin or role.projects_admin or role.finance_admin ):
