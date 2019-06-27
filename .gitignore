@@ -2,3 +2,5 @@
 __ pycache __
 .env
 db.sqlite3
+.idea/
+*.swp
