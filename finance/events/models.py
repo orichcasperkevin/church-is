@@ -1,10 +1,12 @@
-from django.db import models
-from member.models import Member
-from groups.models import CellGroup,ChurchGroup,Ministry,Fellowship
-
 from datetime import date
 
+from django.db import models
+
+from groups.models import CellGroup, ChurchGroup, Ministry, Fellowship
+from member.models import Member
+
 today = date.today()
+
 
 class Event(models.Model):
     '''
@@ -35,18 +37,19 @@ class ExpectedToAttendEvent(models.Model):
         who is expected to attend the event
     '''
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    who_is_coming = models.ManyToManyField(Member,blank = True)
-    church_groups_coming = models.ManyToManyField(ChurchGroup,blank = True)
-    fellowships_coming = models.ManyToManyField(Fellowship,blank = True)
-    cell_groups_coming = models.ManyToManyField(CellGroup,blank = True)
-    ministries_coming = models.ManyToManyField(Ministry,blank = True)
+    who_is_coming = models.ManyToManyField(Member, blank=True)
+    church_groups_coming = models.ManyToManyField(ChurchGroup, blank=True)
+    fellowships_coming = models.ManyToManyField(Fellowship, blank=True)
+    cell_groups_coming = models.ManyToManyField(CellGroup, blank=True)
+    ministries_coming = models.ManyToManyField(Ministry, blank=True)
+
 
 class EventAttendance(models.Model):
     '''
         members that attended an event
     '''
-    event = models.ForeignKey(Event,on_delete=models.CASCADE)
-    attendees = models.ManyToManyField(Member,through='EventRoster')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    attendees = models.ManyToManyField(Member, through='EventRoster')
 
 
 class EventRoster(models.Model):
@@ -54,8 +57,7 @@ class EventRoster(models.Model):
         members that attended the event
     '''
     event = models.ForeignKey(EventAttendance, on_delete=models.CASCADE)
-    attendee = models.ForeignKey(Member,on_delete = models.CASCADE,blank = True)
-
+    attendee = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True)
 
 
 class EventPhoto(models.Model):
@@ -65,6 +67,6 @@ class EventPhoto(models.Model):
         can also be tagged as belonging or containing a certain member or members
     '''
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event,on_delete=models.CASCADE,null=True,blank=True)
-    event_attendees = models.ForeignKey(Member,on_delete= models.CASCADE,blank=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True)
+    event_attendees = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True)
     photo = models.ImageField(upload_to='fellowships/', null=True)

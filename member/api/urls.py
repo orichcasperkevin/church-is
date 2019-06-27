@@ -1,15 +1,17 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import listviews,addviews,detailviews
-#TODO add delete views
+
+from .views import listviews, addviews, detailviews
+
+# TODO add delete views
 urlpatterns = [
-   #listing
+    # listing
     path('member-list/', listviews.MemberList.as_view()),
     path('role-list/', listviews.RoleList.as_view()),
-    path('filter-by-first_name/<slug:pattern>/',listviews.MemberWhereFirstNameLikePattern.as_view()),
-    path('filter-by-gender/<slug:gender>/',listviews.MemberFilteredByGender.as_view()),
-    path('filter-by-age/<int:min_age>/<int:max_age>/',listviews.MemberFilteredByAge.as_view()),
-  #detail for a user
+    path('filter-by-first_name/<slug:pattern>/', listviews.MemberWhereFirstNameLikePattern.as_view()),
+    path('filter-by-gender/<slug:gender>/', listviews.MemberFilteredByGender.as_view()),
+    path('filter-by-age/<int:min_age>/<int:max_age>/', listviews.MemberFilteredByAge.as_view()),
+    # detail for a user
     path('member/<int:id>/', detailviews.GetMemberWithId.as_view()),
     path('member/<slug:username>/', detailviews.GetMemberWithUsername.as_view()),
     path('contact-for-member/<int:id>/', detailviews.GetContactForMemberWithId.as_view()),
@@ -19,15 +21,13 @@ urlpatterns = [
     path('family-for-member/<int:id>/', detailviews.GetFamilyForMemberWithId.as_view()),
     path('roles-for-member/<int:id>/', detailviews.GetRolesForMemberWithId.as_view()),
 
-    #adding
+    # adding
     path('add-member/', addviews.addMember.as_view()),
     path('add-member-contact/', addviews.AddMemberContact.as_view()),
     path('add-member-d_o_b/', addviews.AddMemberD_O_B.as_view()),
     path('add-member-residence/', addviews.AddMemberResidence.as_view()),
     path('add-member-marital-status/', addviews.AddMemberMaritalStatus.as_view()),
     path('add-role-for-member/', addviews.AddRoleMemberShip.as_view()),
-
-
 
 ]
 
