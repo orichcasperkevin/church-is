@@ -45,6 +45,7 @@ def _create_or_update_dotenv_live():
     append('.env', f'DATABASE_URL={config("LIVE_DATABASE_URL")}')
     append('.env', f'AFRICAS_TALKING_API_KEY = {config("AFRICAS_TALKING_API_KEY")}')
     append('.env', f'AFRICAS_TALKING_USERNAME = {config("AFRICAS_TALKING_USERNAME")}')
+    append('.env', f'AFRICAS_TALKING_SENDER_ID = {config("AFRICAS_TALKING_SENDER_ID")}')
     current_contents = run('cat .env')
     if 'SECRET_KEY' not in current_contents:
         new_secret = ''.join(random.SystemRandom().choices(
