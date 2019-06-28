@@ -29,11 +29,13 @@ class ChurchSysMessenger():
         phone_numbers = []
         for data in receipient_member_ids:
             try:
-                contact = MemberContact.objects.get(member_id = data)
+                contact = MemberContact.objects.get(member__member_id = data)
                 member_phone_number = contact.phone
                 phone_numbers.append(member_phone_number)
-            except:
-                return "error getting phone numbers"
+
+            except MemberContact.DoesNotExist:
+                pass
+                #TODO add a mechanism to generate this as a send sms error
         return phone_numbers
 
     def record_members_who_received_sms(self,sent_messages):
@@ -52,7 +54,7 @@ class ChurchSysMessenger():
             callback function called on completion of the thread on which send_message() is running
         '''
         if error is not None:
-            raise error            
+            raise error
         self.record_members_who_received_sms(response)
 
     def send_message(self,receipients,message):
