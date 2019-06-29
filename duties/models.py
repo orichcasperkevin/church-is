@@ -21,7 +21,7 @@ class DutyRoster(models.Model):
         Duty roaster assigns duties to members in given period
         of time in a given church
     '''
-    members = models.ManyToManyField(Member,blank = True)
+    members = models.ManyToManyField(Member, blank=True)
     duty = models.ForeignKey(Duty, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()

@@ -1,8 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from django.utils.text import slugify
 
-from groups.models import ChurchGroup,Fellowship,Ministry
+from groups.models import ChurchGroup, Fellowship, Ministry
 
 
 class News(models.Model):

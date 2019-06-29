@@ -1,7 +1,6 @@
 from decimal import Decimal
 
 from django.contrib.humanize.templatetags.humanize import intcomma
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.template.defaultfilters import floatformat
@@ -15,7 +14,7 @@ from member.models import Member
 
 class Project(models.Model):
     """Church undertaking project"""
-    id = models.AutoField(primary_key = True)
+    id = models.AutoField(primary_key=True)
     church_group = models.ManyToManyField(ChurchGroup, blank=True)
     name = models.CharField(max_length=100, help_text='The name of the project')
     start = models.DateField(verbose_name='Starting Date', help_text='Start date of the project')
@@ -23,6 +22,7 @@ class Project(models.Model):
     description = models.TextField(help_text='Description of the project')
     required_amount = models.DecimalField(max_digits=15, decimal_places=2,
                                           validators=[MinValueValidator(Decimal('0.00'))], default=Decimal('0.00'))
+
     @property
     def raised_amount(self):
         '''
@@ -50,22 +50,25 @@ class Project(models.Model):
         percent = floatformat(percent, 2)
         return percent
 
+
 class Contribution(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='projects')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='projects')
     anonymous = models.BooleanField(default=False)
-    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.CASCADE,related_name='members')
+    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.CASCADE, related_name='members')
     names = models.CharField(max_length=100, blank=True)
-    phone = models.CharField(max_length=15,blank=True)
+    phone = models.CharField(max_length=15, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='contribution_recorded_bys')
+    recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL,
+                                    related_name='contribution_recorded_bys')
     recorded_at = models.DateField(auto_now_add=True)
 
+
 class Pledge(models.Model):
-    id = models.AutoField(primary_key = True)
+    id = models.AutoField(primary_key=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.CASCADE)
     names = models.CharField(max_length=100, blank=True)
-    phone = models.CharField(max_length=15,blank=True)
+    phone = models.CharField(max_length=15, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     date = models.DateField(verbose_name='Pledge Payment Date')
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='pledge_recorded_by')
@@ -73,11 +76,11 @@ class Pledge(models.Model):
 
     @property
     def amount_so_far(self):
-         queryset = PledgePayment.objects.filter(pledge_id=self.id)
-         amount_so_far = 0
-         for pledge_payment in queryset:
+        queryset = PledgePayment.objects.filter(pledge_id=self.id)
+        amount_so_far = 0
+        for pledge_payment in queryset:
             amount_so_far += pledge_payment.payment_amount
-         return amount_so_far
+        return amount_so_far
 
     @property
     def remaining_amount(self):
@@ -89,8 +92,10 @@ class Pledge(models.Model):
         percent = floatformat(percent, 2)
         return str(percent) + '%'
 
+
 class PledgePayment(models.Model):
-    pledge = models.ForeignKey(Pledge,on_delete=models.CASCADE)
+    pledge = models.ForeignKey(Pledge, on_delete=models.CASCADE)
     payment_amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
-    payment_recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='payment_recorded_by')
+    payment_recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL,
+                                            related_name='payment_recorded_by')
     payment_recorded_on = models.DateTimeField(auto_now_add=True)
