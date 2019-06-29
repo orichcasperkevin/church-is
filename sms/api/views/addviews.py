@@ -23,13 +23,8 @@ class addSMS(APIView):
         website = request.data.get("website")
         receipient_member_ids = request.data.get("receipient_member_ids")
 
-<<<<<<< HEAD
-        receipients = messenger.receipients_phone_numbers(receipient_member_ids)        
-        messenger.send_message(receipients,message)
-=======
         receipients = messenger.receipients_phone_numbers(receipient_member_ids)
-        messenger.send_message(receipients, message)
->>>>>>> 9dfcfe161ebeca409d9209e37a98a5c81235dcb8
+        messenger.send_message(receipients,message)
 
         queryset = Member.objects.filter(member_id=sending_member_id)
         member = []

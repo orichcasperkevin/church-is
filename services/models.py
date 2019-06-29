@@ -4,9 +4,12 @@ from groups.models import ChurchGroup
 
 
 class Service(models.Model):
-    church_group = models.ManyToManyField(ChurchGroup, help_text='The church groups this service is intended for.')
     name = models.CharField(max_length=150, help_text='Name of the church service')
+    church_groups = models.ManyToManyField(ChurchGroup, through='ChurchGroupMembership')
 
+class ChurchGroupMembership(models.Model):
+    church_group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, related_name='church_group_memberships')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='church_group_memberships') 
 
 class ServiceItem(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)

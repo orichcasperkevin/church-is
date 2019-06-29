@@ -10,14 +10,11 @@ from groups.models import (Fellowship, CellGroup, ChurchGroup, Ministry)
 from member.api.serializers import (RoleSerializer, MemberSerializer)
 from member.models import (Member, Role)
 
-<<<<<<< HEAD
 from groups.api.serializers import (FellowshipSerializer,AddMemberToFellowshipSerializer,
                                     CellGroupSerializer,AddMemberToCellGroupSerializer,
                                     ChurchGroupSerializer,AddMemberToChurchGroupSerializer,
-                                    MinistrySerializer,AddMemberToMinistrySerializer,)                                                                    
+                                    MinistrySerializer,AddMemberToMinistrySerializer,)
 from member.api.serializers import (RoleSerializer,MemberSerializer)
-=======
->>>>>>> 9dfcfe161ebeca409d9209e37a98a5c81235dcb8
 
 class AddMemberToGroup(APIView):
     '''
@@ -112,11 +109,8 @@ class AddMemberToGroup(APIView):
             serializer = RoleSerializer(role)
             role = serializer.data
 
-<<<<<<< HEAD
             data = {'church_group':church_group,'member':member,'role':role}
-=======
-            data = {'church_group': church_group, 'member': member, 'role': role}
->>>>>>> 9dfcfe161ebeca409d9209e37a98a5c81235dcb8
+
             serializer = AddMemberToChurchGroupSerializer(data=data)
             if serializer.is_valid():
                 created = serializer.save()

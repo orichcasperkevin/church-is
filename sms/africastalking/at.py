@@ -30,11 +30,7 @@ class ChurchSysMessenger():
         phone_numbers = []
         for data in receipient_member_ids:
             try:
-<<<<<<< HEAD
                 contact = MemberContact.objects.get(member__member_id = data)
-=======
-                contact = MemberContact.objects.get(member_id=data)
->>>>>>> 9dfcfe161ebeca409d9209e37a98a5c81235dcb8
                 member_phone_number = contact.phone
                 phone_numbers.append(member_phone_number)
 

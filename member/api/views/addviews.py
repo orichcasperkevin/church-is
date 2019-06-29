@@ -6,10 +6,9 @@ from rest_framework.views import APIView
 from member.api.serializers import (UserSerializer, MemberSerializer, CreateMemberSerializer,
                                     MemberContactSerializer, MemberAgeSerializer, RoleMemberShipSerializer,
                                     MemberResidenceSerializer,
-                                    RoleSerializer, MemberMaritalStatusSerializer,
-                                    )
-from member.models import (Member, Role,
-                           )
+                                    RoleSerializer, MemberMaritalStatusSerializer,)
+
+from member.models import (Member, Role,)
 from sms.africastalking.at import ChurchSysMessenger
 
 messenger = ChurchSysMessenger("create member", "test member 2")
