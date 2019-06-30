@@ -159,6 +159,7 @@ class AddAnonymousPledge(APIView):
 
         recording_member_id = request.data.get("recording_member_id")
         queryset = Member.objects.filter(member_id=recording_member_id)
+
         data = []
         for data in queryset:
             data = data
@@ -189,12 +190,19 @@ class AddPledgePayment(APIView):
 
     def post(self, request):
 
-        pledge_id = request.data.get("pledge_id")
+        project_id = request.data.get("project_id")
+        project = Project.objects.get(id=project_id)
 
-        queryset = Pledge.objects.filter(id=pledge_id)
+        member_id = request.data.get("member_id")
+        member = Member.objects.get(member_id=member_id)
+
+        queryset = Pledge.objects.filter(project_id = project.id,
+                                       member__member__id = member.member.id)
         data = []
         for data in queryset:
-            data = data
+            if (data.remaining_amount > 0):
+                data = data
+                break
         serializer = PledgeSerializer(data)
         pledge = serializer.data
 

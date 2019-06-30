@@ -16,12 +16,12 @@ urlpatterns = [
     path('pledges-by-member/<int:id>/', listviews.PledgesByAmember.as_view()),
 
     path('pledge-payment-for-project/<int:id>/', listviews.PledgesForAProject.as_view()),
-    path('pledge-payment-for-project/<int:project_id>/by-member/<int:id>/',
-         listviews.PledgePaymentForAMember.as_view()),
+    path('pledge-payment-for-project/<int:project_id>/by-member/<int:id>/',listviews.PledgePaymentForAMember.as_view()),
 
     path('add-contribution-to-project/', addviews.AddContribution.as_view()),
     path('add-non-member-contribution-to-project/', addviews.AddAnonymousContribution.as_view()),
     path('add-pledge-to-project/', addviews.AddPledge.as_view()),
+    path('add-anonymous-pledge-to-project/', addviews.AddAnonymousPledge.as_view()),
     path('service-pledge/', addviews.AddPledgePayment.as_view()),
 
 ]

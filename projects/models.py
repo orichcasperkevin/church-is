@@ -41,11 +41,54 @@ class Project(models.Model):
         return raised_amount
 
     @property
+    def total_in_pledges(self):
+        '''
+            the total amount that has been pledged so far.
+        '''
+        project_id = self.id
+        queryset = Pledge.objects.filter(project_id=project_id)
+        total_in_pledge = 0
+        for pledge in queryset:
+            total_in_pledge += pledge.amount
+        return total_in_pledge
+
+    @property
+    def total_in_settled_pledges(self):
+        '''
+            the total amount that has been settled in pledges
+        '''
+        project_id = self.id
+        queryset = PledgePayment.objects.filter(pledge__project__id=project_id)
+        total_in_settled_pledges = 0
+        for payment in queryset:
+            total_in_settled_pledges += payment.payment_amount
+        return total_in_settled_pledges
+
+    @property
+    def percentage_of_pledge_settled(self):
+        '''
+            the percentage of pledges that has been funded so far.
+        '''
+        if (self.total_in_pledges == 0):
+            percent = 0
+        else:
+            percent = (self.total_in_settled_pledges / self.total_in_pledges) * 100
+
+        percent = floatformat(percent, 2)
+        return percent
+
+    @property
     def remaining_amount(self):
+        '''
+            the amount remaining before the project if fully funded
+        '''
         return intcomma(self.required_amount - self.raised_amount)
 
     @property
     def percentage_funded(self):
+        '''
+            the percentage that has been funded so far.
+        '''
         percent = (self.raised_amount / self.required_amount) * 100
         percent = floatformat(percent, 2)
         return percent
@@ -61,6 +104,10 @@ class Contribution(models.Model):
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL,
                                     related_name='contribution_recorded_bys')
     recorded_at = models.DateField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-recorded_at',)
+
 
 
 class Pledge(models.Model):
@@ -84,7 +131,7 @@ class Pledge(models.Model):
 
     @property
     def remaining_amount(self):
-        return intcomma(self.amount - self.amount_so_far)
+        return self.amount - self.amount_so_far
 
     @property
     def percentage_funded(self):
