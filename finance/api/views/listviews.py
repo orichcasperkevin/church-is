@@ -5,10 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from finance.api.serializers import (OfferingSerializer, TitheSerializer, IncomeTypeSerializer, IncomeSerializer,
-                                     ExpenditureTypeSerializer, )
+                                     ExpenditureTypeSerializer, ExpenditureSerializer )
 # TODO import each componet singly
 from finance.models import (Offering, Tithe, Income, IncomeType,
-                            ExpenditureType, )
+                            ExpenditureType, Expenditure)
 
 today = date.today()
 day = today.day
@@ -72,6 +72,16 @@ class ExpenditureTypeList(generics.ListCreateAPIView):
     '''
     queryset = ExpenditureType.objects.all()
     serializer_class = ExpenditureTypeSerializer
+
+class ExpenditureOfType(APIView):
+    '''
+        expenditure of type with id <id>
+    '''
+
+    def get(self, request, id):
+        expenditure = Expenditure.objects.filter(type_id=id)
+        data = ExpenditureSerializer(expenditure, many=True).data
+        return Response(data)
 
 
 class TitheForMember(APIView):

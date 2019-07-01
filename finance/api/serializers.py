@@ -114,7 +114,7 @@ class IncomeSerializer(serializers.ModelSerializer):
 class ExpenditureTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExpenditureType
-        fields = ('type_name', 'description', 'total_this_month', 'total_this_year')
+        fields = ('id','type_name', 'description', 'total_this_month', 'total_this_year')
         extra_kwargs = {'id': {'read_only': True}}
 
 

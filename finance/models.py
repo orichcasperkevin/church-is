@@ -108,6 +108,7 @@ class Income(models.Model):
 
 
 class ExpenditureType(models.Model):
+    id = models.AutoField(primary_key=True)
     type_name = models.CharField(max_length=100,
                                  help_text='Type of church expenditure')
     description = models.TextField(blank=True)

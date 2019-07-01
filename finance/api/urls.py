@@ -22,6 +22,7 @@ urlpatterns = [
 
     path('income-type/<int:id>/', listviews.IncomeTypeOfID.as_view()),
     path('income-of-type/<int:id>/', listviews.IncomeOfType.as_view()),
+    path('expenditure-of-type/<int:id>/', listviews.ExpenditureOfType.as_view()),
 
     path('add-tithe-for-member/', addviews.addTithe.as_view()),
     path('add-offering/', addviews.addOffering.as_view()),
