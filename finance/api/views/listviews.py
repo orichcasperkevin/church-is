@@ -45,7 +45,15 @@ class IncomeStats(APIView):
         stat_dict["total_this_year"] = total_this_year
 
         return Response(stat_dict)
+class IncomeTypeOfID(APIView):
+    '''
+        income type with id <id>
+    '''
 
+    def get(self, request, id):
+        income_type = IncomeType.objects.filter(id=id)
+        data = IncomeTypeSerializer(income_type, many=True).data
+        return Response(data)
 
 class IncomeOfType(APIView):
     '''
@@ -53,8 +61,8 @@ class IncomeOfType(APIView):
     '''
 
     def get(self, request, id):
-        tithe = Income.objects.filter(type_id=id)
-        data = IncomeSerializer(tithe, many=True).data
+        income = Income.objects.filter(type_id=id)
+        data = IncomeSerializer(income, many=True).data
         return Response(data)
 
 
