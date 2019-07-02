@@ -21,6 +21,7 @@ class ProjectList(generics.ListCreateAPIView):
 
 class ProjectWithID(APIView):
     '''
+        get:
         get project with id <id>
     '''
 
@@ -32,7 +33,8 @@ class ProjectWithID(APIView):
 
 class ContributionsForAProject(APIView):
     '''
-    contributions made by members for a project with id <id>
+        get:
+        contributions made by members for a project with id <id>
     '''
 
     def get(self, request, id):
@@ -43,7 +45,8 @@ class ContributionsForAProject(APIView):
 
 class ContributionsByAMember(APIView):
     '''
-    contributions made by member with id <id>
+        get:
+        contributions made by member with id <id>
     '''
 
     def get(self, request, id):
@@ -54,7 +57,8 @@ class ContributionsByAMember(APIView):
 
 class PledgesForAProject(APIView):
     '''
-    pledges made by members for a project with id <id>
+        get:
+        pledges made by members for a project with id <id>
     '''
 
     def get(self, request, id):
@@ -65,7 +69,8 @@ class PledgesForAProject(APIView):
 
 class PledgesByAmember(APIView):
     '''
-    pledges made by member with id <id>
+        get:
+        pledges made by member with id <id>
     '''
 
     def get(self, request, id):
@@ -76,7 +81,8 @@ class PledgesByAmember(APIView):
 
 class PledgePaymentForAProject(APIView):
     '''
-    pledges payment made by members for a project with id <id>
+        get:
+        pledges payment made by members for a project with id <id>
     '''
 
     def get(self, request, id):
@@ -87,7 +93,8 @@ class PledgePaymentForAProject(APIView):
 
 class PledgePaymentForAMember(APIView):
     '''
-    pledges payments made by member with id <id> for project with id <project_id>
+        get:
+        pledges payments made by member with id <id> for project with id <project_id>
     '''
 
     def get(self, request, id, project_id):

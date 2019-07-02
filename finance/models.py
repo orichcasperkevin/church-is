@@ -38,11 +38,17 @@ class Offering(models.Model):
 
 
 class GroupOffering(models.Model):
+    '''
+        offering made by a group
+    '''
     offering = models.ForeignKey(Offering, on_delete=models.CASCADE)
     church_group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
 
 
 class Tithe(models.Model):
+    '''
+        tithe collected for a member
+    '''
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(auto_now_add=True)
@@ -116,14 +122,14 @@ class ExpenditureType(models.Model):
     @property
     def total_this_month(self):
         total = 0
-        for data in Expenditure.objects.filter(type_id=self.id, date__month=month, date__year=year):
+        for data in Expenditure.objects.filter(type_id=self.id,date__month=month, date__year=year):
             total = total + data.amount
         return total
 
     @property
     def total_this_year(self):
         total = 0
-        for data in Expenditure.objects.filter(type_id=self.id, date__year=year):
+        for data in Expenditure.objects.filter(type_id=self.id,date__year=year):
             total = total + data.amount
         return total
 
@@ -135,17 +141,3 @@ class Expenditure(models.Model):
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL,
                                     related_name='expenditure_recorded_by')
-
-    @property
-    def total_overall_expenditure_this_month(self):
-        total = 0
-        for data in Expenditure.objects.filter(date__month=month, date__year=year):
-            total = total + data.amount
-        return total
-
-    @property
-    def total_overall_expenditure_this_year(self):
-        total = 0
-        for data in Expenditure.objects.filter(date__year=year):
-            total = total + data.amount
-        return total

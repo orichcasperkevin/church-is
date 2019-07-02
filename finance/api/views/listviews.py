@@ -45,6 +45,7 @@ class IncomeStats(APIView):
         stat_dict["total_this_year"] = total_this_year
 
         return Response(stat_dict)
+
 class IncomeTypeOfID(APIView):
     '''
         income type with id <id>
@@ -68,13 +69,25 @@ class IncomeOfType(APIView):
 
 class ExpenditureTypeList(generics.ListCreateAPIView):
     '''
+        get:
         a list of all expenditure types
     '''
     queryset = ExpenditureType.objects.all()
     serializer_class = ExpenditureTypeSerializer
 
+class ExpenditureTypeOfID(APIView):
+    '''
+        expenditure type with id <id>
+    '''
+
+    def get(self, request, id):
+        income_type = ExpenditureType.objects.filter(id=id)
+        data = ExpenditureTypeSerializer(income_type, many=True).data
+        return Response(data)
+
 class ExpenditureOfType(APIView):
     '''
+        get:
         expenditure of type with id <id>
     '''
 
@@ -83,6 +96,27 @@ class ExpenditureOfType(APIView):
         data = ExpenditureSerializer(expenditure, many=True).data
         return Response(data)
 
+class ExpenditureStats(APIView):
+    '''
+        statistics for expenditures
+    '''
+
+    def get(self, response):
+        total_this_month = 0.00
+        total_this_year = 0.00
+
+        stat_dict = {"total_this_month": None, "total_this_year": None}
+
+        for data in Expenditure.objects.filter(date__month=month):
+            total_this_month = total_this_month + float(data.amount)
+
+        for data in Expenditure.objects.filter(date__year=year):
+            total_this_year = total_this_year + float(data.amount)
+
+        stat_dict["total_this_month"] = total_this_month
+        stat_dict["total_this_year"] = total_this_year
+
+        return Response(stat_dict)
 
 class TitheForMember(APIView):
     '''

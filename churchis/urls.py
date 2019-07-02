@@ -23,7 +23,7 @@ urlpatterns = [
     # jwt authentication
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    # end
+    # apps
     path('api/members/', include('member.api.urls')),
     path('api/groups/', include('groups.api.urls')),
     path('api/events/', include('events.api.urls')),

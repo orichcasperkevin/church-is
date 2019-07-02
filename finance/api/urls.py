@@ -7,8 +7,9 @@ from .views import listviews, addviews
 urlpatterns = [
     # listing
     path('income-type-list/', listviews.IncomeTypeList.as_view()),
+    path('income-type/<int:id>/', listviews.IncomeTypeOfID.as_view()),
+    path('income-of-type/<int:id>/', listviews.IncomeOfType.as_view()),
     path('income-stats/', listviews.IncomeStats.as_view()),
-    path('expenditure-type-list/', listviews.ExpenditureTypeList.as_view()),
 
     path('tithe-for-member/<int:id>/', listviews.TitheForMember.as_view()),
     path('tithe-stats-for-member/<int:id>/', listviews.TitheStatsForMember.as_view()),
@@ -20,9 +21,10 @@ urlpatterns = [
     path('offering-stats/', listviews.OfferingStats.as_view()),
     path('offerings-by-member/<int:id>/', listviews.OfferingByMember.as_view()),
 
-    path('income-type/<int:id>/', listviews.IncomeTypeOfID.as_view()),
-    path('income-of-type/<int:id>/', listviews.IncomeOfType.as_view()),
-    path('expenditure-of-type/<int:id>/', listviews.ExpenditureOfType.as_view()),
+    path('expenditure-type-list/', listviews.ExpenditureTypeList.as_view()),
+    path('expenditure-type/<int:id>/', listviews.ExpenditureTypeOfID.as_view()),
+    path('expenditures-of-type/<int:id>/', listviews.ExpenditureOfType.as_view()),
+    path('expenditure-stats/', listviews.ExpenditureStats.as_view()),
 
     path('add-tithe-for-member/', addviews.addTithe.as_view()),
     path('add-offering/', addviews.addOffering.as_view()),

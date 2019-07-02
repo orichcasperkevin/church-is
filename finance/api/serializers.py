@@ -124,8 +124,7 @@ class ExpenditureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expenditure
-        fields = ('type', 'amount', 'date', 'narration', 'recorded_by', 'total_overall_expenditure_this_month',
-                  'total_overall_expenditure_this_year')
+        fields = ('type', 'amount', 'date', 'narration', 'recorded_by')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 

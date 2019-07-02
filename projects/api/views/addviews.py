@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from member.api.serializers import MemberSerializer
-from member.models import (Member, )
+from member.models import (Member)
 from projects.api.serializers import (ProjectSerializer, PledgeSerializer,
                                       AddContributionSerializer,
                                       PledgePaymentSerializer, AddAnonymousContributionSerializer,
