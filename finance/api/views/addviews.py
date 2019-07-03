@@ -2,14 +2,19 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from finance.api.serializers import (OfferingSerializer, GroupOfferingSerializer, addAnonymousOfferingSerializer,
-                                     TitheSerializer, IncomeTypeSerializer, IncomeSerializer,
-                                     ExpenditureSerializer, ExpenditureTypeSerializer, )
-from finance.models import (Offering, GroupOffering, IncomeType,
-                            ExpenditureType, )
-from groups.models import ChurchGroup
+#import serializers
+from finance.api.serializers import (OfferingSerializer, GroupOfferingSerializer,
+    addAnonymousOfferingSerializer,TitheSerializer, IncomeTypeSerializer, IncomeSerializer,
+    ExpenditureSerializer, ExpenditureTypeSerializer, AddServiceOfferingSerializer)
+
 from member.api.serializers import MemberSerializer
+from services.api.serializers import ServiceSerializer
+
+# import models
+from finance.models import (Offering, GroupOffering, IncomeType,ExpenditureType, )
+from groups.models import ChurchGroup
 from member.models import Member
+from services.models import Service,ServiceType
 
 
 class addTithe(APIView):
@@ -96,36 +101,45 @@ class addOffering(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# TODO fix the serializer
-class addGroupOffering(APIView):
+class AddServiceOffering(APIView):
     '''
-        add offering by a church group
+        add offering from a service
     '''
 
     def post(self, request):
         recording_member_id = request.data.get("recording_member_id")
+
         recording_member = Member.objects.filter(member_id=recording_member_id)
-
-        date = request.data.get("date")
-        amount = request.data.get("amount")
-        narration = request.data.get("narration")
-
-        offering = Offering.objects.create(amount=amount, date=date, narration=narration)
-
-        church_group_id = request.data.get("church_group_id")
-        church_group = ChurchGroup.objects.get(id=church_group_id)
-
-        GroupOffering.objects.create(offering=offering, church_group=church_group)
-        obj = GroupOffering.objects.latest('id')
-        queryset = {'qs': [obj]}
+        queryset = Member.objects.filter(member_id=recording_member_id)
         data = []
         for data in queryset:
             data = data
-        serializer = GroupOfferingSerializer(data)
-        group_offering = serializer.data
+        serializer = MemberSerializer(data)
+        recording_member = serializer.data
 
-        return Response(group_offering, status=status.HTTP_201_CREATED)
+        service_type_id = request.data.get("service_type_id")
+        date = request.data.get("date")
 
+        queryset = Service.objects.filter(type_id=service_type_id, date=date)
+        data = []
+        for data in queryset:
+            data = data
+            break
+        serializer = ServiceSerializer(data)
+        service = serializer.data
+        print(service)
+
+        amount = request.data.get("amount")
+        narration = request.data.get("narration")
+
+        data = {'service':service, 'date':date, 'amount': amount, 'narration': narration, 'recorded_by': recording_member}
+        serializer = AddServiceOfferingSerializer(data=data)
+
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class addIncome(APIView):
     '''

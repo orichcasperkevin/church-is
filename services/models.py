@@ -12,6 +12,7 @@ class ChurchGroupMembership(models.Model):
     service = models.ForeignKey(ServiceType, on_delete=models.CASCADE, related_name='church_group_memberships')
 
 class Service(models.Model):
+    id = models.AutoField(primary_key=True)
     type = models.ForeignKey(ServiceType, on_delete=models.CASCADE, null=True)
     venue = models.CharField(max_length=100, help_text='The day of the service', default="none", null = True)
     date = models.DateField(help_text='The day of the service', default="2019-05-01", null = True)

@@ -5,10 +5,8 @@ from services.models import (ServiceType, Service, ServiceItem, )
 
 
 class ServiceTypeSerializer(serializers.ModelSerializer):
-    church_groups = ChurchGroupSerializer()
-
     class Meta:
-        model = Service
+        model = ServiceType
         fields = ('church_groups', 'name')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
@@ -18,9 +16,9 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ('type','date', 'venue', 'start', 'end')
+        fields = ('id','type','date', 'venue', 'start', 'end')
         depth = 2
-        extra_kwargs = {'id': {'read_only': True}}
+        extra_kwargs = {'id': {'read_only': False}}
 
 class ServiceItemSerializer(serializers.ModelSerializer):
     service = ServiceSerializer()

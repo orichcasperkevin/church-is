@@ -4,6 +4,7 @@ from datetime import date
 from django.db import models
 
 from groups.models import ChurchGroup
+from services.models import Service
 from member.models import Member
 
 today = date.today()
@@ -19,6 +20,8 @@ class Offering(models.Model):
     name_if_not_member = models.CharField(max_length=50, blank=True, null=True)
     church_group = models.ManyToManyField(ChurchGroup, blank=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True)
+    # the service this offering was collected from
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='offering_recorded_by')
 

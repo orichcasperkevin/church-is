@@ -1,9 +1,14 @@
 from rest_framework import serializers
 
+# import models
 from finance.models import (Offering, GroupOffering, Tithe, Income, IncomeType, Expenditure, ExpenditureType, )
+from member.models import Member
+from services.models import Service
+
+#import serializers
+from services.api.serializers import ServiceSerializer
 from groups.api.serializers import ChurchGroupSerializer
 from member.api.serializers import MemberSerializer
-from member.models import Member
 
 
 class OfferingSerializer(serializers.ModelSerializer):
@@ -13,7 +18,7 @@ class OfferingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offering
         fields = ('amount', 'date', 'anonymous', 'name_if_not_member', 'church_group', 'member',
-                  'narration', 'recorded_by', 'total_this_month', 'total_this_year')
+                  'narration','recorded_by', 'total_this_month', 'total_this_year')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 
@@ -47,6 +52,30 @@ class addAnonymousOfferingSerializer(serializers.ModelSerializer):
         offering = Offering.objects.create(recorded_by=recording_member, **validated_data)
         return offering
 
+class AddServiceOfferingSerializer(serializers.ModelSerializer):
+    '''
+        add offering from a service that.
+    '''
+    recorded_by = MemberSerializer()
+    service = ServiceSerializer()
+
+    class Meta:
+        model = Offering
+        fields = ('amount', 'date','service','narration', 'recorded_by', 'total_this_month', 'total_this_year')
+        depth = 2
+
+    def create(self, validated_data):
+
+        service_data = validated_data.pop('service')
+        service = {}
+        service = Service.objects.get(id=service_data["id"])
+
+        recording_member_data = validated_data.pop('recorded_by')
+        recording_member = {}
+        recording_member = Member.objects.get(member_id=recording_member_data["member"]["id"])
+
+        offering = Offering.objects.create(service=service, recorded_by=recording_member, **validated_data)
+        return offering
 
 class GroupOfferingSerializer(serializers.ModelSerializer):
     church_group = ChurchGroupSerializer()

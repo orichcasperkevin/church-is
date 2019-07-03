@@ -28,7 +28,7 @@ urlpatterns = [
 
     path('add-tithe-for-member/', addviews.addTithe.as_view()),
     path('add-offering/', addviews.addOffering.as_view()),
-    path('add-group-offering/', addviews.addGroupOffering.as_view()),
+    path('add-service-offering/', addviews.AddServiceOffering.as_view()),
     path('add-income/', addviews.addIncome.as_view()),
     path('add-expenditure/', addviews.addExpenditure.as_view())
 
