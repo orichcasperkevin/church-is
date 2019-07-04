@@ -20,7 +20,6 @@ class GetMemberWithId(APIView):
     '''
 
     def get(self, request, id):
-        print(request.session)
         contact = Member.objects.filter(member__id=id)
 
         data = MemberSerializer(contact, many=True).data
@@ -34,7 +33,6 @@ class GetMemberWithUsername(APIView):
     '''
 
     def get(self, request, username):
-        print(request.session)
         member = Member.objects.filter(member__username=username)
 
         data = MemberSerializer(member, many=True).data

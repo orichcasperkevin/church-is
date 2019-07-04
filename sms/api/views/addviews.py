@@ -27,6 +27,7 @@ class addSMS(APIView):
         messenger.send_message(receipients,message)
 
         queryset = Member.objects.filter(member_id=sending_member_id)
+
         member = []
         for member in queryset:
             member = member

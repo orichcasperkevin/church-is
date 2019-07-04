@@ -7,7 +7,7 @@ from services.models import (ServiceType, Service, ServiceItem, )
 class ServiceTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceType
-        fields = ('church_groups', 'name')
+        fields = ('id','name','description','church_groups')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 

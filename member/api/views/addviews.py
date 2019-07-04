@@ -34,6 +34,7 @@ class addMember(APIView):
             email=email
         )
         user.save()
+        user.set_unusable_password()
         user_id = user.id
 
         queryset = User.objects.filter(id=user_id)
@@ -206,18 +207,24 @@ class AddRoleMemberShip(APIView):
             member = Member.objects.get(member_id=member_id)
             user = User.objects.get(id=member.member.id)
             member_id = []
-            starter_password = "nanocomputing-chms-initial"
-            message = ' you have been admin of the Church MS, use ' + starter_password + ' as your starting password.'
+            starter_password = "nano-initial"
+            message = 'You have been made admin of the Church MS, use ' + starter_password + ' as your starting password and '+  user.username + ' as your username'
 
-            if (
-                    role.site_admin or role.member_admin or role.group_admin or role.event_admin or role.projects_admin or role.finance_admin):
-                if (not user.has_usable_password()):
+            if (role.site_admin
+                or role.member_admin
+                or role.group_admin
+                or role.event_admin
+                or role.projects_admin
+                or role.finance_admin):
+                if (not user.check_password(user.password)):
                     member_id.append(member.id)
                     receipient = messenger.receipients_phone_numbers(member_id)
                     user.set_password(starter_password)
                     messenger.send_message(receipient, message)
                     user.save()
 
+                else:
+                    pass
             else:
                 pass
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -127,7 +127,6 @@ class AddServiceOffering(APIView):
             break
         serializer = ServiceSerializer(data)
         service = serializer.data
-        print(service)
 
         amount = request.data.get("amount")
         narration = request.data.get("narration")

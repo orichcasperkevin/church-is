@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import listviews, addviews, detailviews
@@ -11,9 +11,10 @@ urlpatterns = [
     path('filter-by-first_name/<slug:pattern>/', listviews.MemberWhereFirstNameLikePattern.as_view()),
     path('filter-by-gender/<slug:gender>/', listviews.MemberFilteredByGender.as_view()),
     path('filter-by-age/<int:min_age>/<int:max_age>/', listviews.MemberFilteredByAge.as_view()),
+
     # detail for a user
     path('member/<int:id>/', detailviews.GetMemberWithId.as_view()),
-    path('member/<slug:username>/', detailviews.GetMemberWithUsername.as_view()),
+    re_path(r'^member/(?P<username>.*)/$', detailviews.GetMemberWithUsername.as_view()),
     path('contact-for-member/<int:id>/', detailviews.GetContactForMemberWithId.as_view()),
     path('age-for-member/<int:id>/', detailviews.GetAgeForMemberWithId.as_view()),
     path('residence-for-member/<int:id>/', detailviews.GetResidenceForMemberWithId.as_view()),

@@ -4,7 +4,9 @@ from groups.models import ChurchGroup
 
 
 class ServiceType(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150, help_text='Name of the church service')
+    description = models.CharField(max_length=150)
     church_groups = models.ManyToManyField(ChurchGroup, through='ChurchGroupMembership')
 
 class ChurchGroupMembership(models.Model):
