@@ -73,12 +73,17 @@ class AddMemberContact(APIView):
         postal = request.data.get("postal_address")
         phone = request.data.get("phone")
         contact = request.data.get("contact")
+        email = request.data.get("email")
 
         data = {'member': member, 'postal': postal, 'phone': phone, 'contact': contact}
 
         serializer = MemberContactSerializer(data=data)
         if serializer.is_valid():
             created = serializer.save()
+
+            member = Member.objects.get(member_id=member_id)
+            user = User.objects.get(id=member.member.id)
+            user.email = email
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

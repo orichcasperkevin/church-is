@@ -2,8 +2,9 @@ from datetime import date
 
 from rest_framework import generics
 
-from services.api.serializers import (ServiceTypeSerializer ,ServiceItemSerializer, ServiceSerializer)
-# TODO import each componet singly
+from services.api.serializers import (ServiceTypeSerializer ,ServiceItemSerializer,
+    ServiceSerializer,ServiceTypeListSerializer)
+    
 from services.models import (ServiceType, ServiceItem, Service )
 
 today = date.today()
@@ -16,7 +17,7 @@ class ServiceTypes(generics.ListCreateAPIView):
         a list of service types
     '''
     queryset = ServiceType.objects.all()
-    serializer_class = ServiceTypeSerializer
+    serializer_class = ServiceTypeListSerializer
 
 class ServicesToday(generics.ListCreateAPIView):
     '''

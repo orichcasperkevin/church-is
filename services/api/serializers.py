@@ -3,6 +3,11 @@ from rest_framework import serializers
 from groups.api.serializers import ChurchGroupSerializer
 from services.models import (ServiceType, Service, ServiceItem, )
 
+class ServiceTypeListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceType
+        fields = ('id','name','description','church_groups')
+        extra_kwargs = {'id': {'read_only': True}}
 
 class ServiceTypeSerializer(serializers.ModelSerializer):
     class Meta:
