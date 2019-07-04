@@ -18,6 +18,19 @@ class OfferingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offering
         fields = ('amount', 'date', 'anonymous', 'name_if_not_member', 'church_group', 'member',
+                  'service','narration','recorded_by', 'total_this_month', 'total_this_year')
+        depth = 2
+        extra_kwargs = {'id': {'read_only': True}}
+
+
+
+class AddMemberOfferingSerializer(serializers.ModelSerializer):
+    member = MemberSerializer()
+    recorded_by = MemberSerializer()
+
+    class Meta:
+        model = Offering
+        fields = ('amount', 'date', 'anonymous', 'name_if_not_member', 'church_group', 'member',
                   'narration','recorded_by', 'total_this_month', 'total_this_year')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
@@ -33,6 +46,7 @@ class OfferingSerializer(serializers.ModelSerializer):
 
         offering = Offering.objects.create(member=member, recorded_by=recording_member, **validated_data)
         return offering
+
 
 
 class addAnonymousOfferingSerializer(serializers.ModelSerializer):

@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 #import serializers
 from finance.api.serializers import (OfferingSerializer, GroupOfferingSerializer,
     addAnonymousOfferingSerializer,TitheSerializer, IncomeTypeSerializer, IncomeSerializer,
-    ExpenditureSerializer, ExpenditureTypeSerializer, AddServiceOfferingSerializer)
+    ExpenditureSerializer, ExpenditureTypeSerializer, AddServiceOfferingSerializer,
+    AddMemberOfferingSerializer,)
 
 from member.api.serializers import MemberSerializer
 from services.api.serializers import ServiceSerializer
@@ -90,7 +91,7 @@ class addOffering(APIView):
                 'name_if_not_member': name_if_not_member,
                 'recorded_by': recording_member}
         if (serializer_to_use == 0):
-            serializer = OfferingSerializer(data=data)
+            serializer = AddMemberOfferingSerializer(data=data)
         if (serializer_to_use == 1):
             serializer = addAnonymousOfferingSerializer(data=data)
 
