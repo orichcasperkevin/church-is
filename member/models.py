@@ -5,6 +5,7 @@ from django.db import models
 # Create your models here.
 class Member(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE)
+    middle_name = models.CharField(max_length=50, blank=True,  default=" ")
     GENDER = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -99,3 +100,9 @@ class FamilyMembership(models.Model):
     '''
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
+
+class CSV(models.Model):
+    '''
+        csv for importing member data
+    '''
+    csv = models.FileField(upload_to='Resources/',null=True)

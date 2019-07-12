@@ -13,7 +13,7 @@ class addSermon(APIView):
     '''
 
     def post(self, request):
-        serializer = 1
+        serializer_choice = 1
         preaching_member_id = request.data.get("preaching_member_id")
         if (preaching_member_id != None):
             queryset = Member.objects.filter(member_id=preaching_member_id)
@@ -22,9 +22,9 @@ class addSermon(APIView):
                 data = data
             serializer = MemberSerializer(data)
             member = serializer.data
-        else:
+        if (preaching_member_id == None):
             member = None
-            serializer = 2
+            serializer_choice = 2
 
         title = request.data.get("title")
         slug = request.data.get("slug")
@@ -36,9 +36,11 @@ class addSermon(APIView):
 
         data = {'title': title, 'slug': slug, 'type': type, 'youtube_video_url': youtube_video_url,
                 'date': date, 'preached_by_member': member, 'preached_by': preached_by, 'website': website}
-        if (serializer == 1):
+        if (serializer_choice == 1):
+            print("here now")
             serializer = SermonSerializer(data=data)
         else:
+            print("here 2")
             serializer = AddSermonSerializer(data=data)
 
         if serializer.is_valid():

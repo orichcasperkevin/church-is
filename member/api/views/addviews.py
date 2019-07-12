@@ -1,7 +1,10 @@
+import random
+
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 
 from member.api.serializers import (UserSerializer, MemberSerializer, CreateMemberSerializer,
                                     MemberContactSerializer, MemberAgeSerializer, RoleMemberShipSerializer,
@@ -27,15 +30,19 @@ class addMember(APIView):
         email = request.data.get("email")
         gender = request.data.get("gender")
 
-        user = User(
-            first_name=first_name,
-            username=username,
-            last_name=last_name,
-            email=email
-        )
-        user.save()
-        user.set_unusable_password()
-        user_id = user.id
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user = User(first_name=first_name, username=username, last_name=last_name, email=email)
+            user.save()
+            user.set_unusable_password()
+            user_id = user.id
+        else:
+            username = username + str(random.choice(range(100)))
+            user = User(first_name=first_name, username=username, last_name=last_name, email=email)
+            user.save()
+            user.set_unusable_password()
+            user_id = user.id
 
         queryset = User.objects.filter(id=user_id)
         member = []
