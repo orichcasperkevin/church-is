@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'services',
     'events',
     'sms',
+    'Resources',
 
 ]
 

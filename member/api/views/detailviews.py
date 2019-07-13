@@ -12,6 +12,9 @@ from member.models import (Member, MemberContact, MemberAge,
                            MemberResidence, RoleMembership,
                            MemberMaritalStatus, FamilyMembership, )
 
+import os
+from Resources.importCSV import CSVLoader
+loader = CSVLoader()
 
 class GetMemberWithId(APIView):
     '''
@@ -21,8 +24,10 @@ class GetMemberWithId(APIView):
 
     def get(self, request, id):
         contact = Member.objects.filter(member__id=id)
-
         data = MemberSerializer(contact, many=True).data
+        if (not loader.check_CSV('test.csv')):
+            print("found errors")
+            print(loader.errors)
         return Response(data)
 
 
