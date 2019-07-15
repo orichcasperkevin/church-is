@@ -15,6 +15,9 @@ from member.api.serializers import (UserSerializer, MemberSerializer, CreateMemb
 from member.models import (Member, Role,)
 from sms.africastalking.at import ChurchSysMessenger
 
+from member.resources.importCSV import CSVLoader
+loader = CSVLoader()
+
 messenger = ChurchSysMessenger("create member", "test member 2")
 
 
@@ -62,6 +65,9 @@ class addMember(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UploadCSV(APIView):
+    '''
+        upload a csv file, check if the file is of valid type and format
+    '''
     parser_class = (FileUploadParser,)
 
     def post(self, request, *args, **kwargs):
@@ -69,9 +75,29 @@ class UploadCSV(APIView):
 
       if file_serializer.is_valid():
           file_serializer.save()
+          file_path_split = file_serializer.data["csv"].split("/")
+          file_name = file_path_split[1]
+
+          if (not loader.check_CSV(file_name)):
+              return Response(loader.errors)
+
           return Response(file_serializer.data, status=status.HTTP_201_CREATED)
       else:
           return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class ImportDataFromCsv(APIView):
+    '''
+        post:
+        import data from a csv file given the name
+    '''
+
+    def post(self, request):
+
+            try:                
+                loader.load(request.data.get("file_name"))
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_201_CREATED)
 
 class AddMemberContact(APIView):
     '''

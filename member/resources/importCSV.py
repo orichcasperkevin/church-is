@@ -13,7 +13,7 @@ class CSVLoader():
 
     def check_names(self,file_name):
         '''
-            check
+            check that the names are valid
         '''
         initial_dir = os.getcwd()
         os.chdir("Resources")
@@ -27,7 +27,7 @@ class CSVLoader():
                     line_count += 1
                 else:
                     names =  row[0].split(" ")
-                    if (len(names) == 1):                        
+                    if (len(names) == 1):
                         CSVLoader.errors.append("only one name given  at line " + str(line_count))
                     line_count += 1
             if (len(CSVLoader.errors) > 0):
@@ -236,10 +236,9 @@ class CSVLoader():
         for data in d_o_b.split(" "):
             if (len(data)==10):
                 d_o_b = data
-                break
-        member = Member.objects.get(id=member_id)
-        d_o_b = MemberAge.objects.create(member=member, d_o_b=d_o_b)
-        return d_o_b
+                member = Member.objects.get(id=member_id)
+                d_o_b = MemberAge.objects.create(member=member, d_o_b=d_o_b)
+                break    
 
     def create_contact(self,member_id,phone_number):
         '''

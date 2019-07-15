@@ -25,6 +25,7 @@ urlpatterns = [
     # adding
     path('add-member/', addviews.addMember.as_view()),
     path('upload-csv/', addviews.UploadCSV.as_view()),
+    path('import-data-from-csv/', addviews.ImportDataFromCsv.as_view()),
     path('add-member-contact/', addviews.AddMemberContact.as_view()),
     path('add-member-d_o_b/', addviews.AddMemberD_O_B.as_view()),
     path('add-member-residence/', addviews.AddMemberResidence.as_view()),
