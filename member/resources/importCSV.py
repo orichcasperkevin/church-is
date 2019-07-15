@@ -27,7 +27,7 @@ class CSVLoader():
                     line_count += 1
                 else:
                     names =  row[0].split(" ")
-                    if (len(names) == 1):
+                    if (len(names) == 1):                        
                         CSVLoader.errors.append("only one name given  at line " + str(line_count))
                     line_count += 1
             if (len(CSVLoader.errors) > 0):
@@ -157,6 +157,7 @@ class CSVLoader():
                 return False
             else:
                 return True
+
     #TODO add regex to validate email
     def check_email(self,file_name):
         '''
@@ -183,72 +184,6 @@ class CSVLoader():
                 return False
             else:
                 return True
-
-    def check_CSV(self, file_name):
-        '''
-            check if CSV meets the required standards
-        '''
-
-        if (not self.check_names(file_name)):
-            return False
-
-        if (not self.check_gender(file_name)):
-            return False
-
-        if (not self.check_d_o_b(file_name)):
-            return False
-
-        if (not self.check_phone_number(file_name)):
-            return False
-
-        if (not self.check_email(file_name)):
-            return False
-
-        if (not self.check_marital_status(file_name)):
-            return False
-
-        return True
-
-    def load(self, file_name):
-        '''
-            load a csv file and get its detail
-        '''
-        initial_dir = os.getcwd()
-        os.chdir("Resources")
-        with open(file_name) as csv_file:
-            os.chdir(initial_dir)
-            csv_reader = csv.reader(csv_file,delimiter=',')
-            line_count = 0
-            member_id = 0
-            for row in csv_reader:
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    names =  row[0].split(" ")
-                    gender = row[1]
-                    d_o_b = row[2]
-                    phone_number = row[3]
-                    email = row[4]
-                    marital_status = row[5]
-
-                    if ( len(names) == 2 ):
-                        first_name = names[0]
-                        last_name = names[1]
-                        username = '@' + first_name.lower() + last_name.lower()
-                        user_id = self.create_user(first_name,last_name, username, email)
-                        member_id = self.create_member(user_id,gender)
-
-                    if ( len(names) == 3 ):
-                        first_name = names[0]
-                        middle_name = names[1]
-                        last_name = names[2]
-                        username = '@' + first_name.lower() + last_name.lower()
-                        user_id = self.create_user(first_name,last_name, username, email)
-                        member_id = self.create_member(user_id,gender,middle_name)
-
-                    self.set_date_of_birth(member_id, d_o_b)
-                    self.create_contact(member_id,phone_number)
-                    self.create_marital_status(member_id,marital_status)
 
     def create_user(self, first_name, last_name, username, email):
         '''
@@ -329,3 +264,70 @@ class CSVLoader():
         member = Member.objects.get(id=member_id)
         status = MemberMaritalStatus.objects.create(member=member, status=status)
         return status
+
+    #public methods
+    def check_CSV(self, file_name):
+        '''
+            check if CSV meets the required standards
+        '''
+
+        if (not self.check_names(file_name)):
+            return False
+
+        if (not self.check_gender(file_name)):
+            return False
+
+        if (not self.check_d_o_b(file_name)):
+            return False
+
+        if (not self.check_phone_number(file_name)):
+            return False
+
+        if (not self.check_email(file_name)):
+            return False
+
+        if (not self.check_marital_status(file_name)):
+            return False
+
+        return True
+
+    def load(self, file_name):
+        '''
+            load a csv file and get its detail
+        '''
+        initial_dir = os.getcwd()
+        os.chdir("Resources")
+        with open(file_name) as csv_file:
+            os.chdir(initial_dir)
+            csv_reader = csv.reader(csv_file,delimiter=',')
+            line_count = 0
+            member_id = 0
+            for row in csv_reader:
+                if line_count == 0:
+                    line_count += 1
+                else:
+                    names =  row[0].split(" ")
+                    gender = row[1]
+                    d_o_b = row[2]
+                    phone_number = row[3]
+                    email = row[4]
+                    marital_status = row[5]
+
+                    if ( len(names) == 2 ):
+                        first_name = names[0]
+                        last_name = names[1]
+                        username = '@' + first_name.lower() + last_name.lower()
+                        user_id = self.create_user(first_name,last_name, username, email)
+                        member_id = self.create_member(user_id,gender)
+
+                    if ( len(names) == 3 ):
+                        first_name = names[0]
+                        middle_name = names[1]
+                        last_name = names[2]
+                        username = '@' + first_name.lower() + last_name.lower()
+                        user_id = self.create_user(first_name,last_name, username, email)
+                        member_id = self.create_member(user_id,gender,middle_name)
+
+                    self.set_date_of_birth(member_id, d_o_b)
+                    self.create_contact(member_id,phone_number)
+                    self.create_marital_status(member_id,marital_status)

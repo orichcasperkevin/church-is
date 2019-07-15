@@ -4,12 +4,13 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import FileUploadParser
 
 
 from member.api.serializers import (UserSerializer, MemberSerializer, CreateMemberSerializer,
                                     MemberContactSerializer, MemberAgeSerializer, RoleMemberShipSerializer,
                                     MemberResidenceSerializer,
-                                    RoleSerializer, MemberMaritalStatusSerializer,)
+                                    RoleSerializer, MemberMaritalStatusSerializer,CSVFileSerializer)
 
 from member.models import (Member, Role,)
 from sms.africastalking.at import ChurchSysMessenger
@@ -60,6 +61,17 @@ class addMember(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UploadCSV(APIView):
+    parser_class = (FileUploadParser,)
+
+    def post(self, request, *args, **kwargs):
+      file_serializer = CSVFileSerializer(data=request.data)
+
+      if file_serializer.is_valid():
+          file_serializer.save()
+          return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+      else:
+          return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AddMemberContact(APIView):
     '''

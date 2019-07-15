@@ -13,7 +13,7 @@ from member.models import (Member, MemberContact, MemberAge,
                            MemberMaritalStatus, FamilyMembership, )
 
 import os
-from Resources.importCSV import CSVLoader
+from member.resources.importCSV import CSVLoader
 loader = CSVLoader()
 
 class GetMemberWithId(APIView):

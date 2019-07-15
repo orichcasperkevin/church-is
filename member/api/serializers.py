@@ -3,7 +3,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from rest_framework import serializers
 
 from member.models import (Member, MemberContact, MemberAge, MemberResidence,
-                           Role, RoleMembership, MemberMaritalStatus, Family, FamilyMembership, )
+                           Role, RoleMembership, MemberMaritalStatus, Family, FamilyMembership, CSV)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -167,3 +167,8 @@ class RoleMemberShipSerializer(serializers.ModelSerializer):
         role_membership = RoleMembership.objects.create(member=member, role=role, **validated_data)
 
         return role_membership
+
+class CSVFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CSV
+        fields = "__all__"
