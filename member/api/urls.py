@@ -20,6 +20,7 @@ urlpatterns = [
     path('residence-for-member/<int:id>/', detailviews.GetResidenceForMemberWithId.as_view()),
     path('marital-status-for-member/<int:id>/', detailviews.GetMaritalStatusForMemberWithId.as_view()),
     path('family-for-member/<int:id>/', detailviews.GetFamilyForMemberWithId.as_view()),
+    path('family-tree-for-member/<int:id>/', detailviews.GetMemberFamilyTree.as_view()),
     path('roles-for-member/<int:id>/', detailviews.GetRolesForMemberWithId.as_view()),
 
     # adding

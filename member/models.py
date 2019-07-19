@@ -69,13 +69,6 @@ class Role(models.Model):
     role = models.CharField(max_length=20, default="member")
     description = models.TextField(max_length=200)
 
-    def get_role():
-        '''
-            returns the default role which is just a'member'
-        '''
-        return Role.objects.get(role="member")
-
-
 class RoleMembership(models.Model):
     '''
         a membership roster for used for adding members to a role
@@ -93,7 +86,6 @@ class Family(models.Model):
     head = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, related_name="familyHeads")
     members = models.ManyToManyField(Member, through='FamilyMembership')
 
-
 class FamilyMembership(models.Model):
     '''
         a member in a family
@@ -101,8 +93,49 @@ class FamilyMembership(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
 
+class ParentRelation(models.Model):
+    '''
+         member - parent relation
+    '''
+    member = models.OneToOneField(Member,on_delete=models.CASCADE)
+    mom = models.ForeignKey(Member,on_delete=models.CASCADE, blank=True, null=True, related_name="moms")
+    dad = models.ForeignKey(Member,on_delete=models.CASCADE, blank=True, null=True, related_name="dads")
+
+class SiblingRelation(models.Model):
+    '''
+        Member - sibling relation
+    '''
+    member = models.OneToOneField(Member,on_delete=models.CASCADE)
+    sibling = models.ForeignKey(Member,on_delete=models.CASCADE, related_name="siblings")
+
+class SpouseRelation(models.Model):
+    '''
+        Member - spouse relation
+    '''
+    member = models.OneToOneField(Member,on_delete=models.CASCADE)
+    spouse = models.ForeignKey(Member,on_delete=models.CASCADE, related_name="spouses")
+
+class ImportantDateType(models.Model):
+    '''
+        a type of date that is marked by the church for its members
+    '''
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=160)
+
+class MemberImportantDate(models.Model):
+    '''
+        important date for member
+    '''
+    type = models.ForeignKey(ImportantDateType, on_delete=models.CASCADE, blank=True, null=True)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    description = models.CharField(max_length=160)
+    overseen_by_member = models.ForeignKey(Member,on_delete=models.CASCADE, blank=True, null=True,related_name="overseer")
+    overseen_by_non_member = models.CharField(max_length=50, blank=True, null=True)
+    non_member_description = models.CharField(max_length=160, blank=True, null=True)
+
+
 class CSV(models.Model):
     '''
-        csv for importing member data
+        csv for importing Member data
     '''
     csv = models.FileField(upload_to='Resources/',null=True)

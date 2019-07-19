@@ -5,12 +5,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from member.api.serializers import (MemberSerializer, MemberContactSerializer,
-                                    MemberResidenceSerializer, RoleMemberShipSerializer,
-                                    MemberMaritalStatusSerializer,
-                                    FamilyMembershipSerializer, )
+    MemberResidenceSerializer, RoleMemberShipSerializer,MemberMaritalStatusSerializer,
+    FamilyMembershipSerializer, )
+
 from member.models import (Member, MemberContact, MemberAge,
-                           MemberResidence, RoleMembership,
-                           MemberMaritalStatus, FamilyMembership, )
+    MemberResidence, RoleMembership,MemberMaritalStatus, FamilyMembership, ParentRelation,
+    SiblingRelation, SpouseRelation)
 
 
 class GetMemberWithId(APIView):
@@ -20,8 +20,8 @@ class GetMemberWithId(APIView):
     '''
 
     def get(self, request, id):
-        contact = Member.objects.filter(member__id=id)
-        data = MemberSerializer(contact, many=True).data
+        member = Member.objects.filter(member__id=id)
+        data = MemberSerializer(member, many=True).data
         return Response(data)
 
 
@@ -110,6 +110,40 @@ class GetFamilyForMemberWithId(APIView):
         data = FamilyMembershipSerializer(family_membership, many=True).data
         return Response(data)
 
+class GetMemberFamilyTree(APIView):
+    '''
+        get:
+        get the family tree for a member
+    '''
+    current_node = 0
+    root = 0
+    family_tree = {}
+
+    def nodeHasParent(self,member_id):
+        try:
+            parent = ParentRelation.objects.get(member__member__id=member_id)
+        except ParentRelation.DoesNotExist:
+            return False
+        else:
+            try:
+                self.current_node = parent.dad.member.id
+            except:
+                self.current_node = parent.mom.member.id
+            return True
+
+    def getFamilyTreeRoot(self, member_id):
+        if (self.nodeHasParent(member_id) == False):
+            root = member_id
+        else:
+            root = self.getFamilyTreeRoot(self.current_node)
+        return root
+
+    def createFamilyTree(self, root):
+        print("creating...")
+    def get(self,request,id):
+        member = Member.objects.get(member__id=id)
+        self.root = self.getFamilyTreeRoot(member.member.id)
+        family_tree = self.createFamilyTree(self.root)
 
 class GetRolesForMemberWithId(APIView):
     '''

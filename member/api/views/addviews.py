@@ -1,4 +1,5 @@
 import random
+import os
 
 from django.contrib.auth.models import User
 from rest_framework import status
@@ -71,19 +72,23 @@ class UploadCSV(APIView):
     parser_class = (FileUploadParser,)
 
     def post(self, request, *args, **kwargs):
+
       file_serializer = CSVFileSerializer(data=request.data)
 
       if file_serializer.is_valid():
+
           file_serializer.save()
           file_path_split = file_serializer.data["csv"].split("/")
           file_name = file_path_split[1]
 
           if (not loader.check_CSV(file_name)):
-              return Response(loader.errors)
 
+              return Response(loader.errors)
+              
           return Response(file_serializer.data, status=status.HTTP_201_CREATED)
       else:
           return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ImportDataFromCsv(APIView):
     '''
         post:
@@ -92,7 +97,7 @@ class ImportDataFromCsv(APIView):
 
     def post(self, request):
 
-            try:                
+            try:
                 loader.load(request.data.get("file_name"))
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -238,7 +238,7 @@ class CSVLoader():
                 d_o_b = data
                 member = Member.objects.get(id=member_id)
                 d_o_b = MemberAge.objects.create(member=member, d_o_b=d_o_b)
-                break    
+                break
 
     def create_contact(self,member_id,phone_number):
         '''
