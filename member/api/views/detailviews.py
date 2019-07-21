@@ -117,7 +117,8 @@ class GetMemberFamilyTree(APIView):
     '''
     current_node = 0
     root = 0
-    family_tree = {}
+    level = 0
+    family_tree = []
 
     def nodeHasParent(self,member_id):
         try:
@@ -138,12 +139,71 @@ class GetMemberFamilyTree(APIView):
             root = self.getFamilyTreeRoot(self.current_node)
         return root
 
-    def createFamilyTree(self, root):
-        print("creating...")
+    def growFamilyTree(self, root):
+
+        node = {'level':self.level, 'member': None, 'spouse': None, 'children': []}
+
+        #get root's  member
+        member = Member.objects.get(member__id=root)
+        member = member.member.first_name + ' ' +member.member.last_name
+
+        #get root's spouse
+        try:
+            spouse_relation = SpouseRelation.objects.get(member__member__id=root)
+        except SpouseRelation.DoesNotExist:
+            spouse = None
+        else:
+            spouse = spouse_relation.spouse.member.first_name + ' '+ spouse_relation.spouse.member.last_name
+
+        node['member'] = member
+        node['spouse'] = spouse
+
+        #get root's children
+        children = []
+        parent_relation = ParentRelation.objects.filter(mom__member__id=root)
+        if (len(parent_relation) > 0):
+            self.level += 1
+            # if roor has any children
+            for data in parent_relation:
+                node['children'].append(data.member.member.first_name)
+                print(node)
+
+                self.family_tree.append({'member': node})
+                self.growFamilyTree(data.member.member.id)
+
+        else:
+            parent_relation = ParentRelation.objects.filter(dad__member__id=root)
+            if (len(parent_relation) > 0):
+                self.level += 1
+                for data in parent_relation:
+                    node['children'].append(data.member.member.first_name)
+                    print(node)
+                    self.family_tree.append({'member': node})
+                    self.growFamilyTree(data.member.member.id)
+
+            if(len(parent_relation) == 0):
+                    self.family_tree.append({'member': node})
+                    print(node)
+
     def get(self,request,id):
         member = Member.objects.get(member__id=id)
         self.root = self.getFamilyTreeRoot(member.member.id)
-        family_tree = self.createFamilyTree(self.root)
+        self.growFamilyTree(self.root)
+
+        data = self.family_tree
+
+        levels = []
+        for i in range(self.level+1):
+            levels.append(i)
+        levels.reverse()
+
+
+        for node in self.family_tree:
+            for i in levels:
+                if (node['member']['level'] == i+1):
+                    print(node)
+
+        return Response(data)
 
 class GetRolesForMemberWithId(APIView):
     '''
