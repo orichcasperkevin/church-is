@@ -12,6 +12,11 @@ class Member(models.Model):
         ('R', 'Rather not say'),
     )
     gender = models.CharField(max_length=2, null=True, blank=True, choices=GENDER)
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['gender']),
+        ]
 
 
 class MemberContact(models.Model):

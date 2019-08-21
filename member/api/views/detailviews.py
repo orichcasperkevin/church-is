@@ -146,7 +146,7 @@ class GetMemberFamilyTree(APIView):
         '''starting from the root, grow family root until all its leaves'''
 
         node = {'level':self.level, 'member': None, 'spouse': None, 'children': []}
-                
+
         #get root's  member
         member = Member.objects.get(member__id=root)
         member = member.member.first_name + ' ' +member.member.last_name
