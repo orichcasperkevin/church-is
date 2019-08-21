@@ -11,10 +11,11 @@ class CSVLoader():
 
     errors = []
 
-    def check_names(self,file_name):
+    def _check_names(self,file_name):
         '''
             check that the names are valid
         '''
+
         initial_dir = os.getcwd()
         os.chdir("Resources")
         with open(file_name) as csv_file:
@@ -35,7 +36,7 @@ class CSVLoader():
             else:
                 return True
 
-    def check_gender(self,file_name):
+    def _check_gender(self,file_name):
         initial_dir = os.getcwd()
         os.chdir("Resources")
         with open(file_name) as csv_file:
@@ -58,7 +59,7 @@ class CSVLoader():
             else:
                 return True
 
-    def check_d_o_b(self,file_name):
+    def _check_d_o_b(self,file_name):
         '''
             check that the date input given is of correct format
         '''
@@ -93,7 +94,7 @@ class CSVLoader():
             else:
                 return True
 
-    def check_phone_number(self,file_name):
+    def _check_phone_number(self,file_name):
         '''
             check that the phone number input provided is correct
         '''
@@ -135,7 +136,7 @@ class CSVLoader():
             else:
                 return True
 
-    def check_marital_status(self,file_name):
+    def _check_marital_status(self,file_name):
         initial_dir = os.getcwd()
         os.chdir("Resources")
         with open(file_name) as csv_file:
@@ -159,7 +160,7 @@ class CSVLoader():
                 return True
 
     #TODO add regex to validate email
-    def check_email(self,file_name):
+    def _check_email(self,file_name):
         '''
             check that the email input is of correct format
         '''
@@ -185,7 +186,7 @@ class CSVLoader():
             else:
                 return True
 
-    def create_user(self, first_name, last_name, username, email):
+    def _create_user(self, first_name, last_name, username, email):
         '''
             create a user from data from CSV
         '''
@@ -205,7 +206,7 @@ class CSVLoader():
             user_id = user.id
         return user_id
 
-    def create_member(self,*var_tuple):
+    def _create_member(self,*var_tuple):
         '''
             create a member from a created user
         '''
@@ -228,7 +229,7 @@ class CSVLoader():
             member = Member.objects.create(member=user,gender=gender,middle_name=middle_name)
             return member.id
 
-    def set_date_of_birth(self, member_id, d_o_b):
+    def _set_date_of_birth(self, member_id, d_o_b):
         '''
             set a date of birth from data from the CSV
         '''
@@ -240,7 +241,7 @@ class CSVLoader():
                 d_o_b = MemberAge.objects.create(member=member, d_o_b=d_o_b)
                 break
 
-    def create_contact(self,member_id,phone_number):
+    def _create_contact(self,member_id,phone_number):
         '''
             create contact for a member
         '''
@@ -252,7 +253,7 @@ class CSVLoader():
         contact = MemberContact.objects.create(member=member, phone=phone_number)
         return contact
 
-    def create_marital_status(self,member_id,status):
+    def _create_marital_status(self,member_id,status):
         '''
             set marital status for member.
         '''
@@ -270,22 +271,22 @@ class CSVLoader():
             check if CSV meets the required standards
         '''
 
-        if (not self.check_names(file_name)):
+        if (not self._check_names(file_name)):
             return False
 
-        if (not self.check_gender(file_name)):
+        if (not self._check_gender(file_name)):
             return False
 
-        if (not self.check_d_o_b(file_name)):
+        if (not self._check_d_o_b(file_name)):
             return False
 
-        if (not self.check_phone_number(file_name)):
+        if (not self._check_phone_number(file_name)):
             return False
 
-        if (not self.check_email(file_name)):
+        if (not self._check_email(file_name)):
             return False
 
-        if (not self.check_marital_status(file_name)):
+        if (not self._check_marital_status(file_name)):
             return False
 
         return True
@@ -316,17 +317,17 @@ class CSVLoader():
                         first_name = names[0]
                         last_name = names[1]
                         username = '@' + first_name.lower() + last_name.lower()
-                        user_id = self.create_user(first_name,last_name, username, email)
-                        member_id = self.create_member(user_id,gender)
+                        user_id = self._create_user(first_name,last_name, username, email)
+                        member_id = self._create_member(user_id,gender)
 
                     if ( len(names) == 3 ):
                         first_name = names[0]
                         middle_name = names[1]
                         last_name = names[2]
                         username = '@' + first_name.lower() + last_name.lower()
-                        user_id = self.create_user(first_name,last_name, username, email)
-                        member_id = self.create_member(user_id,gender,middle_name)
+                        user_id = self._create_user(first_name,last_name, username, email)
+                        member_id = self._create_member(user_id,gender,middle_name)
 
-                    self.set_date_of_birth(member_id, d_o_b)
-                    self.create_contact(member_id,phone_number)
-                    self.create_marital_status(member_id,marital_status)
+                    self._set_date_of_birth(member_id, d_o_b)
+                    self._create_contact(member_id,phone_number)
+                    self._create_marital_status(member_id,marital_status)

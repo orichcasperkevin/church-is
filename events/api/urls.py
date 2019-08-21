@@ -6,9 +6,7 @@ from .views import listviews
 # TODO add delete views
 urlpatterns = [
     # listing
-    path('event-list/', listviews.EventList.as_view()),
-    path('expected-to-attend-event-list/<int:id>/', listviews.ExpectedToAttendEventList.as_view()),
-    path('event-attendance-list/<int:id>/', listviews.EventAttendanceList.as_view()),
+    path('event-list/', listviews.EventsList.as_view()),
 
 ]
 

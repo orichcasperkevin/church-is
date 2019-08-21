@@ -1,72 +1,39 @@
-from datetime import date
 
 from django.db import models
 
-from groups.models import CellGroup, ChurchGroup, Ministry, Fellowship
+from groups.models import ChurchGroup
 from member.models import Member
 
-today = date.today()
-
-
 class Event(models.Model):
-    '''
-        the name and description of the event
-    '''
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(help_text='SEO friendly slug')
-    description = models.TextField(help_text='Description of the event')
-    date = models.DateField(help_text='Date and Time of the event')
-    added_on = models.DateTimeField(auto_now_add=True)
-    website = models.BooleanField(default=True, help_text='Display on the website')
-    poster = models.ImageField(upload_to='events', null=True, blank=True)
-    location = models.CharField(max_length=200, help_text='The location of the event ')
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=20)
+    description = models.TextField(max_length=50)
+    location = models.CharField(max_length=20, blank=True, null=True)
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
+    website = models.BooleanField(default=True)
 
     @property
-    def past(self):
-        '''
-            marks an event as either past or not
-        '''
-        past = False
-        if (self.date < today):
-            past = True
-        return past
+    def start(self):
+        start = self.start_datetime.strftime("%Y-%m-%d %H:%M")
+        return start
+
+    @property
+    def end(self):
+        end = self.end_datetime.strftime("%Y-%m-%d %H:%M")
+        return end
 
 
-class ExpectedToAttendEvent(models.Model):
+class EventAttendingGroup(models.Model):
     '''
-        who is expected to attend the event
-    '''
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    who_is_coming = models.ManyToManyField(Member, blank=True)
-    church_groups_coming = models.ManyToManyField(ChurchGroup, blank=True)
-    fellowships_coming = models.ManyToManyField(Fellowship, blank=True)
-    cell_groups_coming = models.ManyToManyField(CellGroup, blank=True)
-    ministries_coming = models.ManyToManyField(Ministry, blank=True)
-
-
-class EventAttendance(models.Model):
-    '''
-        members that attended an event
+        what group is expected to attend the event
     '''
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    attendees = models.ManyToManyField(Member, through='EventRoster')
+    group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
 
-
-class EventRoster(models.Model):
+class EventAttendedMember(models.Model):
     '''
-        members that attended the event
-    '''
-    event = models.ForeignKey(EventAttendance, on_delete=models.CASCADE)
-    attendee = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True)
-
-
-class EventPhoto(models.Model):
-    '''
-        the photos of grouped under an event,
-        can be tagged as belonging to a certain event meeting
-        can also be tagged as belonging or containing a certain member or members
+        the members who attended the event
     '''
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True, blank=True)
-    event_attendees = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True)
-    photo = models.ImageField(upload_to='fellowships/', null=True)
+    member = models.ForeignKey(Member, on_delete = models.CASCADE)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from groups.api.serializers import ChurchGroupSerializer
-from services.models import (ServiceType, Service, ServiceItem, )
+from services.models import ServiceType, Service, ServiceItem
 
 class ServiceTypeListSerializer(serializers.ModelSerializer):
     class Meta:
