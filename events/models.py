@@ -15,13 +15,11 @@ class Event(models.Model):
 
     @property
     def start(self):
-        start = self.start_datetime.strftime("%Y-%m-%d %H:%M")
-        return start
+        return self.start_datetime.strftime("%Y-%m-%d %H:%M")
 
     @property
     def end(self):
-        end = self.end_datetime.strftime("%Y-%m-%d %H:%M")
-        return end
+        return self.end_datetime.strftime("%Y-%m-%d %H:%M")        
 
 
 class EventAttendingGroup(models.Model):

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from groups.models import ChurchGroup, Fellowship, Ministry
+from groups.models import ChurchGroup
 
 
 class News(models.Model):
@@ -12,8 +12,6 @@ class News(models.Model):
     slug = models.SlugField(unique=True)
     featured_image = models.ImageField(upload_to='news/', null=True, blank=True)
     church_group = models.ManyToManyField(ChurchGroup, blank=True)
-    fellowship = models.ManyToManyField(Fellowship, blank=True)
-    ministry = models.ManyToManyField(Ministry, blank=True)
     article = models.TextField()
     date = models.DateField(default=timezone.now, help_text='Date of publishing of the article')
     author = models.CharField(max_length=100, help_text='Author of the news article')

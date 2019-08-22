@@ -5,14 +5,14 @@ from django.db import models
 # Create your models here.
 class Member(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE)
-    middle_name = models.CharField(max_length=50, blank=True,  default=" ")
+    middle_name = models.CharField(max_length=15, blank=True,  default=" ")
     GENDER = (
         ('M', 'Male'),
         ('F', 'Female'),
         ('R', 'Rather not say'),
     )
     gender = models.CharField(max_length=2, null=True, blank=True, choices=GENDER)
-    
+
     class Meta:
         indexes = [
             models.Index(fields=['gender']),
@@ -50,11 +50,11 @@ class MemberMaritalStatus(models.Model):
 class MemberResidence(models.Model):
     id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE)
-    town = models.CharField(max_length=200, blank=True, verbose_name='town')
-    road = models.CharField(max_length=200, blank=True, verbose_name='Road')
-    street = models.CharField(max_length=200, blank=True, verbose_name='street')
-    village_estate = models.CharField(max_length=200, blank=True, verbose_name='village/estate')
-    description = models.CharField(max_length=200, blank=True, verbose_name='description')
+    town = models.CharField(max_length=15, blank=True, verbose_name='town')
+    road = models.CharField(max_length=15, blank=True, verbose_name='Road')
+    street = models.CharField(max_length=15, blank=True, verbose_name='street')
+    village_estate = models.CharField(max_length=15, blank=True, verbose_name='village/estate')
+    description = models.CharField(max_length=30, blank=True, verbose_name='description')
 
     def __str__(self):
         return str(self.member)
@@ -72,7 +72,7 @@ class Role(models.Model):
     projects_admin = models.BooleanField(default=False)
     finance_admin = models.BooleanField(default=False)
     role = models.CharField(max_length=20, default="member")
-    description = models.TextField(max_length=200)
+    description = models.TextField(max_length=30)
 
 class RoleMembership(models.Model):
     '''
@@ -87,7 +87,7 @@ class Family(models.Model):
         a family  in church
     '''
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=15, blank=True, null=True)
     head = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, related_name="familyHeads")
     members = models.ManyToManyField(Member, through='FamilyMembership')
 
@@ -124,7 +124,7 @@ class ImportantDateType(models.Model):
     '''
         a type of date that is marked by the church for its members
     '''
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=15)
     description = models.CharField(max_length=160)
 
 class MemberImportantDate(models.Model):
