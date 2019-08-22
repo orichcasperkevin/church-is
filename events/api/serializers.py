@@ -8,3 +8,9 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('id', 'title', 'description', 'location', 'start', 'end')
         extra_kwargs = {'id': {'read_only': True}}
+
+class AddEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('id', 'title', 'description', 'location', 'start_datetime', 'end_datetime')
+        extra_kwargs = {'id': {'read_only': True}}
