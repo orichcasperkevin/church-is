@@ -27,6 +27,16 @@ class GetGroupsInGroupWithId(APIView):
         data = ChurchGroupSerializer(church_group, many=True).data
         return Response(data)
 
+class GetIndependentGroups(APIView):
+    '''
+        get:
+        get the groups that are not within another group
+    '''
+    def get(self, request):
+        church_group = ChurchGroup.objects.filter(group=None)
+        data = ChurchGroupSerializer(church_group, many=True).data
+        return Response(data)
+
 class GetMembersOfChurchGroupWithId(APIView):
     '''
         get:

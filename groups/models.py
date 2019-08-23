@@ -10,6 +10,14 @@ class GroupOfChurchGroups(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=30)
 
+    @property
+    def number_of_groups(self):
+        count = 0
+        for data in ChurchGroup.objects.filter(group_id = self.id):
+            count += 1        
+        return count
+
+
 class ChurchGroup(models.Model):
     '''
         the name and description of the group
@@ -20,6 +28,7 @@ class ChurchGroup(models.Model):
     description = models.TextField(blank=True)
     group_members = models.ManyToManyField(Member, through='ChurchGroupMembership', blank=True)
 
+    @property
     def number_of_members(self):
         number = 0
         for data in self.group_members.all():

@@ -11,6 +11,7 @@ urlpatterns = [
     path('church-group-meeting-list/<int:id>/', listviews.ChurchGroupMeetingList.as_view()),
 
     # detailviews
+    path('church-groups-not-in-group/', detailviews.GetIndependentGroups.as_view()),
     path('church-groups-in-group/<int:id>/', detailviews.GetGroupsInGroupWithId.as_view()),
     path('church-group/<int:id>/', detailviews.GetChurchGroupWithId.as_view()),
     path('church-groups-for-a-member/<int:id>/', detailviews.GetChurchGroupsAMemberBelongsTo.as_view()),

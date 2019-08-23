@@ -7,7 +7,7 @@ from member.models import Member, Role
 class GroupOfChurchGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupOfChurchGroups
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'number_of_groups')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 
