@@ -67,6 +67,7 @@ class addMember(APIView):
 
 class UploadCSV(APIView):
     '''
+        post:
         upload a csv file, check if the file is of valid type and format
     '''
     parser_class = (FileUploadParser,)
@@ -82,9 +83,7 @@ class UploadCSV(APIView):
           file_name = file_path_split[1]
 
           if (not loader.check_CSV(file_name)):
-
               return Response(loader.errors)
-              
           return Response(file_serializer.data, status=status.HTTP_201_CREATED)
       else:
           return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

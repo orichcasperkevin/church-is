@@ -12,6 +12,8 @@ from member.models import (Member, MemberContact, MemberAge,
     MemberResidence, RoleMembership,MemberMaritalStatus, FamilyMembership, ParentRelation,
     SiblingRelation, SpouseRelation)
 
+from member.resources.importCSV import CSVLoader
+loader = CSVLoader()
 
 class GetMemberWithId(APIView):
     '''
@@ -204,4 +206,14 @@ class GetRolesForMemberWithId(APIView):
         role_membership = RoleMembership.objects.filter(member__member__id=id)
 
         data = RoleMemberShipSerializer(role_membership, many=True).data
+        return Response(data)
+
+class PreviewCSV(APIView):
+    '''
+        get:
+        get csv data for preview in the UI
+    '''
+
+    def get(self, request, file_name):
+        data = loader.preview_CSV(file_name)
         return Response(data)

@@ -8,9 +8,7 @@ from member.models import (Member, MemberContact, MemberAge, MemberResidence,
     Role, RoleMembership, MemberMaritalStatus, Family, FamilyMembership, )
 
 class CSVLoader():
-
     errors = []
-
     def _check_names(self,file_name):
         '''
             check that the names are valid
@@ -266,6 +264,25 @@ class CSVLoader():
         return status
 
     #public methods
+    def preview_CSV(self, file_name):
+        '''
+            return the csv as json for preview in the UI
+        '''
+        initial_dir = os.getcwd()
+        os.chdir("Resources")
+        data = []
+        with open(file_name) as csv_file:
+            os.chdir(initial_dir)
+            csv_reader = csv.DictReader(csv_file,delimiter=',')
+            row = {}
+            count = 0
+            for row in csv_reader:
+                if count < 5:
+                    row = row
+                    data.append(row)
+                    count += 1
+        return data
+
     def check_CSV(self, file_name):
         '''
             check if CSV meets the required standards

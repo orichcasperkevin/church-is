@@ -22,6 +22,7 @@ urlpatterns = [
     path('family-for-member/<int:id>/', detailviews.GetFamilyForMemberWithId.as_view()),
     path('family-tree-for-member/<int:id>/', detailviews.GetMemberFamilyTree.as_view()),
     path('roles-for-member/<int:id>/', detailviews.GetRolesForMemberWithId.as_view()),
+    re_path(r'^preview-csv/(?P<file_name>.*)/$', detailviews.PreviewCSV.as_view()),
 
     # adding
     path('add-member/', addviews.addMember.as_view()),
@@ -32,6 +33,8 @@ urlpatterns = [
     path('add-member-residence/', addviews.AddMemberResidence.as_view()),
     path('add-member-marital-status/', addviews.AddMemberMaritalStatus.as_view()),
     path('add-role-for-member/', addviews.AddRoleMemberShip.as_view()),
+
+
 
 ]
 
