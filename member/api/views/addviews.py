@@ -77,16 +77,28 @@ class UploadCSV(APIView):
       file_serializer = CSVFileSerializer(data=request.data)
 
       if file_serializer.is_valid():
-
           file_serializer.save()
-          file_path_split = file_serializer.data["csv"].split("/")
-          file_name = file_path_split[1]
 
-          if (not loader.check_CSV(file_name)):
-              return Response(loader.errors)
           return Response(file_serializer.data, status=status.HTTP_201_CREATED)
       else:
           return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CheckCSV(APIView):
+    '''
+        post:
+        check that the csv file sent has no
+    '''
+
+    def post(self, request):
+
+            try:
+                filename = request.data.get('file_name')
+                column_config = request.data.get('column_config')
+                loader.configure_CSV(filename,column_config)
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_201_CREATED)
 
 class ImportDataFromCsv(APIView):
     '''

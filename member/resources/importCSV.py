@@ -282,6 +282,19 @@ class CSVLoader():
                     data.append(row)
                     count += 1
         return data
+    def configure_CSV(self, file_name, config_array):
+        '''
+            configure the csv file columns according to specifications by the config_array
+        '''
+        initial_dir = os.getcwd()
+        os.chdir("Resources")
+        with open(file_name) as csv_file:
+            os.chdir(initial_dir)
+            csv_reader = csv.reader(csv_file,delimiter=',')
+            line_count = 0
+            for row in csv_reader:
+                if line_count == 0:
+                    print(row)
 
     def check_CSV(self, file_name):
         '''
