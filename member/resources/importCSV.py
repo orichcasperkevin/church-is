@@ -9,6 +9,13 @@ from member.models import (Member, MemberContact, MemberAge, MemberResidence,
 
 class CSVLoader():
     errors = []
+    gender_column = None
+    marital_status_column = None
+    email_column = None
+    phone_number_column = None
+    names_column = None
+    date_of_birth_column = None
+
     def _check_names(self,file_name):
         '''
             check that the names are valid
@@ -25,7 +32,7 @@ class CSVLoader():
                 if line_count == 0:
                     line_count += 1
                 else:
-                    names =  row[0].split(" ")
+                    names =  row[self.names_column].split(" ")
                     if (len(names) == 1):
                         CSVLoader.errors.append("only one name given  at line " + str(line_count))
                     line_count += 1
@@ -43,7 +50,7 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                gender = row[1]
+                gender = row[self.gender_column]
                 if line_count == 0:
                     line_count += 1
                 else:
@@ -69,7 +76,7 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                d_o_b = row[2]
+                d_o_b = row[self.date_of_birth_column]
                 if line_count == 0:
                     line_count += 1
                 else:
@@ -104,7 +111,7 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                phone_number = row[3]
+                phone_number = row[self.phone_number_column]
                 if line_count == 0:
                     line_count += 1
                 else:
@@ -143,7 +150,7 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                status = row[5]
+                status = row[self.marital_status_column]
                 if line_count == 0:
                     line_count += 1
                 else:
@@ -170,7 +177,7 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                email = row[4]
+                email = row[self.email_column]
                 if line_count == 0:
                     line_count += 1
                 else:
@@ -282,10 +289,18 @@ class CSVLoader():
                     data.append(row)
                     count += 1
         return data
-    def configure_CSV(self, file_name, config_array):
+
+    def configure_CSV(self, file_name, config_tuple):
         '''
-            configure the csv file columns according to specifications by the config_array
+            configure the csv file columns according to specifications by the config_tuple
         '''
+        self.gender_column = None
+        self.marital_status_column = None
+        self.email_column = None
+        self.phone_number_column = None
+        self.names_column = None
+        self.date_of_birth_column = None
+
         initial_dir = os.getcwd()
         os.chdir("Resources")
         with open(file_name) as csv_file:
@@ -294,7 +309,22 @@ class CSVLoader():
             line_count = 0
             for row in csv_reader:
                 if line_count == 0:
-                    print(row)
+                    for key in config_tuple:
+                        for i in range(0,len(row)):
+                            if row[i].strip() == key.strip():
+                                if config_tuple[key] == 'gender':
+                                    self.gender_column = i
+                                if config_tuple[key] == 'marital status':
+                                    self.marital_status_column = i
+                                if config_tuple[key] == 'email':
+                                    self.email_column = i
+                                if config_tuple[key] == 'phone number':
+                                    self.phone_number_column = i
+                                if config_tuple[key] == 'names':
+                                    self.names_column = i
+                                if config_tuple[key] == 'date of birth':
+                                    self.date_of_birth_column = i
+                line_count += 1
 
     def check_CSV(self, file_name):
         '''
@@ -336,12 +366,12 @@ class CSVLoader():
                 if line_count == 0:
                     line_count += 1
                 else:
-                    names =  row[0].split(" ")
-                    gender = row[1]
-                    d_o_b = row[2]
-                    phone_number = row[3]
-                    email = row[4]
-                    marital_status = row[5]
+                    names =  row[self.names_column].split(" ")
+                    gender = row[self.gender_column]
+                    d_o_b = row[self.date_of_birth_column]
+                    phone_number = row[self.phone_number_column]
+                    email = row[self.email_column]
+                    marital_status = row[self.marital_status_column]
 
                     if ( len(names) == 2 ):
                         first_name = names[0]

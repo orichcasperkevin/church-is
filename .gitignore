@@ -4,3 +4,4 @@ __ pycache __
 db.sqlite3
 .idea/
 *.swp
+*.csv
