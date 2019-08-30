@@ -90,14 +90,13 @@ class CheckCSV(APIView):
     '''
 
     def post(self, request):
-            filename = request.data.get('file_name')
+            file_name = request.data.get('file_name')
             column_config = request.data.get('column_config')
-            print(filename)
-            print(column_config)
-            loader.configure_CSV(filename,column_config)
             try:
-                filename = request.data.get('file_name')
-                column_config = request.data.get('column_config')            
+                loader.configure_CSV(file_name,column_config)
+                loader.check_CSV(file_name)
+                if (loader.errors):
+                    return Response(loader.errors)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -109,8 +108,8 @@ class ImportDataFromCsv(APIView):
         import data from a csv file given the name
     '''
 
-    def post(self, request):
-
+    def post(self, request):            
+            loader.load(request.data.get("file_name"))
             try:
                 loader.load(request.data.get("file_name"))
             except:
