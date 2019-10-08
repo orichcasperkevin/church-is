@@ -81,7 +81,6 @@ class RoleMembership(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
-
 class Family(models.Model):
     '''
         a family  in church

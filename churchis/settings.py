@@ -137,3 +137,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}

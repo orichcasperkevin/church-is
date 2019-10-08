@@ -288,6 +288,8 @@ class CSVLoader():
                     row = row
                     data.append(row)
                     count += 1
+                else:
+                    break
         return data
 
     def configure_CSV(self, file_name, config_tuple):
@@ -323,8 +325,10 @@ class CSVLoader():
                                 if config_tuple[key] == 'names':
                                     self.names_column = i
                                 if config_tuple[key] == 'date of birth':
-                                    self.date_of_birth_column = i
-                line_count += 1            
+                                    self.date_of_birth_column = i                                    
+                else:
+                    break
+                line_count += 1
 
     def check_CSV(self, file_name):
         '''
