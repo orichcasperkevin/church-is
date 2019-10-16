@@ -78,9 +78,9 @@ for model in app_models:
     except AlreadyRegistered:
         pass
 
-app_models = apps.get_app_config('social').get_models()
+app_models = apps.get_app_config('church_social').get_models()
 for model in app_models:
-    try:
-        admin.site.register(model)
-    except AlreadyRegistered:
-        pass
+     try:
+         admin.site.register(model)
+     except AlreadyRegistered:
+         pass

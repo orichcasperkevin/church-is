@@ -3,7 +3,6 @@ from datetime import date
 from rest_framework import generics
 
 from news.api.serializers import (NewsSerializer, )
-# TODO import each componet singly
 from news.models import (News, )
 
 today = date.today()

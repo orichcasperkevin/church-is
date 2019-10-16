@@ -26,7 +26,7 @@ urlpatterns = [
     # apps
     path('api/members/', include('member.api.urls')),
     path('api/groups/', include('groups.api.urls')),
-    path('api/events/', include('events.api.urls')),   
+    path('api/events/', include('events.api.urls')),
     path('api/projects/', include('projects.api.urls')),
     path('api/finance/', include('finance.api.urls')),
     path('api/daily-verses/', include('dailyVerses.api.urls')),
@@ -34,4 +34,5 @@ urlpatterns = [
     path('api/sermons/', include('sermons.api.urls')),
     path('api/services/', include('services.api.urls')),
     path('api/sms/', include('sms.api.urls')),
+    path('api/social/', include('church_social.api.urls')),
 ]

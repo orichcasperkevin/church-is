@@ -44,7 +44,13 @@ class Channel(models.Model):
     name = models.CharField(max_length=20)
     description = models.TextField(max_length=50)
     open = models.BooleanField(default=False)
-    live = models.BooleanField(default = False)
+
+class ChannelParticipant(models.Model):
+    '''
+        members of a certain channel
+    '''
+    channel = models.ForeignKey(Channel, on_delete = models.CASCADE)
+    participant = models.ForeignKey(Member, on_delete = models.CASCADE)
 
 class ChannelMessage(models.Model):
     '''
@@ -52,6 +58,12 @@ class ChannelMessage(models.Model):
     '''
     channel = models.ForeignKey(Channel, on_delete = models.CASCADE)
     sender = models.ForeignKey(Member, on_delete = models.CASCADE)
-    important = models.BooleanField(default=False)
     message = models.TextField(max_length=160)
-    creation_time = models.DateTimeField(auto_now_add=True)
+    TYPE = (
+        ('A', 'Announcement'),
+        ('S', 'Suggestion'),
+        ('Q', 'Question'),
+        ('M', 'message'),
+    )
+    type = models.CharField(max_length=2, null=True, blank=True, choices=TYPE)
+    time_stamp = models.DateTimeField(auto_now_add=True)
