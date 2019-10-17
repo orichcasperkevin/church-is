@@ -1,7 +1,10 @@
 # chat/consumers.py
+import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-import json
+
+from church_social.api.serializers import *
+from member.models import Member
 
 class ChatConsumer(WebsocketConsumer):
 
@@ -34,24 +37,31 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
 
+        channel = Channel.objects.get(name=self.room_name)
+        sender = text_data_json['username']
+        sender = Member.objects.get(member__username=sender)
+        message = text_data_json['message']
+        type = text_data_json['type']
+        #record message to database
+        message = ChannelMessage.objects.create(channel=channel,sender=sender,message=message,type=type)
+        time_stamp = message.time_stamp
+        time_stamp = str(time_stamp)
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
+            self.room_group_name,{
                 'type': 'chat_message',
-                'message': message
-            }
+                'time_stamp': time_stamp
+                }
         )
-
     # Receive message from room group
     def chat_message(self, event):
-        message = event['message']
         # Send message to WebSocket
-        self.send(text_data=json.dumps({
-            'message': message
-        }))
+        time_stamp = event['time_stamp']
+        message = ChannelMessage.objects.filter(time_stamp=time_stamp)        
+        self.send(json.dumps(
+            ChannelMessageSerializer(message, many=True).data)
+            )
 
     def join_chat(self, event):
         print("someone joined chat")
