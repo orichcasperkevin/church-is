@@ -67,3 +67,4 @@ class ChannelMessage(models.Model):
     )
     type = models.CharField(max_length=2, null=True, blank=True, choices=TYPE)
     time_stamp = models.DateTimeField(auto_now_add=True)
+    

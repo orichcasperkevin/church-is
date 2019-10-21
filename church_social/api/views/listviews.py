@@ -20,6 +20,16 @@ class ChannelMessages(APIView):
         get channel messages
     '''
     def get(self,request,channel):
-        message = ChannelMessage.objects.filter(channel__name=channel)
+        message = ChannelMessage.objects.filter(channel__name=channel,type="M")
+        data = ChannelMessageSerializer(message, many=True).data
+        return Response(data)
+
+class ChannelNotices(APIView):
+    '''
+        get:
+        get channel public notices
+    '''
+    def get(self,request,channel):
+        message = ChannelMessage.objects.filter(channel__name=channel,type="A").order_by('-time_stamp')
         data = ChannelMessageSerializer(message, many=True).data
         return Response(data)
