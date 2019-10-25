@@ -20,7 +20,7 @@ class ChannelMessages(APIView):
         get channel messages
     '''
     def get(self,request,channel):
-        message = ChannelMessage.objects.filter(channel__name=channel,type="M")
+        message = ChannelMessage.objects.filter(channel__name=channel,type="M").order_by('id')
         data = ChannelMessageSerializer(message, many=True).data
         return Response(data)
 

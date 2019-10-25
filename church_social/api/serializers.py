@@ -14,9 +14,9 @@ class ChannelParticipantSerializer(serializers.ModelSerializer):
         fields = ('channel',)
         depth = 1
 
-class ChannelMessageSerializer(serializers.ModelSerializer):    
+class ChannelMessageSerializer(serializers.ModelSerializer):
     sender = MemberSerializer()
     class Meta:
         model = ChannelMessage
-        fields = ('sender','message','type','time_stamp',)
+        fields = ('id','sender','message','type','time_stamp',)
         depth = 2
