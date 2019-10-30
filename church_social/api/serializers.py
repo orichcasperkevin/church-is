@@ -20,3 +20,10 @@ class ChannelMessageSerializer(serializers.ModelSerializer):
         model = ChannelMessage
         fields = ('id','sender','message','type','time_stamp',)
         depth = 2
+
+class PeerToPeerMessageSerializer(serializers.ModelSerializer):
+    sender = MemberSerializer()
+    receiver = MemberSerializer()
+    class Meta:
+        model = PeerToPeerMessage
+        fields = ('id','sender','receiver','message','time_stamp',)

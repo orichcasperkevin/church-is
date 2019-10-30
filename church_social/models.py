@@ -2,7 +2,6 @@ from django.db import models
 
 from member.models import Member
 from groups.models import ChurchGroup
-
 class Discussion(models.Model):
     '''
         a discussion started in the church
@@ -58,7 +57,7 @@ class ChannelMessage(models.Model):
     '''
     channel = models.ForeignKey(Channel, on_delete = models.CASCADE)
     sender = models.ForeignKey(Member, on_delete = models.CASCADE)
-    message = models.TextField(max_length=160)
+    message = models.TextField()
     TYPE = (
         ('A', 'Announcement'),
         ('S', 'Suggestion'),
@@ -67,4 +66,9 @@ class ChannelMessage(models.Model):
     )
     type = models.CharField(max_length=2, null=True, blank=True, choices=TYPE)
     time_stamp = models.DateTimeField(auto_now_add=True)
-    
+
+class PeerToPeerMessage(models.Model):
+    sender = models.ForeignKey(Member, on_delete = models.CASCADE, related_name="peer_to_peer_sender")
+    receiver = models.ForeignKey(Member, on_delete = models.CASCADE, related_name="peer_to_peer_receiver")
+    message = models.TextField()
+    time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
