@@ -26,4 +26,4 @@ class PeerToPeerMessageSerializer(serializers.ModelSerializer):
     receiver = MemberSerializer()
     class Meta:
         model = PeerToPeerMessage
-        fields = ('id','sender','receiver','message','time_stamp',)
+        fields = ('id','chat_name','sender','receiver','message','time_stamp',)

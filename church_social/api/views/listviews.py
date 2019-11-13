@@ -46,10 +46,7 @@ class PeerChats(APIView):
         criteria1 = Q(sender__member__username=username)
         criteria2 = Q(receiver__member__username=username)
         messages = PeerToPeerMessage.objects.filter(criteria1 | criteria2)\
-                                            .order_by('receiver__member__username','sender__member__username')\
-                                            .distinct('receiver__member__username','sender__member__username')                                            
-
-
+                                            .order_by('chat_id').distinct('chat_id')
 
         data =  PeerToPeerMessageSerializer(messages,many=True).data
         return Response(data)

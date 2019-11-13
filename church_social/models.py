@@ -1,3 +1,4 @@
+from django.db.models import Value,F
 from django.db import models
 
 from member.models import Member
@@ -67,8 +68,24 @@ class ChannelMessage(models.Model):
     type = models.CharField(max_length=2, null=True, blank=True, choices=TYPE)
     time_stamp = models.DateTimeField(auto_now_add=True)
 
+
+class PeerToPeerMessageManager(models.Manager):
+    def get_queryset(self):
+        qs = super(PeerToPeerMessageManager, self).get_queryset().annotate(chat_id = F('sender') + F('receiver'))
+        return qs
+
 class PeerToPeerMessage(models.Model):
     sender = models.ForeignKey(Member, on_delete = models.CASCADE, related_name="peer_to_peer_sender")
     receiver = models.ForeignKey(Member, on_delete = models.CASCADE, related_name="peer_to_peer_receiver")
     message = models.TextField()
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    @property
+    def chat_name(self):
+        sender = self.sender.member.username
+        receiver = self.receiver.member.username
+        name_list = [sender,receiver]
+        name_list.sort()
+        return '_'.join(name_list)
+
+    objects = PeerToPeerMessageManager()

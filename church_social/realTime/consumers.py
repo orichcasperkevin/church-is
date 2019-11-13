@@ -63,7 +63,7 @@ class ChannelNoticeConsumer(WebsocketConsumer):
             )
 
     def join_chat(self, event):
-        print("someone joined chat")
+        pass
 
 class ChannelChatConsumer(WebsocketConsumer):
 
@@ -122,12 +122,13 @@ class ChannelChatConsumer(WebsocketConsumer):
             )
 
     def join_chat(self, event):
-        print("someone joined chat")
+        pass
 
 class PeerToPeerChatConsumer(WebsocketConsumer):
 
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_name = ('_').join(self.room_name.split('@'))
         self.room_group_name = 'chat_%s' % self.room_name
 
         # Join room group
@@ -156,7 +157,6 @@ class PeerToPeerChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
 
-        channel = Channel.objects.get(name=self.room_name)
         sender = text_data_json['sender']
         receiver = text_data_json['receiver']
         sender = Member.objects.get(member__username=sender)
@@ -184,4 +184,4 @@ class PeerToPeerChatConsumer(WebsocketConsumer):
             )
 
     def join_chat(self, event):
-        print("someone joined chat")
+        pass

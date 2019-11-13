@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import listviews
@@ -8,8 +8,8 @@ urlpatterns = [
     path('<slug:username>/channels/', listviews.Channels.as_view()),
     path('<slug:channel>/messages/', listviews.ChannelMessages.as_view()),
     path('<slug:channel>/notices/', listviews.ChannelNotices.as_view()),
-    path('<slug:username>/chats/', listviews.PeerChats.as_view()),
-    path('<slug:peer_1>/<slug:peer_2>/chat-messages/', listviews.PeerToPeerMessages.as_view()),
+    re_path(r'^(?P<username>.*)/chats/$', listviews.PeerChats.as_view()),
+    re_path(r'^(?P<peer_1>.*)/(?P<peer_2>.*)/chat-messages/$', listviews.PeerToPeerMessages.as_view()),
 
 ]
 
