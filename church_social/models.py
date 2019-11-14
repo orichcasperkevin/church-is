@@ -71,7 +71,8 @@ class ChannelMessage(models.Model):
 
 class PeerToPeerMessageManager(models.Manager):
     def get_queryset(self):
-        qs = super(PeerToPeerMessageManager, self).get_queryset().annotate(chat_id = F('sender') + F('receiver'))
+        qs = super(PeerToPeerMessageManager, self).get_queryset()\
+            .annotate(chat_id = F('sender') + F('receiver'))
         return qs
 
 class PeerToPeerMessage(models.Model):

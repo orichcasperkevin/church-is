@@ -325,7 +325,7 @@ class CSVLoader():
                                 if config_tuple[key] == 'names':
                                     self.names_column = i
                                 if config_tuple[key] == 'date of birth':
-                                    self.date_of_birth_column = i                                    
+                                    self.date_of_birth_column = i
                 else:
                     break
                 line_count += 1
@@ -402,7 +402,7 @@ class CSVLoader():
                     if ( len(names) == 2 ):
                         first_name = names[0]
                         last_name = names[1]
-                        username = '@' + first_name.lower() + last_name.lower()
+                        username = first_name.lower() + last_name.lower()
                         user_id = self._create_user(first_name,last_name, username, email)
                         member_id = self._create_member(user_id,gender)
 
@@ -410,7 +410,7 @@ class CSVLoader():
                         first_name = names[0]
                         middle_name = names[1]
                         last_name = names[2]
-                        username = '@' + first_name.lower() + last_name.lower()
+                        username = first_name.lower() + last_name.lower()
                         user_id = self._create_user(first_name,last_name, username, email)
                         member_id = self._create_member(user_id,gender,middle_name)
 
