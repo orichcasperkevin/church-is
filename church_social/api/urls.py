@@ -1,7 +1,7 @@
 from django.urls import path,re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews,addviews
+from .views import listviews,addviews,updateviews
 
 urlpatterns = [
     # listing
@@ -20,6 +20,10 @@ urlpatterns = [
     path('add-reaction-to-discussion/', addviews.AddReactionToDiscussion.as_view()),
     path('add-contribution-to-discussion/', addviews.AddContributionToDiscussion.as_view()),
     path('add-comment-to-contribution/', addviews.AddCommentToContribution.as_view()),
+
+    #updating
+    path('vote-contribution/<int:contribution_id>/', updateviews.VoteContribution.as_view()),
+    path('vote-comment/<int:comment_id>/', updateviews.VoteComment.as_view()),
 
 
 
