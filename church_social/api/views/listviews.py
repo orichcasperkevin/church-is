@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q,Count
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -26,6 +26,16 @@ class Discussions(APIView):
         discussions = Discussion.objects.filter()[from_index:to_index]
         data = DiscussionSerializer(discussions,many=True).data
         return Response(data)
+
+class DisccussionReactions(APIView):
+    '''
+        get:
+        reactions from people on a discussion
+    '''
+    def get(self,request,discussion_id):
+        reactions = DiscussionReaction.objects.filter(discussion_id=discussion_id)\
+                                               .aggregate(count = Count('discussion_id'))
+        return Response(reactions)
 
 
 class Channels(APIView):
