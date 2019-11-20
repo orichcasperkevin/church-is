@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from church_social.api.serializers import (TagSerializer,DiscussionSerializer,TagMembershipSerializer,
-        DiscussionReactionSerializer,)
+        DiscussionReactionSerializer,AddContributionToDiscussionSerializer)
 from church_social.models import Tag,TagMembership,Discussion
 from member.models import Member
 from member.api.serializers import MemberSerializer
@@ -106,10 +106,37 @@ class AddReactionToDiscussion(APIView):
         data = {'reaction':reaction,'discussion':discussion,'reaction_by':reactor}
 
         serializer = DiscussionReactionSerializer(data=data)
-        print(serializer)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            print("here22")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddContributionToDiscussion(APIView):
+    def post(self,request):
+        discussion_id = request.data.get("discussion_id")
+        contributor_id = request.data.get("contributor_id")
+        contribution = request.data.get("contribution")
+
+        queryset = Discussion.objects.filter(id=discussion_id)
+        data = []
+        for data in queryset:
+            data = data
+        serializer = DiscussionSerializer(data)
+        discussion = serializer.data
+
+        queryset = Member.objects.filter(id=contributor_id)        
+        contributor = []
+        for contributor in queryset:
+            contributor = contributor
+        serializer = MemberSerializer(contributor)
+        contributor = serializer.data
+
+        data = {'discussion':discussion,'contributor':contributor,'contribution':contribution}
+        serializer = AddContributionToDiscussionSerializer(data=data)
+
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

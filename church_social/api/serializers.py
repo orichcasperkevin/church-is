@@ -67,6 +67,25 @@ class DiscussionReactionSerializer(serializers.ModelSerializer):
         reaction = DiscussionReaction.objects.create(discussion=discussion,reaction_by=reaction_by,**validated_data)
         return reaction
 
+class AddContributionToDiscussionSerializer(serializers.ModelSerializer):
+    discussion = DiscussionSerializer()
+    contributor = MemberSerializer()
+    class Meta:
+        model = DiscussionContribution
+        fields = ('discussion','contributor','contribution',)
+
+    def create(self,validated_data):
+        discussion = {}
+        discussion_data = validated_data.pop('discussion')
+        discussion = Discussion.objects.get(topic=discussion_data['topic'])
+
+        member = {}
+        member_data = validated_data.pop('contributor')
+        contributor = Member.objects.get(id=member_data['id'])
+
+        contribution = DiscussionContribution.objects.create(discussion=discussion,contributor=contributor,**validated_data)
+        return contribution
+
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
@@ -91,4 +110,4 @@ class PeerToPeerMessageSerializer(serializers.ModelSerializer):
     receiver = MemberSerializer()
     class Meta:
         model = PeerToPeerMessage
-        fields = ('id','chat_name','sender','receiver','message','time_stamp',)
+        fields = ('id','sender','receiver','message','time_stamp',)

@@ -6,7 +6,7 @@ from groups.models import ChurchGroup
 
 class Tag(models.Model):
     '''
-        a tag
+        a tag to a discussion
     '''
     name = models.CharField(max_length=100)
 
@@ -48,7 +48,7 @@ class DiscussionContribution(models.Model):
     '''
     discussion  =   models.ForeignKey(Discussion, on_delete=models.CASCADE)
     contributor = models.ForeignKey(Member, on_delete=models.CASCADE)
-    contribution = models.TextField(max_length=160)
+    contribution = models.TextField(max_length=1600)
     creation_time = models.DateTimeField(auto_now_add=True)
     votes_up = models.IntegerField(default=0)
     votes_down = models.IntegerField(default=0)
@@ -96,7 +96,6 @@ class ChannelMessage(models.Model):
     type = models.CharField(max_length=2, null=True, blank=True, choices=TYPE)
     time_stamp = models.DateTimeField(auto_now_add=True)
 
-
 class PeerToPeerMessageManager(models.Manager):
     def get_queryset(self):
         qs = super(PeerToPeerMessageManager, self).get_queryset()\
@@ -108,13 +107,5 @@ class PeerToPeerMessage(models.Model):
     receiver = models.ForeignKey(Member, on_delete = models.CASCADE, related_name="peer_to_peer_receiver")
     message = models.TextField()
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    @property
-    def chat_name(self):
-        sender = self.sender.member.username
-        receiver = self.receiver.member.username
-        name_list = [sender,receiver]
-        name_list.sort()
-        return '_'.join(name_list)
 
     objects = PeerToPeerMessageManager()
