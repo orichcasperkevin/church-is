@@ -3,6 +3,34 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from church_social.api.serializers import TagSerializer,DiscussionSerializer,TagMembershipSerializer
 from church_social.models import Tag,TagMembership,Discussion
+from member.models import Member
+from member.api.serializers import MemberSerializer
+
+class AddDiscussion(APIView):
+    '''
+        add discussion
+    '''
+    def post(self, request):
+        topic = request.data.get("topic")
+        description = request.data.get("description")
+        creator_id = request.data.get("creator_id")
+        open = request.data.get("open")
+
+        queryset = Member.objects.filter(id=creator_id)
+        creator = []
+        for creator in queryset:
+            creator = creator
+        serializer = MemberSerializer(creator)
+        creator = serializer.data
+
+        data = {'topic':topic,'description':description,'creator':creator,'open':open}
+
+        serializer = DiscussionSerializer(data=data)
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AddTag(APIView):
     '''
@@ -14,7 +42,7 @@ class AddTag(APIView):
         data = {'name': name}
         serializer = TagSerializer(data=data)
         if serializer.is_valid():
-            created = serializer.save()            
+            created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

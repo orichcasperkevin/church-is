@@ -12,9 +12,12 @@ urlpatterns = [
 
     re_path(r'^(?P<username>.*)/chats/$', listviews.PeerChats.as_view()),
     re_path(r'^(?P<peer_1>.*)/(?P<peer_2>.*)/chat-messages/$', listviews.PeerToPeerMessages.as_view()),
-    
+
     # adding
     path('add-tag/', addviews.AddTag.as_view()),
+    path('add-discussion/', addviews.AddDiscussion.as_view()),
+    path('add-tag-to-discussion/', addviews.AddTagMembership.as_view()),
+
 
 ]
 
