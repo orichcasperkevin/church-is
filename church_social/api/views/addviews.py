@@ -1,9 +1,9 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from church_social.api.serializers import (TagSerializer,DiscussionSerializer,TagMembershipSerializer,
-        DiscussionReactionSerializer,AddContributionToDiscussionSerializer)
-from church_social.models import Tag,TagMembership,Discussion
+from church_social.api.serializers import (TagSerializer,DiscussionSerializer,TagMembershipSerializer,DiscussionContributionSerializer,
+        DiscussionReactionSerializer,AddContributionToDiscussionSerializer, AddCommentToContributionSerializer)
+from church_social.models import Tag,TagMembership,Discussion,DiscussionContribution
 from member.models import Member
 from member.api.serializers import MemberSerializer
 
@@ -125,7 +125,7 @@ class AddContributionToDiscussion(APIView):
         serializer = DiscussionSerializer(data)
         discussion = serializer.data
 
-        queryset = Member.objects.filter(id=contributor_id)        
+        queryset = Member.objects.filter(id=contributor_id)
         contributor = []
         for contributor in queryset:
             contributor = contributor
@@ -134,6 +134,35 @@ class AddContributionToDiscussion(APIView):
 
         data = {'discussion':discussion,'contributor':contributor,'contribution':contribution}
         serializer = AddContributionToDiscussionSerializer(data=data)
+
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddCommentToContribution(APIView):
+    def post(self, request):
+        commentor_id = request.data.get("commentor_id")
+        contribution_id = request.data.get("contribution_id")
+        comment = request.data.get("comment")
+
+        queryset = DiscussionContribution.objects.filter(id=contribution_id)
+        contribution = []
+        for contribution in queryset:
+            contribution = contribution
+        serializer = DiscussionContributionSerializer(contribution)
+        contribution = serializer.data
+
+        queryset = Member.objects.filter(id=commentor_id)
+        commentor = []
+        for commentor in queryset:
+            commentor = commentor
+        serializer = MemberSerializer(commentor)
+        commentor = serializer.data
+
+        data = {'commentor':commentor,'contribution':contribution,'comment':comment}
+        serializer = AddCommentToContributionSerializer(data=data)
 
         if serializer.is_valid():
             created = serializer.save()

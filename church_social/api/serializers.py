@@ -27,6 +27,14 @@ class DiscussionSerializer(serializers.ModelSerializer):
         discussion = Discussion.objects.create(creator=creator, **validated_data)
         return discussion
 
+class DiscussionContributionSerializer(serializers.ModelSerializer):
+    discussion = DiscussionSerializer()
+    contributor = MemberSerializer()
+    class Meta:
+        model = DiscussionContribution
+        fields = ('id','discussion','contributor','votes_up','votes_down',)
+        depth = 1
+        extra_kwargs = {'id': {'read_only': False}}
 
 class TagMembershipSerializer(serializers.ModelSerializer):
     tag = TagSerializer()
@@ -85,6 +93,27 @@ class AddContributionToDiscussionSerializer(serializers.ModelSerializer):
 
         contribution = DiscussionContribution.objects.create(discussion=discussion,contributor=contributor,**validated_data)
         return contribution
+
+class AddCommentToContributionSerializer(serializers.ModelSerializer):
+    contribution = DiscussionContributionSerializer()
+    commentor = MemberSerializer()
+    class Meta:
+        model = CommentToContribution
+        fields = ('contribution','comment','commentor',)
+
+    def create(self, validated_data):
+        member = {}
+        member_data = validated_data.pop('commentor')
+        commentor = Member.objects.get(id=member_data['id'])
+
+        contribution = {}
+        contribution_data = validated_data.pop('contribution')
+        contribution = DiscussionContribution.objects.get(id=contribution_data['id'])
+
+        comment = CommentToContribution.objects.create(contribution=contribution,commentor=commentor,**validated_data)
+        return comment
+
+
 
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:

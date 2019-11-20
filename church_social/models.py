@@ -53,7 +53,7 @@ class DiscussionContribution(models.Model):
     votes_up = models.IntegerField(default=0)
     votes_down = models.IntegerField(default=0)
 
-class commentToContribution(models.Model):
+class CommentToContribution(models.Model):
     '''
         a comment toward a contribution
     '''
