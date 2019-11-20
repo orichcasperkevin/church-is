@@ -15,8 +15,8 @@ class Discussion(models.Model):
         a discussion started in the church
     '''
     id = models.AutoField(primary_key=True)
-    topic = models.CharField(max_length=50)
-    description = models.CharField(max_length=160)
+    topic = models.CharField(max_length=500)
+    description = models.CharField(max_length=1600)
     creation_time = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(Member,on_delete=models.CASCADE)
     open = models.BooleanField(default=True)

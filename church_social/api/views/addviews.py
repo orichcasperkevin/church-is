@@ -47,13 +47,13 @@ class AddTag(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class AddTagMembership(APIView):
+class AddTagToDiscussion(APIView):
     '''
         add a discussion to a tag
     '''
     def post(self, request):
 
-        name = request.data.get("name")
+        name = request.data.get("tag_name")
         queryset = Tag.objects.filter(name=name)
         data = []
         for data in queryset:
@@ -62,7 +62,7 @@ class AddTagMembership(APIView):
         tag = serializer.data
 
         discussion_id = request.data.get("discussion_id")
-        queryset = Discussion.objects.filter(discussion_id=discussion_id)
+        queryset = Discussion.objects.filter(id=discussion_id)        
         data = []
         for data in queryset:
             data = data

@@ -16,7 +16,7 @@ class DiscussionSerializer(serializers.ModelSerializer):
     creator = MemberSerializer()
     class Meta:
         model = Discussion
-        fields = ('id','topic','creation_time','creator','open','tags',)
+        fields = ('id','topic','description','creation_time','creator','open','tags',)
         depth = 2
 
     def create(self,validated_data):
@@ -42,8 +42,8 @@ class TagMembershipSerializer(serializers.ModelSerializer):
         tag = Tag.objects.get(**tag_data)
 
         discussion = {}
-        discussion_data = validated_data.pop('discussion')
-        discussion = Discussion.objects.get(**discussion_data)
+        discussion_data = validated_data.pop('discussion')        
+        discussion = Discussion.objects.get(topic=discussion_data['topic'])
 
         tag_membership = TagMembership.objects.create(discussion=discussion,tag=tag)
         return tag_membership
