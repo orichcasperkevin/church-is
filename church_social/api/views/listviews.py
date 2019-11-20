@@ -37,6 +37,25 @@ class DisccussionReactions(APIView):
                                                .aggregate(count = Count('discussion_id'))
         return Response(reactions)
 
+class ContributionsInDiscussion(APIView):
+    '''
+        get:
+        get the cntributions towards a discussion between the specified indexes
+    '''
+    def get(self, request, discussion_id ,from_index, to_index):
+        contributions = DiscussionContribution.objects.filter(discussion_id=discussion_id)[from_index:to_index]
+        data = DiscussionContributionSerializer(contributions, many=True).data
+        return Response(data)
+
+class CommentsInContribution(APIView):
+    '''
+        get:
+        get comments to a contribution.
+    '''
+    def get(self,request,contribution_id,from_index, to_index):
+        comments = CommentToContribution.objects.filter(contribution_id=contribution_id)[from_index:to_index]
+        data = AddCommentToContributionSerializer(comments,many=True).data
+        return Response(data)
 
 class Channels(APIView):
     '''
