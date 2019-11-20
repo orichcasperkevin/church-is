@@ -17,6 +17,7 @@ urlpatterns = [
     path('add-tag/', addviews.AddTag.as_view()),
     path('add-discussion/', addviews.AddDiscussion.as_view()),
     path('add-tag-to-discussion/', addviews.AddTagToDiscussion.as_view()),
+    path('add-reaction-to-discussion/', addviews.AddReactionToDiscussion.as_view()),
 
 
 ]

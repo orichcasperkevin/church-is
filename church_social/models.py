@@ -23,8 +23,24 @@ class Discussion(models.Model):
     tags = models.ManyToManyField(Tag, through='TagMembership',blank=True)
 
 class TagMembership(models.Model):
+    '''
+        discussions belong to a tag
+    '''
     tag = models.ForeignKey(Tag,on_delete=models.CASCADE)
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
+
+class DiscussionReaction(models.Model):
+    '''
+        likes towards a discussion
+    '''
+    REACTIONS= (
+        ('L', 'Like'),
+        ('R', 'Reccomend'),
+        ('H', 'Heart'),
+    )
+    reaction = models.CharField(max_length=2, null=True, blank=True, choices=REACTIONS)
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
+    reaction_by = models.ForeignKey(Member, on_delete=models.CASCADE)
 
 class DiscussionContribution(models.Model):
     '''
