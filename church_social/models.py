@@ -3,6 +3,13 @@ from django.db import models
 
 from member.models import Member
 from groups.models import ChurchGroup
+
+class Tag(models.Model):
+    '''
+        a tag
+    '''
+    name = models.CharField(max_length=100)
+
 class Discussion(models.Model):
     '''
         a discussion started in the church
@@ -13,6 +20,11 @@ class Discussion(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(Member,on_delete=models.CASCADE)
     open = models.BooleanField(default=True)
+    tags = models.ManyToManyField(Tag, through='TagMembership',blank=True)
+
+class TagMembership(models.Model):
+    tag = models.ForeignKey(Tag,on_delete=models.CASCADE)
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
 
 class DiscussionContribution(models.Model):
     '''

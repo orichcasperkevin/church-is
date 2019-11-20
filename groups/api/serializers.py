@@ -35,7 +35,6 @@ class AddChurchGroupSerializer(serializers.ModelSerializer):
 
 class ChurchGroupMembershipSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
-
     class Meta:
         model = ChurchGroupMembership
         fields = ('id', 'church_group', 'member', 'role', 'date_joined')

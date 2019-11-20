@@ -1,9 +1,7 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from groups.api.serializers import GroupOfChurchGroupSerializer, ChurchGroupSerializer, ChurchGroupMeetingSerializer
-
 from groups.models import GroupOfChurchGroups, ChurchGroup, GroupMeeting
 
 class GroupOfChurchGroupsList(generics.ListCreateAPIView):

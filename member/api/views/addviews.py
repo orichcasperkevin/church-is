@@ -1,18 +1,11 @@
 import random
 import os
-
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
-
-
-from member.api.serializers import (UserSerializer, MemberSerializer, CreateMemberSerializer,
-                                    MemberContactSerializer, MemberAgeSerializer, RoleMemberShipSerializer,
-                                    MemberResidenceSerializer,
-                                    RoleSerializer, MemberMaritalStatusSerializer,CSVFileSerializer)
-
+from member.api.serializers import *
 from member.models import (Member, Role,)
 from sms.africastalking.at import ChurchSysMessenger
 
@@ -24,14 +17,13 @@ messenger = ChurchSysMessenger("create member", "test member 2")
 
 class addMember(APIView):
     '''
-
+        add member to church
     '''
-
     def post(self, request):
 
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
-        username = '@' + first_name.lower() + last_name.lower()
+        username = first_name.lower() + last_name.lower()
         email = request.data.get("email")
         gender = request.data.get("gender")
 
@@ -108,7 +100,7 @@ class ImportDataFromCsv(APIView):
         import data from a csv file given the name
     '''
 
-    def post(self, request):            
+    def post(self, request):
             loader.load(request.data.get("file_name"))
             try:
                 loader.load(request.data.get("file_name"))

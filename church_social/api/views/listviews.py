@@ -1,10 +1,32 @@
 from django.db.models import Q
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from church_social.api.serializers import *
+from church_social.models import *
 from member.models import Member
 
 MAX_MESSAGE_COUNT = 200
+
+class Tags(APIView):
+    '''
+        a list of tags
+    '''
+    def get(self,request):
+        tags = Tag.objects.all()
+        data = TagSerializer(tags,many=True).data
+        return Response(data)
+
+class Discussions(APIView):
+    '''
+        get:
+        get Discussions from x to x
+    '''
+    def get(self,request,from_index,to_index):
+        discussions = Discussion.objects.filter()[from_index:to_index]
+        data = DiscussionSerializer(discussions,many=True).data
+        return Response(data)
+
 
 class Channels(APIView):
     '''
