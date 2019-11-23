@@ -61,7 +61,7 @@ class DiscussionReactionSerializer(serializers.ModelSerializer):
     reaction_by = MemberSerializer()
     class Meta:
         model = DiscussionReaction
-        fields = ('discussion','reaction','reaction_by',)
+        fields = ('discussion','recomendation','reaction','reaction_by',)
 
     def create(self,validated_data):
         discussion = {}

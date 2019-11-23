@@ -37,6 +37,16 @@ class DisccussionReactions(APIView):
                                                .aggregate(count = Count('discussion_id'))
         return Response(reactions)
 
+class DisccussionRecomendations(APIView):
+    '''
+        get:
+        recomendations from people on a discussion
+    '''
+    def get(self,request,discussion_id):
+        recomendations = DiscussionReaction.objects.filter(discussion_id=discussion_id,reaction="R")
+        data = DiscussionReactionSerializer(recomendations,many=True).data
+        return Response(data)
+        
 class ContributionsInDiscussion(APIView):
     '''
         get:
@@ -46,6 +56,17 @@ class ContributionsInDiscussion(APIView):
         contributions = DiscussionContribution.objects.filter(discussion_id=discussion_id)[from_index:to_index]
         data = DiscussionContributionSerializer(contributions, many=True).data
         return Response(data)
+
+class ContributionsInDiscussionCount(APIView):
+    '''
+        get:
+        get the count of  contributions towards a discussion.
+    '''
+    def get(self, request, discussion_id):
+        contributions = DiscussionContribution.objects.filter(discussion_id=discussion_id)\
+                                                       .aggregate(count= Count('discussion_id'))
+        return Response(contributions)
+
 
 class CommentsInContribution(APIView):
     '''

@@ -85,6 +85,7 @@ class AddReactionToDiscussion(APIView):
     '''
     def post(self, request):
         reaction = request.data.get("reaction")
+        recomendation = request.data.get("recomendation")
         reactor_id = request.data.get("reactor_id")
         discussion_id = request.data.get("discussion_id")
 
@@ -103,7 +104,7 @@ class AddReactionToDiscussion(APIView):
         serializer = MemberSerializer(reactor)
         reactor = serializer.data
 
-        data = {'reaction':reaction,'discussion':discussion,'reaction_by':reactor}
+        data = {'reaction':reaction,'recomendation':recomendation,'discussion':discussion,'reaction_by':reactor}
 
         serializer = DiscussionReactionSerializer(data=data)
         if serializer.is_valid():
