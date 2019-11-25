@@ -17,7 +17,7 @@ class AddDiscussion(APIView):
         creator_id = request.data.get("creator_id")
         open = request.data.get("open")
 
-        queryset = Member.objects.filter(id=creator_id)
+        queryset = Member.objects.filter(member_id=creator_id)
         creator = []
         for creator in queryset:
             creator = creator
@@ -97,7 +97,7 @@ class AddReactionToDiscussion(APIView):
         serializer = DiscussionSerializer(data)
         discussion = serializer.data
 
-        queryset = Member.objects.filter(id=reactor_id)
+        queryset = Member.objects.filter(member_id=reactor_id)
         reactor = []
         for reactor in queryset:
             reactor = reactor
@@ -126,7 +126,7 @@ class AddContributionToDiscussion(APIView):
         serializer = DiscussionSerializer(data)
         discussion = serializer.data
 
-        queryset = Member.objects.filter(id=contributor_id)
+        queryset = Member.objects.filter(member_id=contributor_id)
         contributor = []
         for contributor in queryset:
             contributor = contributor
@@ -155,7 +155,7 @@ class AddCommentToContribution(APIView):
         serializer = DiscussionContributionSerializer(contribution)
         contribution = serializer.data
 
-        queryset = Member.objects.filter(id=commentor_id)
+        queryset = Member.objects.filter(member_id=commentor_id)
         commentor = []
         for commentor in queryset:
             commentor = commentor

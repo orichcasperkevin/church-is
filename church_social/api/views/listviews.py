@@ -23,7 +23,7 @@ class Discussions(APIView):
         get Discussions from x to x
     '''
     def get(self,request,from_index,to_index):
-        discussions = Discussion.objects.filter()[from_index:to_index]
+        discussions = Discussion.objects.filter().order_by('-creation_time')[from_index:to_index]
         data = DiscussionSerializer(discussions,many=True).data
         return Response(data)
 
@@ -37,6 +37,20 @@ class DisccussionReactions(APIView):
                                                .aggregate(count = Count('discussion_id'))
         return Response(reactions)
 
+class MemberHasReacted(APIView):
+    '''
+        get:
+        if member has liked this discussion
+    '''
+    def get(self,request,discussion_id,member_id):
+        data = {}
+        reactions = DiscussionReaction.objects.filter(discussion_id=discussion_id,reaction_by__member_id=member_id)
+        if len(reactions):
+            data = { 'has_liked':True };
+        else:
+            data = { 'has_liked':False };
+        return Response(data)
+
 class DisccussionRecomendations(APIView):
     '''
         get:
@@ -46,7 +60,7 @@ class DisccussionRecomendations(APIView):
         recomendations = DiscussionReaction.objects.filter(discussion_id=discussion_id,reaction="R")
         data = DiscussionReactionSerializer(recomendations,many=True).data
         return Response(data)
-        
+
 class ContributionsInDiscussion(APIView):
     '''
         get:

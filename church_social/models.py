@@ -2,7 +2,6 @@ from django.db.models import Value,F
 from django.db import models
 
 from member.models import Member
-from groups.models import ChurchGroup
 
 class Tag(models.Model):
     '''
@@ -39,7 +38,7 @@ class DiscussionReaction(models.Model):
         ('H', 'Heart'),
     )
     reaction = models.CharField(max_length=2, null=True, blank=True, choices=REACTIONS)
-    recomendation = models.TextField(max_length=50,null=True,blank=True)        
+    recomendation = models.TextField(max_length=50,null=True,blank=True)
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
     reaction_by = models.ForeignKey(Member, on_delete=models.CASCADE)
 

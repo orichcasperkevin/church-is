@@ -10,6 +10,7 @@ urlpatterns = [
     path('<slug:channel>/notices/', listviews.ChannelNotices.as_view()),
     path('discussions/<int:from_index>/<int:to_index>/', listviews.Discussions.as_view()),
     path('discussion/<int:discussion_id>/reactions/', listviews.DisccussionReactions.as_view()),
+    path('member/<int:member_id>/reactions-to-discussion/<int:discussion_id>/', listviews.MemberHasReacted.as_view()),
     path('discussion/<int:discussion_id>/recomendations/', listviews.DisccussionRecomendations.as_view()),
     path('discussion/<int:discussion_id>/contributions/<int:from_index>/<int:to_index>/', listviews.ContributionsInDiscussion.as_view()),
     path('discussion/<int:discussion_id>/contributions-count/', listviews.ContributionsInDiscussionCount.as_view()),

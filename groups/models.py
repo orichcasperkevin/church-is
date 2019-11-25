@@ -1,6 +1,7 @@
 from django.db import models
-
+from church_social.models import  Channel,ChannelParticipant
 from member.models import Member, Role
+
 
 class GroupOfChurchGroups(models.Model):
     '''
@@ -14,9 +15,21 @@ class GroupOfChurchGroups(models.Model):
     def number_of_groups(self):
         count = 0
         for data in ChurchGroup.objects.filter(group_id = self.id):
-            count += 1        
+            count += 1
         return count
 
+class ChurchGroupModelManager(models.Manager):
+    '''
+        we need to create a channel every time a group is created
+    '''
+    def create(self,**obj_data):
+        group_name  = (obj_data['name'])
+        description = (obj_data['description'])
+        channel_name = ('_').join(group_name.split(' '))
+
+        #create the channel for this group
+        Channel.objects.create(name=channel_name,description=description,open=True)
+        return super().create(**obj_data)
 
 class ChurchGroup(models.Model):
     '''
@@ -27,6 +40,7 @@ class ChurchGroup(models.Model):
     name = models.CharField(max_length=20)
     description = models.TextField(blank=True)
     group_members = models.ManyToManyField(Member, through='ChurchGroupMembership', blank=True)
+    anvil_space_only = models.BooleanField(default=False)
 
     @property
     def number_of_members(self):
@@ -34,7 +48,20 @@ class ChurchGroup(models.Model):
         for data in self.group_members.all():
             number = number + 1
         return number
+    objects = ChurchGroupModelManager()
 
+class ChurchGroupMembershipModelManager(models.Manager):
+    '''
+        because we need to create add a member to a channel whenever they are added to a group
+    '''
+    def create(self,**obj_data):
+        member  = (obj_data['member'])
+        church_group = (obj_data['church_group'])
+        church_group_name = church_group.name
+        channel = Channel.objects.get(name=('_').join(church_group_name.split(' ')))
+        #create ChannelParticipant
+        ChannelParticipant.objects.create(channel_id=channel.id,participant_id=member.id)
+        return super().create(**obj_data)
 
 class ChurchGroupMembership(models.Model):
     '''
@@ -45,6 +72,8 @@ class ChurchGroupMembership(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
     date_joined = models.DateField(auto_now_add=True)
+
+    objects = ChurchGroupMembershipModelManager()
 
 
 class GroupMeeting(models.Model):

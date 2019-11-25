@@ -13,6 +13,7 @@ from member.resources.importCSV import CSVLoader
 loader = CSVLoader()
 
 messenger = ChurchSysMessenger("create member", "test member 2")
+STARTER_PASSWORD = "changeMe"
 
 
 class addMember(APIView):
@@ -267,7 +268,7 @@ class AddRoleMemberShip(APIView):
             member = Member.objects.get(member_id=member_id)
             user = User.objects.get(id=member.member.id)
             member_id = []
-            starter_password = "nano-initial"
+            starter_password = STARTER_PASSWORD
             message = 'You have been made admin of the Church MS, use ' + starter_password + ' as your starting password and '+  user.username + ' as your username'
 
             if (role.site_admin
@@ -277,10 +278,11 @@ class AddRoleMemberShip(APIView):
                 or role.projects_admin
                 or role.finance_admin):
                 if (not user.check_password(user.password)):
-                    member_id.append(member.id)
+                    member_id.append(member.member.id)
                     receipient = messenger.receipients_phone_numbers(member_id)
                     user.set_password(starter_password)
-                    messenger.send_message(receipient, message)
+                    if (len(receipient)):                        
+                        messenger.send_message(receipient, message)
                     user.save()
 
                 else:
