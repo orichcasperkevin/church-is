@@ -5,14 +5,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.api.serializers import (MemberSerializer, MemberContactSerializer, MemberAgeSerializer,
-                                    MemberResidenceSerializer,
-                                    RoleSerializer, MemberMaritalStatusSerializer,
-                                    FamilySerializer, FamilyMembershipSerializer, )
-# TODO import each componet singly
-from member.models import (Member, MemberContact, MemberAge,
-                           MemberResidence, Role,
-                           MemberMaritalStatus, Family, FamilyMembership, )
+from member.api.serializers import *
+from member.models import *
 
 
 class MemberList(generics.ListCreateAPIView):

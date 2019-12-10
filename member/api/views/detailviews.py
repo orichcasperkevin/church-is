@@ -61,17 +61,21 @@ class GetAgeForMemberWithId(APIView):
     '''
 
     def get(self, request, id):
-        age = MemberAge.objects.get(member__member__id=id)
+        try:
+            age = MemberAge.objects.get(member__member__id=id)
+            today = date.today()
+            data = today.year - age.d_o_b.year - ((today.month, today.day) < (age.d_o_b.month, age.d_o_b.day))
+            age_dict = {"age": '', "d_o_b": ''}
+            age_dict["age"] = data
+            age_dict["d_o_b"] = age.d_o_b
 
-        today = date.today()
-        data = today.year - age.d_o_b.year - ((today.month, today.day) < (age.d_o_b.month, age.d_o_b.day))
-        age_dict = {"age": '', "d_o_b": ''}
-        age_dict["age"] = data
-        age_dict["d_o_b"] = age.d_o_b
+            data = age_dict
+            return Response(data)
 
-        data = age_dict
+        except:
+            data = [None]
+            return Response(data)
 
-        return Response(data)
 
 
 class GetResidenceForMemberWithId(APIView):
@@ -215,5 +219,6 @@ class PreviewCSV(APIView):
     '''
 
     def get(self, request, file_name):
+        loader.set_base_url(request.get_host())
         data = loader.preview_CSV(file_name)
         return Response(data)

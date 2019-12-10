@@ -1,21 +1,13 @@
-from datetime import date
-
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from finance.api.serializers import (OfferingSerializer, TitheSerializer, IncomeTypeSerializer, IncomeSerializer,
-                                     ExpenditureTypeSerializer, ExpenditureSerializer )
-# TODO import each componet singly
-from finance.models import (Offering, Tithe, Income, IncomeType,
-                            ExpenditureType, Expenditure)
+from finance.api.serializers import *
+from finance.models import *
 
-today = date.today()
-day = today.day
-month = today.month
-year = today.year
-
-
+class PendingConfirmations(generics.ListCreateAPIView):
+    queryset = PendingConfirmation.objects.all()
+    serializer_class = PendingConfirmationSerializer
 class IncomeTypeList(generics.ListCreateAPIView):
     '''
         a list of all income types

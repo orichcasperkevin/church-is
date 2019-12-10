@@ -3,20 +3,43 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 #import serializers
-from finance.api.serializers import (OfferingSerializer, GroupOfferingSerializer,
-    addAnonymousOfferingSerializer,TitheSerializer, IncomeTypeSerializer, IncomeSerializer,
-    ExpenditureSerializer, ExpenditureTypeSerializer, AddServiceOfferingSerializer,
-    AddMemberOfferingSerializer,)
-
+from finance.api.serializers import *
 from member.api.serializers import MemberSerializer
 from services.api.serializers import ServiceSerializer
-
 # import models
-from finance.models import (Offering, GroupOffering, IncomeType,ExpenditureType, )
+from finance.models import *
 from groups.models import ChurchGroup
 from member.models import Member
 from services.models import Service,ServiceType
 
+
+class addPendingConfirmation(APIView):
+    '''
+        add a pending confirmation
+    '''
+
+    def post(self, request):
+
+        member_id = request.data.get("member_id")
+        queryset = Member.objects.filter(member_id=member_id)
+        data = []
+        for data in queryset:
+            data = data
+        serializer = MemberSerializer(data)
+        member = serializer.data
+
+        amount = request.data.get("amount")
+        type = request.data.get("type")
+        confirmation_message = request.data.get("confirmation_message")
+
+        data = {'confirming_for': member, 'amount': amount, 'confirmation_message': confirmation_message, 'type': type}
+        serializer = PendingConfirmationSerializer(data=data)
+
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class addTithe(APIView):
     '''

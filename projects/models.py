@@ -11,7 +11,6 @@ from member.models import Member
 
 # Create your models here.
 
-
 class Project(models.Model):
     """Church undertaking project"""
     id = models.AutoField(primary_key=True)
@@ -146,3 +145,34 @@ class PledgePayment(models.Model):
     payment_recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL,
                                             related_name='payment_recorded_by')
     payment_recorded_on = models.DateTimeField(auto_now_add=True)
+
+
+class PendingConfirmation(models.Model):
+    '''
+        pending payment confirmations
+    '''
+    confirming_for = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True, related_name='confirming_for')
+    for_project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='for_projects',null=True)
+    TYPE = (
+            ('C', 'Contribution'),
+            ('P', 'PledgeSettlement'),
+    )
+    confirmation_message = models.TextField(max_length=500)
+    type = models.CharField(max_length=2, null=True, blank=True, choices=TYPE)
+    date = models.DateField(auto_now_add=True)
+    amount = models.DecimalField(max_digits=15, decimal_places=2,default=0.00)
+
+    def confirmPayment(self):
+        '''
+            confirm that the payment has been made
+        '''
+        #TODO tun this offering to queryset without doing a filter
+        if (self.type == "C"):
+            contribution =  Contribution.objects.create(project=self.for_project,member=self.confirming_for,amount=self.amount)
+            self.delete()
+            return Contribution.objects.filter(id=contribution.id)
+        else:
+            pledge = Pledge.objects.get(project_id = self.for_project.id,member__member__id = self.confirming_for.member.id)
+            payment =  PledgePayment.objects.create(pledge=pledge,payment_amount=self.amount)
+            self.delete()
+            return PledgePayment.objects.filter(id=payment.id)

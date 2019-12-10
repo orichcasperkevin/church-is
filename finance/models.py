@@ -2,6 +2,7 @@
 from datetime import date
 
 from django.db import models
+from django.utils.timezone import now
 
 from groups.models import ChurchGroup
 from services.models import Service
@@ -11,6 +12,31 @@ today = date.today()
 day = today.day
 month = today.month
 year = today.year
+
+class PendingConfirmation(models.Model):
+    confirming_for = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True)
+    TYPE = (
+            ('O', 'Offering'),
+            ('T', 'Tithe'),
+    )
+    confirmation_message = models.TextField(max_length=500)
+    date = models.DateField(auto_now_add=True)
+    type = models.CharField(max_length=2, null=True, blank=True, choices=TYPE)
+    amount = models.DecimalField(max_digits=15, decimal_places=2,default=0.00)
+
+    def confirmPayment(self):
+        '''
+            confirm that the payment has been made
+        '''
+        #TODO tun this offering to queryset without doing a filter
+        if (self.type == "O"):
+            offering =  Offering.objects.create(member=self.confirming_for,amount=self.amount,date=now().date())
+            self.delete()
+            return Offering.objects.filter(id=offering.id)
+        else:
+            tithe =  Tithe.objects.create(member=self.confirming_for,amount=self.amount)
+            self.delete()
+            return Tithe.objects.filter(id=tithe.id)
 
 
 class Offering(models.Model):

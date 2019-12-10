@@ -3,12 +3,47 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from member.api.serializers import MemberSerializer
-from member.models import (Member)
-from projects.api.serializers import (ProjectSerializer, PledgeSerializer,
-                                      AddContributionSerializer,
-                                      PledgePaymentSerializer, AddAnonymousContributionSerializer,
-                                      AddAnonymousPledgeSerializer, AddPledgeSerializer)
-from projects.models import (Project, Pledge)
+from member.models import Member
+from projects.api.serializers import *
+from projects.models import Project, Pledge, PendingConfirmation
+
+class AddPendingConfirmation(APIView):
+    '''
+        post:
+        add pending confirmation
+    '''
+    def post(self,request):
+        project_id = request.data.get("project_id")
+        queryset = Project.objects.filter(id=project_id)
+        data = []
+        for data in queryset:
+            data = data
+        serializer = ProjectSerializer(data)
+        project = serializer.data
+
+        member_id = request.data.get("member_id")
+        queryset = Member.objects.filter(member_id=member_id)
+        data = []
+        for data in queryset:
+            data = data
+        serializer = MemberSerializer(data)
+        member = serializer.data
+
+        confirmation_message = request.data.get("confirmation_message")
+        amount = request.data.get("amount")
+        type = request.data.get("type")
+
+        data = {'for_project': project, 'confirming_for': member, 'confirmation_message': confirmation_message,
+                'amount': amount, 'type': type}
+
+        serializer = PendingConfirmationSerializer(data=data)
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class AddContribution(APIView):

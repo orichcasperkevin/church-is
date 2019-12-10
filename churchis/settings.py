@@ -59,6 +59,7 @@ TENANT_APPS = (
     'sms',
     'Resources',
     'church_social',
+    'mpesa',
 )
 TENANT_MODEL = "Clients.Client"
 
@@ -91,6 +92,7 @@ INSTALLED_APPS = [
     'sms',
     'Resources',
     'church_social',
+    'mpesa',
 
 ]
 

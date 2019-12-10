@@ -67,6 +67,7 @@ class UploadCSV(APIView):
 
     def post(self, request, *args, **kwargs):
 
+      loader.set_base_url(request.get_host())
       file_serializer = CSVFileSerializer(data=request.data)
 
       if file_serializer.is_valid():
@@ -83,6 +84,7 @@ class CheckCSV(APIView):
     '''
 
     def post(self, request):
+            loader.set_base_url(request.get_host())
             file_name = request.data.get('file_name')
             column_config = request.data.get('column_config')
             try:
@@ -102,6 +104,7 @@ class ImportDataFromCsv(APIView):
     '''
 
     def post(self, request):
+            loader.set_base_url(request.get_host())
             loader.load(request.data.get("file_name"))
             try:
                 loader.load(request.data.get("file_name"))
@@ -281,7 +284,7 @@ class AddRoleMemberShip(APIView):
                     member_id.append(member.member.id)
                     receipient = messenger.receipients_phone_numbers(member_id)
                     user.set_password(starter_password)
-                    if (len(receipient)):                        
+                    if (len(receipient)):
                         messenger.send_message(receipient, message)
                     user.save()
 

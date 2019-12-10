@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
 from member.api.serializers import MemberSerializer
-from member.models import (Member, )
-from projects.models import (Project, Pledge, Contribution, PledgePayment)
+from member.models import Member
+from projects.models import *
+
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -170,3 +171,25 @@ class PledgePaymentSerializer(serializers.ModelSerializer):
         pledge_payment = PledgePayment.objects.create(pledge=pledge, payment_recorded_by=payment_recorded_by,
                                                       **validated_data)
         return pledge_payment
+
+
+class PendingConfirmationSerializer(serializers.ModelSerializer):
+    confirming_for = MemberSerializer()
+    for_project = ProjectSerializer()
+
+    class Meta:
+        model = PendingConfirmation
+        fields = ('id','confirming_for','for_project','confirmation_message','type','amount','date')
+
+    def create(self,validated_data):
+
+        project_data = validated_data.pop('for_project')
+        project = {}
+        project = Project.objects.get(**project_data)
+
+        member_data = validated_data.pop('confirming_for')
+        member = {}
+        member = Member.objects.get(member_id=member_data["member"]["id"])
+
+        pending_confirmation = PendingConfirmation.objects.create(confirming_for=member,for_project=project,**validated_data)
+        return pending_confirmation

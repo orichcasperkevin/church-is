@@ -2,11 +2,31 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from projects.api.serializers import (ProjectSerializer, ContributionSerializer, PledgeSerializer,
-                                      PledgePaymentSerializer)
-# TODO import each componet singly
-from projects.models import (Project, Contribution, Pledge, PledgePayment)
+from projects.api.serializers import *
+from projects.models import (Project, Contribution, Pledge, PledgePayment, PendingConfirmation)
 
+class PendingConfirmations(generics.ListCreateAPIView):
+    '''
+        get:
+        get the list of all pending confirmations
+    '''
+    queryset = PendingConfirmation.objects.all()
+    serializer_class = PendingConfirmationSerializer
+
+class ConfirmPayment(APIView):
+    '''
+        get:
+        confirm a pending confirmation
+    '''
+    def get(self, request, pending_confirmation_id):
+        data = {}
+        pending_confirmation = PendingConfirmation.objects.get(id=pending_confirmation_id)
+        confirmed = pending_confirmation.confirmPayment()
+        if (pending_confirmation.type == "C"):
+            data = ContributionSerializer(confirmed, many=True).data
+        else:
+            data = PledgePaymentSerializer(confirmed, many=True).data
+        return Response(data)
 
 class ProjectList(generics.ListCreateAPIView):
     '''

@@ -4,8 +4,7 @@ import random
 import datetime
 
 from django.contrib.auth.models import User
-from member.models import (Member, MemberContact, MemberAge, MemberResidence,
-    Role, RoleMembership, MemberMaritalStatus, Family, FamilyMembership, )
+from member.models import *
 
 class CSVLoader():
     errors = []
@@ -15,6 +14,11 @@ class CSVLoader():
     phone_number_column = None
     names_column = None
     date_of_birth_column = None
+    BASE_URL = ''
+
+    def set_base_url(self,base_url):
+        self.BASE_URL = base_url.split(':')[0] + "/"
+        print(self.BASE_URL)
 
     def _check_names(self,file_name):
         '''
@@ -22,7 +26,7 @@ class CSVLoader():
         '''
 
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
@@ -44,7 +48,7 @@ class CSVLoader():
 
     def _check_gender(self,file_name):
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
@@ -70,7 +74,7 @@ class CSVLoader():
             check that the date input given is of correct format
         '''
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
@@ -105,7 +109,7 @@ class CSVLoader():
             check that the phone number input provided is correct
         '''
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
@@ -144,7 +148,7 @@ class CSVLoader():
 
     def _check_marital_status(self,file_name):
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
@@ -171,7 +175,7 @@ class CSVLoader():
             check that the email input is of correct format
         '''
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
@@ -276,7 +280,8 @@ class CSVLoader():
             return the csv as json for preview in the UI
         '''
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
+        print(self.BASE_URL)
         data = []
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
@@ -304,7 +309,7 @@ class CSVLoader():
         self.date_of_birth_column = None
 
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL+"Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
@@ -366,7 +371,7 @@ class CSVLoader():
             load a csv file and get its detail
         '''
         initial_dir = os.getcwd()
-        os.chdir("Resources")
+        os.chdir(self.BASE_URL + "Resources")
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')

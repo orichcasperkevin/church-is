@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 # import models
-from finance.models import (Offering, GroupOffering, Tithe, Income, IncomeType, Expenditure, ExpenditureType, )
+from finance.models import *
 from member.models import Member
 from services.models import Service
 
@@ -10,6 +10,19 @@ from services.api.serializers import ServiceSerializer
 from groups.api.serializers import ChurchGroupSerializer
 from member.api.serializers import MemberSerializer
 
+class PendingConfirmationSerializer(serializers.ModelSerializer):
+    confirming_for = MemberSerializer()
+    class Meta:
+        model = PendingConfirmation
+        fields = ('id','date','confirming_for','confirmation_message','amount','type')
+
+    def create(self, validated_data):
+        member_data = validated_data.pop('confirming_for')
+        member = {}
+        member = Member.objects.get(member_id=member_data["member"]["id"])
+
+        pending_confirmation = PendingConfirmation.objects.create(confirming_for=member,**validated_data)
+        return pending_confirmation
 
 class OfferingSerializer(serializers.ModelSerializer):
     member = MemberSerializer()

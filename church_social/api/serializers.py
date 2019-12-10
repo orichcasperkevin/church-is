@@ -129,10 +129,23 @@ class ChannelParticipantSerializer(serializers.ModelSerializer):
 
 class ChannelMessageSerializer(serializers.ModelSerializer):
     sender = MemberSerializer()
+    channel = ChannelSerializer()
     class Meta:
         model = ChannelMessage
-        fields = ('id','sender','message','type','time_stamp',)
+        fields = ('id','channel','sender','message','type','time_stamp',)
         depth = 2
+    def create(self,validated_data):
+        member = {}
+        member_data = validated_data.pop('sender')
+        sender = Member.objects.get(id=member_data['id'])
+
+        channel = {}
+        channel_data = validated_data.pop("channel")
+        channel = Channel.objects.get(**channel_data)
+
+        message = ChannelMessage.objects.create(sender=sender,channel=channel,**validated_data)
+        return message
+
 
 class PeerToPeerMessageSerializer(serializers.ModelSerializer):
     sender = MemberSerializer()
@@ -140,3 +153,15 @@ class PeerToPeerMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PeerToPeerMessage
         fields = ('id','sender','receiver','message','time_stamp',)
+
+    def create(self,validated_data):
+        sender = {}
+        sender_data = validated_data.pop('sender')
+        sender = Member.objects.get(id=sender_data['id'])
+
+        receiver = {}
+        receiver_data = validated_data.pop('receiver')
+        receiver = Member.objects.get(id=receiver_data['id'])
+
+        message = PeerToPeerMessage.objects.create(sender=sender,receiver=receiver,**validated_data)
+        return message

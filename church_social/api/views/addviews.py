@@ -1,11 +1,95 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from church_social.api.serializers import (TagSerializer,DiscussionSerializer,TagMembershipSerializer,DiscussionContributionSerializer,
-        DiscussionReactionSerializer,AddContributionToDiscussionSerializer, AddCommentToContributionSerializer)
-from church_social.models import Tag,TagMembership,Discussion,DiscussionContribution
+from church_social.api.serializers import *
+from church_social.models import *
 from member.models import Member
 from member.api.serializers import MemberSerializer
+
+class AddPeerToPeerNewMessage(APIView):
+    '''
+        add a new message
+    '''
+    def post(self,request):
+        sender_id = request.data.get("sender_id")
+        queryset = Member.objects.filter(member_id=sender_id)
+        sender = []
+        for sender in queryset:
+            sender = sender
+        serializer = MemberSerializer(sender)
+        sender = serializer.data
+
+        receiver_id = request.data.get("receiver_id")
+        queryset = Member.objects.filter(member_id=receiver_id)
+        receiver = []
+        for receiver in queryset:
+            receiver = receiver
+        serializer = MemberSerializer(receiver)
+        receiver = serializer.data
+
+        message = request.data.get("message")
+
+        data = {'sender':sender,'receiver':receiver,'message':message}
+
+        serializer = PeerToPeerMessageSerializer(data=data)
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddPeerToPeerNewMessageBulk(APIView):
+    '''
+        add a new message
+    '''
+    def post(self,request):
+        sender_id = request.data.get("sender_id")
+        sender = Member.objects.get(member_id=sender_id)
+
+        message = request.data.get("message")
+
+        receiver_ids = request.data.get("receiver_ids")
+        for id in receiver_ids:
+            try:
+                receiver = Member.objects.get(id=id)
+                PeerToPeerMessage.objects.create(sender=sender,receiver=receiver,message=message)
+            except:
+                pass
+
+        return Response(["success"], status=status.HTTP_201_CREATED)
+
+class AddChannelNotification(APIView):
+    def post(self,request):
+        sender_id = request.data.get("sender_id")
+        queryset = Member.objects.filter(member_id=sender_id)
+        sender = []
+        for sender in queryset:
+            sender = sender
+        serializer = MemberSerializer(sender)
+        sender = serializer.data
+
+        group_name = request.data.get("group_name")
+        channel_name = '_'.join(group_name.split(' '))
+        queryset = Channel.objects.filter(name=channel_name)
+        channel = []
+        for channel in queryset:
+            channel = channel
+        serializer = ChannelSerializer(channel)
+        channel = serializer.data
+
+        message = request.data.get("message")
+        type = "A" #Announcement
+
+        data = {'channel':channel,'sender':sender,'message':message,'type':type}
+
+        print(data)
+        serializer = ChannelMessageSerializer(data=data)
+        print(serializer.initial)
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AddDiscussion(APIView):
     '''

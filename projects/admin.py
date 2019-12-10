@@ -91,3 +91,11 @@ for model in app_models:
          admin.site.register(model)
      except AlreadyRegistered:
          pass
+
+
+app_models = apps.get_app_config('mpesa').get_models()
+for model in app_models:
+     try:
+         admin.site.register(model)
+     except AlreadyRegistered:
+         pass

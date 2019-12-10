@@ -26,6 +26,9 @@ urlpatterns = [
     path('add-reaction-to-discussion/', addviews.AddReactionToDiscussion.as_view()),
     path('add-contribution-to-discussion/', addviews.AddContributionToDiscussion.as_view()),
     path('add-comment-to-contribution/', addviews.AddCommentToContribution.as_view()),
+    path('add-channel-notification/', addviews.AddChannelNotification.as_view()),
+
+    path('add-peer-to-peer-bulk/', addviews.AddPeerToPeerNewMessageBulk.as_view()),
 
     #updating
     path('vote-contribution/<int:contribution_id>/', updateviews.VoteContribution.as_view()),

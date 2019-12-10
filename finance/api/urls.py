@@ -1,11 +1,12 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews
+from .views import listviews, addviews, updateviews
 
 # TODO add delete views
 urlpatterns = [
     # listing
+    path('pending-confirmations/', listviews.PendingConfirmations.as_view()),
     path('income-type-list/', listviews.IncomeTypeList.as_view()),
     path('income-type/<int:id>/', listviews.IncomeTypeOfID.as_view()),
     path('income-of-type/<int:id>/', listviews.IncomeOfType.as_view()),
@@ -30,7 +31,10 @@ urlpatterns = [
     path('add-offering/', addviews.addOffering.as_view()),
     path('add-service-offering/', addviews.AddServiceOffering.as_view()),
     path('add-income/', addviews.addIncome.as_view()),
-    path('add-expenditure/', addviews.addExpenditure.as_view())
+    path('add-expenditure/', addviews.addExpenditure.as_view()),
+    path('add-pending-confirmation/', addviews.addPendingConfirmation.as_view()),
+
+    path('confirm-payment/<int:pending_confirmation_id>/', updateviews.ConfirmPayment.as_view())
 
 ]
 
