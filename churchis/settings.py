@@ -59,7 +59,7 @@ TENANT_APPS = (
     'sms',
     'Resources',
     'church_social',
-    'mpesa',
+    'bootstrap4',
 )
 TENANT_MODEL = "Clients.Client"
 
@@ -92,7 +92,7 @@ INSTALLED_APPS = [
     'sms',
     'Resources',
     'church_social',
-    'mpesa',
+    'bootstrap4',
 
 ]
 
@@ -116,7 +116,7 @@ ROOT_URLCONF = 'churchis.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

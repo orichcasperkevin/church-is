@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework_simplejwt import views as jwt_views
+from Clients import views as site_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('mpesa/', include('mpesa.urls')),
+    path('', site_views.index),
     # jwt authentication
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
