@@ -23,17 +23,33 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top">Start Bootstrap</a>
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">
+        <h2>
+        <img class="mr-0 "style="width: 150px ;height: auto" src="{% static '/site/images/full_logo.png' %}">
+      </h2>
+      </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">About</a>
+            <a class="nav-link js-scroll-trigger" href="#about">about</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#services">Services</a>
+            <a class="nav-link js-scroll-trigger" href="#Members">members</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger " href="#groups">groups</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger " href="#events">events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger " href="#finances">finances</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#communications">communications</a>
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
@@ -43,36 +59,152 @@
     </div>
   </nav>
 
-  <header class="bg-primary text-white">
+  <header class=" text-muted">
     <div class="container text-center">
-      <h1>Welcome to Scrolling Nav</h1>
-      <p class="lead">A landing page template freshly redesigned for Bootstrap 4</p>
+      <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_process_e90d.svg' %}">
+      <h1 class="font-weight-bold">Welcome to anvil church</h1>
+      <p class="lead ">move your church foward with redefined church management.</p>
+      <div class="mt-4 ">
+        <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
+        <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
+      </div>
     </div>
   </header>
 
   <section id="about">
-    <div class="container">
+    <div class="container ">
       <div class="row">
+        <div class="col-lg-2">
+          <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_resume_folder_2_arse.svg' %}">
+        </div>
         <div class="col-lg-8 mx-auto">
-          <h2>About this page</h2>
-          <p class="lead">This is a great place to talk about your webpage. This template is purposefully unstyled so you can use it as a boilerplate or starting point for you own landing page designs! This template features:</p>
-          <ul>
-            <li>Clickable nav links that smooth scroll to page sections</li>
-            <li>Responsive behavior when clicking nav links perfect for a one page website</li>
-            <li>Bootstrap's scrollspy feature which highlights which section of the page you're on in the navbar</li>
-            <li>Minimal custom CSS so you are free to explore your own unique design options</li>
-          </ul>
+          <h2 class="font-weight-bold ">anvil will help <br> YOU stay organised !!</h2>
+          <h2 class="font-weight-bold text-muted">manage your members, plan events,  track giving and so much more with anvil church</h2>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="services" class="bg-light">
+  <section id="Members" class="bg-light">
     <div class="container">
       <div class="row">
+        <div class="col-lg-2">
+          <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_people_search_wctu.svg' %}">
+        </div>
         <div class="col-lg-8 mx-auto">
-          <h2>Services we offer</h2>
-          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel, labore ut velit dignissimos.</p>
+          <div class="row">
+            <div class="col-lg-6 col-sm-12 col-md-8">
+              <h2 class="font-weight-bold">all your members info conveniently stored</h2>
+              <p class="lead text-muted">your members all in one pool,easily searchable by any field, selectable for actions like sending communications and so much more.<br>
+                each member has a file that details their profile,groups they belong to,giving among others.
+              </p>
+              <div class="mt-4 mb-4">
+                <button class="btn btn-success">try demo</button>
+                <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-12">
+              <img class="mr-0" style="width: 500px ;height: auto" src="{% static '/site/images/members.png' %}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="groups">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2 col-sm-12">
+          <img class="mr-0 "style="width: 150px ;height: auto" src="{% static '/site/images/undraw_community_8nwl.svg' %}">
+        </div>
+        <div class="col-lg-6 mx-auto ">
+          <h2 class="font-weight-bold ">organise them into groups</h2>
+          <h2 class="lead text-muted">group your members according to any crieteria of your liking. Then have the groups organised into folders </h2>
+          <div class="mt-4">
+            <button class="btn btn-success">try demo</button>
+            <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+          </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+          <img class="mr-0 "style="width: 350px ;height: auto" src="{% static '/site/images/groups.png' %}">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="events" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2">
+          <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_schedule_pnbk.svg' %}">
+        </div>
+        <div class="col-lg-8 mx-auto">
+          <div class="row">
+            <div class="col-lg-6 col-sm-12 col-md-8">
+              <h2 class="font-weight-bold">plan and track church events</h2>
+              <p class="lead text-muted">schedule church events, view them conveniently with anvil's calender view<br>
+                send reminders to members concerning the events.
+              </p>
+              <div class="mt-4 mb-4">
+                <button class="btn btn-success">try demo</button>
+                <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-12">
+              <img class="mr-0" style="width: 500px ;height: auto" src="{% static '/site/images/events.png' %}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="finances">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2 col-sm-12">
+          <img class="mr-0 "style="width: 150px ;height: auto" src="{% static '/site/images/undraw_wallet_aym5.svg' %}">
+        </div>
+        <div class="col-lg-6 mx-auto ">
+          <h2 class="font-weight-bold ">church finances have never been easier</h2>
+          <h2 class="lead text-muted">monitor church giving: tithes, offerings, add custom givings.<br>
+            track church projects contributions and progress.track your expenses.
+          </h2>
+          <div class="mt-4">
+            <button class="btn btn-success">try demo</button>
+            <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+          </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+          <img class="mr-0 "style="width: 350px ;height: auto" src="{% static '/site/images/finance.png' %}">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="communications" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2">
+          <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_chatting_2yvo.svg' %}">
+        </div>
+        <div class="col-lg-8 mx-auto">
+          <div class="row">
+            <div class="col-lg-6 col-sm-12 col-md-8">
+              <h2 class="font-weight-bold">keep in touch with your members</h2>
+              <p class="lead text-muted">dont just send messages to your members but also receive feedback with anvil's member app<br>
+                have members communicate and sharpen each other on the teachings of your ministry.
+              </p>
+              <div class="mt-4 mb-4">
+                <button class="btn btn-success">try demo</button>
+                <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-12">
+              <img class="mr-0" style="width: 500px ;height: auto" src="{% static '/site/images/undraw_live_collaboration_2r4y.svg' %}">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -82,17 +214,70 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 mx-auto">
-          <h2>Contact us</h2>
-          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero odio fugiat voluptatem dolor, provident officiis, id iusto! Obcaecati incidunt, qui nihil beatae magnam et repudiandae ipsa exercitationem, in, quo totam.</p>
+          <h2 class="font-weight-bold">Contact us</h2>
+          <p class="lead">email: orichcasper59@gmail.com</p>
+          <p class="lead">text: 0713111882</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- try demo Modal -->
+  <div class="modal fade" id="tryDemoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form method="post" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-group">
+              {{ demo_form.as_p }}
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success">submit</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- get anvil modal -->
+  <div class="modal fade" id="getAnvilModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">get anvil</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            {% csrf_token %}
+            <div class="form-group">
+              {{ get_anvil_form.as_p }}
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success">submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="py-5 bg-dark">
     <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
+      <p class="m-0 text-center text-white">Copyright &copy; anvilchurch 2019</p>
     </div>
     <!-- /.container -->
   </footer>
