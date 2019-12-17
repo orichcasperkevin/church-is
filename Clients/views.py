@@ -9,11 +9,12 @@ from member.models import *
 from groups.models import *
 from projects.models import *
 
-from .models import Client
+from .models import Client,ClientDetail
 
+DEFAULT_DATE = "2012-01-01"
 STARTER_PASSWORD = "changeMe"
 DEMO_MEMBERS = [['Daniel','Dambuki','M','M'],['Mercy','Masika','F','M'],['Dorothy','Nyambura','F','S'],['David','Masai','M','S'],['Paul','Mwai','M','M'],
-                ['Timothy','Resty','S','M'],['Christina','Shusho','F','M'],['Ann','Mutai','F','M'],['Nickson','Korir','M','S']]
+                ['Timothy','Resty','M','S'],['Christina','Shusho','F','M'],['Ann','Mutai','F','M'],['Nickson','Korir','M','S']]
 
 DEMO_GROUPS = [['men','all the men of the church',['Daniel','David','Paul','Timothy','Nickson'],None],
                ['women','all women of the church',['Mercy','Dorothy','Christina','Ann'],None],
@@ -53,7 +54,6 @@ def setUpDemoGroups():
             for name in data[2]:
                 member = Member.objects.get(member__first_name=name)
                 role = Role.objects.get_or_create(role='member')[0]
-                print(role)
                 ChurchGroupMembership.objects.create(church_group=church_group,member=member,role=role)
 
 
@@ -70,6 +70,17 @@ def setupDemoProjects():
                 PledgePayment.objects.create(pledge=pledge,payment_amount=random.choice(range(1000)),payment_recorded_by=member)
 
 
+def setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of_church):
+    with schema_context(formated_name_of_church):
+        #inside the clents schema. create first memberself
+        username = first_name.lower() + last_name.lower()
+        user = User(first_name=first_name, username=username, last_name=last_name, email=email)
+        user.set_password(STARTER_PASSWORD)
+        user.save()
+        user_id = user.id
+
+        member = Member.objects.create(member_id = user_id)
+        MemberContact.objects.create(member=member, phone = phone_number)
 
 def setupDemoDatabase(first_name,last_name,email,demo_name):
     #inside the demo schema
@@ -95,8 +106,35 @@ def index(request):
         get_anvil_form = getAnvilForm(request.POST)
         try:
             #try using the get anvil form
-            if getAnvilForm.is_valid(request.POST):
-                print("ouhs")
+            if get_anvil_form.is_valid(request.POST):
+                #peronal info
+                print("getting anvil")
+                first_name = get_anvil_form.cleaned_data['first_name']
+                last_name = get_anvil_form.cleaned_data['last_name']
+                phone_number = get_anvil_form.cleaned_data['phone_number']
+                ID_number = get_anvil_form.cleaned_data['ID_number']
+                email = get_anvil_form.cleaned_data['email']
+
+                #church detai;
+                name_of_church = get_anvil_form.cleaned_data['name_of_church']
+                city_or_town = get_anvil_form.cleaned_data['city_or_town']
+                road_or_street = get_anvil_form.cleaned_data['road_or_street']
+                location_description = get_anvil_form.cleaned_data['location_description']
+
+                website = get_anvil_form.cleaned_data['website']
+
+                formated_name_of_church = ('').join(name_of_church.split(' '))
+                domain_url = formated_name_of_church + "." + request.get_host().split(':')[0]
+
+                tenant = Client(domain_url=domain_url, schema_name=formated_name_of_church,
+                                name = name_of_church,paid_until=DEFAULT_DATE, on_trial=False)
+                tenant.save()
+                ClientDetail.objects.create(client=tenant,first_name=first_name,last_name=last_name,
+                                            ID_number=ID_number,phone_number=phone_number,city_or_town=city_or_town,
+                                            road_or_street=road_or_street,location_description=location_description,
+                                            website=website)
+                setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of_church)
+
         except:
             #use the demo form
             if demo_form.is_valid():
@@ -107,9 +145,9 @@ def index(request):
                 demo_name = "demo" + str(random.choice(range(10000000)))
                 #domain_url
                 domain_url = demo_name +"."+ request.get_host().split(':')[0]
-                print(domain_url)
+                name = first_name +" "+ last_name + " " + email
                 tenant = Client(domain_url=domain_url, schema_name=demo_name,
-                                name=first_name,paid_until='2014-12-05',on_trial=True)
+                                name=name,paid_until=DEFAULT_DATE,on_trial=True)
                 tenant.save()
                 setupDemoDatabase(first_name,last_name,email,demo_name)
 
