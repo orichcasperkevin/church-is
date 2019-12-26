@@ -13,6 +13,10 @@ class Client(TenantMixin):
     def __str__(self):
         return self.name
 
+    @property
+    def church_code(self):
+        return str(self.id).zfill(3)
+
 class ClientDetail(models.Model):
     client = models.ForeignKey(Client,on_delete=models.CASCADE)
     #responsible person

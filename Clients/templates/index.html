@@ -5,10 +5,11 @@
   {% load static %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="the simplest, easiest, best in class, church management software for small, medium and large churches
+                                    anywhere in Kenya at cheap affordable prices">
+  <meta name="author" content="casper orich">
 
-  <title>anvil church</title>
+  <title>anvil church : simple,easy and affordable church management software for every size of church </title>
 
   <!-- Bootstrap core CSS -->
   <link href="{% static 'site/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -63,7 +64,7 @@
     <div class="container text-center">
       <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_process_e90d.svg' %}">
       <h1 class="font-weight-bold">Welcome to anvil church</h1>
-      <p class="lead ">move your church foward with redefined church management.</p>
+      <p class="lead ">move your church foward with simple,easy church management.</p>
       <div class="mt-4 ">
         <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
         <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
@@ -78,7 +79,7 @@
           <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_resume_folder_2_arse.svg' %}">
         </div>
         <div class="col-lg-8 mx-auto">
-          <h2 class="font-weight-bold ">anvil will help <br> YOU stay organised !!</h2>
+          <h2 class="font-weight-bold ">we help you stay organised</h2>
           <h2 class="font-weight-bold text-muted">manage your members, plan events,  track giving and so much more with anvil church</h2>
         </div>
       </div>
@@ -99,8 +100,8 @@
                 each member has a file that details their profile,groups they belong to,giving among others.
               </p>
               <div class="mt-4 mb-4">
-                <button class="btn btn-success">try demo</button>
-                <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+                <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
+                <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
               </div>
             </div>
             <div class="col-lg-2 col-sm-12">
@@ -121,9 +122,9 @@
         <div class="col-lg-6 mx-auto ">
           <h2 class="font-weight-bold ">organise them into groups</h2>
           <h2 class="lead text-muted">group your members according to any crieteria of your liking. Then have the groups organised into folders </h2>
-          <div class="mt-4">
-            <button class="btn btn-success">try demo</button>
-            <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+          <div class="mt-4 mb-4">
+            <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
+            <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
           </div>
         </div>
         <div class="col-lg-4 col-sm-12">
@@ -147,8 +148,8 @@
                 send reminders to members concerning the events.
               </p>
               <div class="mt-4 mb-4">
-                <button class="btn btn-success">try demo</button>
-                <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+                <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
+                <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
               </div>
             </div>
             <div class="col-lg-2 col-sm-12">
@@ -171,9 +172,9 @@
           <h2 class="lead text-muted">monitor church giving: tithes, offerings, add custom givings.<br>
             track church projects contributions and progress.track your expenses.
           </h2>
-          <div class="mt-4">
-            <button class="btn btn-success">try demo</button>
-            <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+          <div class="mt-4 mb-4">
+            <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
+            <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
           </div>
         </div>
         <div class="col-lg-4 col-sm-12">
@@ -197,8 +198,8 @@
                 have members communicate and sharpen each other on the teachings of your ministry.
               </p>
               <div class="mt-4 mb-4">
-                <button class="btn btn-success">try demo</button>
-                <button class="btn btn-outline-success ml-2" name="button">get anvil church</button>
+                <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
+                <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
               </div>
             </div>
             <div class="col-lg-2 col-sm-12">
@@ -215,8 +216,8 @@
       <div class="row">
         <div class="col-lg-8 mx-auto">
           <h2 class="font-weight-bold">Contact us</h2>
-          <p class="lead">email: orichcasper59@gmail.com</p>
-          <p class="lead">text: 0713111882</p>
+          <p class="lead">email:<span class="text-muted"> orichcasper59@gmail.com</span></p>
+          <p class="lead">text/whatsapp:<span class="text-muted"> 0778021240</span></p>
         </div>
       </div>
     </div>
@@ -226,7 +227,7 @@
   <div class="modal fade" id="tryDemoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <form method="post" novalidate>
+        <form method="post" type="try_demo" novalidate>
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalCenterTitle">try demo</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -259,7 +260,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">            
+          <div class="modal-body">
               {% csrf_token %}
               <div class="form-group">
                 {{ get_anvil_form.as_p }}

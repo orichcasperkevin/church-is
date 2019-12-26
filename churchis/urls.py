@@ -22,11 +22,15 @@ from Clients import views as site_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', site_views.index),
+    path('change-password/<slug:username>/<slug:church_name>/',site_views.changePassword, name='change_password'),
+    path('password-fail', site_views.passwordFail),
+
     # jwt authentication
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     # apps
+    path('api/clients/', include('Clients.api.urls')),
     path('api/members/', include('member.api.urls')),
     path('api/groups/', include('groups.api.urls')),
     path('api/events/', include('events.api.urls')),
