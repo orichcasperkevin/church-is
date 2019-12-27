@@ -6,7 +6,7 @@ class TryDemoForm(forms.Form):
 
     demo_last_name = forms.CharField(max_length=30,
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'enter your last name'}))
-    demo_email = forms.EmailField(max_length=254,
+    demo_email = forms.EmailField(max_length=30,
                             widget = forms.EmailInput(attrs={'class':'form-control', 'placeholder':'your email'}))
 
     def clean(self):
@@ -27,7 +27,7 @@ class GetAnvilForm(forms.Form):
         ID_number = forms.CharField(max_length=8,
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'your ID number'}))
 
-        phone_number = forms.CharField(max_length=10,
+        phone_number = forms.CharField(max_length=12,
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'+2547######'}))
 
         email = forms.EmailField(max_length=50,

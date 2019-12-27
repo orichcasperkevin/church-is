@@ -267,7 +267,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-success">submit</button>
+          <button id="getDemoButton" onclick="getDemo()" type="submit" class="btn btn-success">submit</button>
         </div>
       </form>
       </div>
@@ -293,7 +293,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-success">submit</button>
+            <button id="getAnvilButton" onclick="getAnvil()" type="submit" class="btn btn-success">submit</button>
           </div>
         </form>
       </div>
@@ -309,6 +309,14 @@
   </footer>
 
   <!-- Bootstrap core JavaScript -->
+  <script>
+     function getAnvil(){
+       document.getElementById(getAnvilButton).lastChild.data = "setting up..."
+     }
+     function getDemo(){
+       document.getElementById(getDemoButton).lastChild.data = "setting up..."
+     }
+  </script>
   <script src="{% static 'site/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'site/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 

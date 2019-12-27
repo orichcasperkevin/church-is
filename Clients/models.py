@@ -70,4 +70,4 @@ class ClientDetail(models.Model):
     @property
     def number_of_sms(self):
         with schema_context(self.client.schema_name):
-            return SmsReceipients.objects.filter(date__month=month, date__year=year).count()
+            return SmsReceipients.objects.filter(date__month=month, date__year=year,status="Success").count()
