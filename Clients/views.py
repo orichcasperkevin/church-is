@@ -2,6 +2,7 @@ import random
 from decouple import config
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from tenant_schemas.utils import schema_context
 
 from .forms import *
@@ -140,7 +141,6 @@ def index(request):
             print("get anvil form invalid")
 
         if demo_form.is_valid():
-                print("true demo")
                 first_name = demo_form.cleaned_data['demo_first_name']
                 last_name = demo_form.cleaned_data['demo_last_name']
                 email = demo_form.cleaned_data['demo_email']
@@ -189,3 +189,8 @@ def changePassword(request, username, church_name):
 
 def passwordFail(request):
     return render(request, 'passwordFail.html')
+
+@login_required
+def anvilAdmin(request):
+    clients = ClientDetail.objects.all()
+    return render(request, 'anvilAdmin.html' ,{'clients':clients})

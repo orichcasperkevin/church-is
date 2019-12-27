@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
 from rest_framework_simplejwt import views as jwt_views
 from Clients import views as site_views
 
 urlpatterns = [
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('anvilAdmin/' ,site_views.anvilAdmin, name="anvilAdmin"),
     path('admin/', admin.site.urls),
     path('', site_views.index),
     path('change-password/<slug:username>/<slug:church_name>/',site_views.changePassword, name='change_password'),

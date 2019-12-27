@@ -5,7 +5,7 @@ from Clients.models import *
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ('name', 'created_on', 'paid' ,'paid_until', 'on_trial')
+        fields = ('name', 'domain_url','created_on', 'paid' ,'paid_until', 'on_trial')
 
 class ClientDetailSerializer(serializers.ModelSerializer):
     client = ClientSerializer()

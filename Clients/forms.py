@@ -28,7 +28,7 @@ class GetAnvilForm(forms.Form):
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'your ID number'}))
 
         phone_number = forms.CharField(max_length=10,
-                                widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'your phone number'}))
+                                widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'+2547######'}))
 
         email = forms.EmailField(max_length=50,
                                 widget = forms.EmailInput(attrs={'class':'form-control', 'placeholder':'your email'}))

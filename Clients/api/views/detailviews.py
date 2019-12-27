@@ -12,13 +12,13 @@ class GetClient(APIView):
     get client using the name
     '''
 
-    def get(self, request, formated_name_of_church):
-        client = Client.objects.filter(schema_name=formated_name_of_church)
+    def get(self, request, id):
+        client = Client.objects.filter(id=id)
         data = ClientSerializer(client, many=True).data
         return Response(data)
 
 class GetClientDetail(APIView):
-    def get(self, request, formated_name_of_church):
-        client_detail = ClientDetail.objects.filter(client__schema_name=formated_name_of_church)
+    def get(self, request, id):
+        client_detail = ClientDetail.objects.filter(client_id=id)
         data = ClientDetailSerializer(client_detail,many=True).data
         return Response(data)
