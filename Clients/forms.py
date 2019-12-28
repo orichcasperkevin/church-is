@@ -9,12 +9,17 @@ class TryDemoForm(forms.Form):
     demo_email = forms.EmailField(max_length=30,
                             widget = forms.EmailInput(attrs={'class':'form-control', 'placeholder':'your email'}))
 
+    demo_phone_number = forms.CharField(max_length=13,
+                                widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'+2547######'}))
+
+
     def clean(self):
         cleaned_data = super(TryDemoForm, self).clean()
         first_name = cleaned_data.get('demo_first_name')
         last_name = cleaned_data.get('demo_last_name')
         email = cleaned_data.get('demo_email')
-        if not first_name and not last_name and not email:
+        phone_number = cleaned_data.get('demo_phone_number')
+        if not first_name and not last_name and not email and not phone_number:
             raise forms.ValidationError('all Fields are required')
 
 class GetAnvilForm(forms.Form):
@@ -27,7 +32,7 @@ class GetAnvilForm(forms.Form):
         ID_number = forms.CharField(max_length=8,
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'your ID number'}))
 
-        phone_number = forms.CharField(max_length=12,
+        phone_number = forms.CharField(max_length=13,
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'+2547######'}))
 
         email = forms.EmailField(max_length=50,

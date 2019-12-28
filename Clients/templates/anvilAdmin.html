@@ -73,6 +73,22 @@
         </div>
       </div>
       {% endfor %}
+
+
+      {% for demo in demos%}
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">
+            {{demo}}
+             <span class="badge badge-success">{{demo.created_on}}</span>
+             <span class="badge badge-secondary">demo</span>
+           </h5>
+          <h6 class="card-subtitle mb-2">sduiueh<span class="text-info">suhiueh</span></h6>
+          <h6 class="card-subtitle mb-2">church code<span class="text-info"> rer</span></h6>
+
+        </div>
+      </div>
+      {% endfor %}
     </div>
     </div>
   </header>

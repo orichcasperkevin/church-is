@@ -146,11 +146,12 @@ def index(request):
                 first_name = demo_form.cleaned_data['demo_first_name']
                 last_name = demo_form.cleaned_data['demo_last_name']
                 email = demo_form.cleaned_data['demo_email']
+                phone_number = demo_form.cleaned_data['demo_phone_number']
                 #demo name
                 demo_name = "demo" + str(random.choice(range(10000000)))
                 #domain_url
                 domain_url = demo_name +"."+ request.get_host().split(':')[0]
-                name = first_name +" "+ last_name + " " + email
+                name = first_name +" "+ last_name + " " + email + " " +phone_number
                 tenant = Client(domain_url=domain_url, schema_name=demo_name,
                                  name=name,paid_until=DEFAULT_DATE,on_trial=True)
                 tenant.save()
@@ -195,4 +196,5 @@ def passwordFail(request):
 @login_required
 def anvilAdmin(request):
     clients = ClientDetail.objects.all()
-    return render(request, 'anvilAdmin.html' ,{'clients':clients})
+    demos = Client.objects.filter(on_trial=True)
+    return render(request, 'anvilAdmin.html' ,{'clients':clients,'demos':demos},)
