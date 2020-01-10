@@ -31,11 +31,13 @@ class ChurchSysMessenger():
             try:
                 contact = MemberContact.objects.get(member__member_id = data)
                 member_phone_number = contact.phone
+                if not member_phone_number:
+                    continue
                 if member_phone_number[0] == '0':
                     member_phone_number = member_phone_number.replace('0','+254',1)
                 if member_phone_number[:3] == '254':
                     member_phone_number = member_phone_number.replace('254','+254',1)
-                    
+
                 phone_numbers.append(member_phone_number)
 
             except MemberContact.DoesNotExist:

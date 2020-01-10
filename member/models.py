@@ -71,7 +71,7 @@ class Role(models.Model):
     projects_admin = models.BooleanField(default=False)
     finance_admin = models.BooleanField(default=False)
     role = models.CharField(max_length=20, default="member")
-    description = models.TextField(max_length=30)
+    description = models.TextField(max_length=30,blank=True,null=True)
 
 class RoleMembership(models.Model):
     '''

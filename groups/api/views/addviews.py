@@ -47,11 +47,9 @@ class AddMemberToGroup(APIView):
     '''
 
     def post(self, request):
-        group_type = request.data.get("group_type")
         group_id = request.data.get("group_id")
         member_id = request.data.get("member_id")
         role_id = request.data.get("role_id")
-
 
         queryset = ChurchGroup.objects.filter(id=group_id)
         group = []
@@ -67,12 +65,25 @@ class AddMemberToGroup(APIView):
         serializer = MemberSerializer(member)
         member = serializer.data
 
-        queryset = Role.objects.filter(id=role_id)
-        role = []
-        for role in queryset:
-            role = role
-        serializer = RoleSerializer(role)
-        role = serializer.data
+        role = None
+        if not role_id:
+            Role.objects.get_or_create(role="member")
+            queryset = Role.objects.filter(role="member")
+            role = []
+            for role in queryset:
+                role = role
+            serializer = RoleSerializer(role)
+            role = serializer.data
+            print(role)
+        else:
+            queryset = Role.objects.filter(id=role_id)
+            role = []
+            for role in queryset:
+                role = role
+            serializer = RoleSerializer(role)
+            role = serializer.data
+            print(role)
+
 
         data = {'church_group':church_group,'member':member,'role':role}
 

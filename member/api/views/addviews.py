@@ -91,7 +91,9 @@ class CheckCSV(APIView):
                 loader.configure_CSV(file_name,column_config)
                 loader.check_CSV(file_name)
                 if (loader.errors):
-                    return Response(loader.errors)
+                    errors = loader.errors
+                    #get only the first 5 errors
+                    return Response(errors[:5])
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
