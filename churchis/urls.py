@@ -24,7 +24,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('anvilAdmin/' ,site_views.anvilAdmin, name="anvilAdmin"),
     path('admin/', admin.site.urls),
-    path('', site_views.index),
+    path('', site_views.index,name='home'),
+    path('get-anvil/',site_views.getAnvil,name='get_anvil'),
+    path('try-demo/',site_views.getDemo,name='try_demo'),
     path('change-password/<slug:username>/<slug:church_name>/',site_views.changePassword, name='change_password'),
     path('password-fail', site_views.passwordFail),
 

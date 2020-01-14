@@ -39,7 +39,7 @@ SHARED_APPS = (
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.admin',
+    'django.contrib.admin',    
 )
 TENANT_APPS = (
     'django.contrib.contenttypes',
@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'widget_tweaks',
 
     'Clients',
     'member',

@@ -33,7 +33,7 @@ def setupDemoMembers():
         user_id = user.id
 
         member = Member.objects.create(member_id = user_id, gender=data[2])
-        MemberContact.objects.create(member=member, phone = '07##########')
+        MemberContact.objects.create(member=member, phone = '0713111882')
         MemberMaritalStatus.objects.create(member=member, status = data[3])
 
 def setUpDemoGroupOfGroups():
@@ -107,65 +107,72 @@ def setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of
         return change_password_url
 
 def index(request):
-    if request.method == 'POST':
-        demo_form = TryDemoForm(request.POST)
-        get_anvil_form = GetAnvilForm(request.POST)
-        #try using the get anvil form
-        if get_anvil_form.is_valid():
-            #peronal info
-            first_name = get_anvil_form.cleaned_data['first_name']
-            last_name = get_anvil_form.cleaned_data['last_name']
-            phone_number = get_anvil_form.cleaned_data['phone_number']
-            ID_number = get_anvil_form.cleaned_data['ID_number']
-            email = get_anvil_form.cleaned_data['email']
+    return render(request, 'index.html')
 
-            #church detai;
-            name_of_church = get_anvil_form.cleaned_data['name_of_church']
-            city_or_town = get_anvil_form.cleaned_data['city_or_town']
-            road_or_street = get_anvil_form.cleaned_data['road_or_street']
-            location_description = get_anvil_form.cleaned_data['location_description']
+def getAnvil(request):
+        if request.method == 'POST':
+            get_anvil_form = GetAnvilForm(request.POST)
+            #try using the get anvil form
+            if get_anvil_form.is_valid():
+                #peronal info
+                first_name = get_anvil_form.cleaned_data['first_name'].strip()
+                last_name = get_anvil_form.cleaned_data['last_name'].strip()
+                phone_number = get_anvil_form.cleaned_data['phone_number'].strip()
+                ID_number = get_anvil_form.cleaned_data['ID_number'].strip()
+                email = get_anvil_form.cleaned_data['email'].strip()
 
-            website = get_anvil_form.cleaned_data['website']
+                #church detai;
+                name_of_church = get_anvil_form.cleaned_data['name_of_church']
+                city_or_town = get_anvil_form.cleaned_data['city_or_town']
+                road_or_street = get_anvil_form.cleaned_data['road_or_street']
+                location_description = get_anvil_form.cleaned_data['location_description']
 
-            formated_name_of_church = ('').join(name_of_church.split(' '))
-            domain_url = formated_name_of_church + "." + request.get_host().split(':')[0]
+                website = get_anvil_form.cleaned_data['website']
 
-            tenant = Client(domain_url=domain_url, schema_name=formated_name_of_church,
-                         name = name_of_church,paid_until=DEFAULT_DATE, on_trial=False)
-            tenant.save()
-            ClientDetail.objects.create(client=tenant,first_name=first_name,last_name=last_name,
-                                     ID_number=ID_number,phone_number=phone_number,city_or_town=city_or_town,
-                                     road_or_street=road_or_street,location_description=location_description,
-                                     website=website)
-            redirect_url = setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of_church)
-            return redirect(redirect_url)
-        else:
-            print("get anvil form invalid")
-
-        if demo_form.is_valid():
-                first_name = demo_form.cleaned_data['demo_first_name']
-                last_name = demo_form.cleaned_data['demo_last_name']
-                email = demo_form.cleaned_data['demo_email']
-                phone_number = demo_form.cleaned_data['demo_phone_number']
-                #demo name
-                demo_name = "demo" + str(random.choice(range(10000000)))
-                #domain_url
-                domain_url = demo_name +"."+ request.get_host().split(':')[0]
-                name = first_name +" "+ last_name + " " + email + " " +phone_number
-                tenant = Client(domain_url=domain_url, schema_name=demo_name,
-                                 name=name,paid_until=DEFAULT_DATE,on_trial=True)
+                formated_name_of_church = ('').join(name_of_church.split(' '))
+                domain_url = formated_name_of_church + "." + request.get_host().split(':')[0]
+                tenant = Client(domain_url=domain_url, schema_name=formated_name_of_church,
+                             name = name_of_church,paid_until=DEFAULT_DATE, on_trial=False)
                 tenant.save()
-                redirect_url = setupDemoDatabase(first_name,last_name,email,demo_name)
+                ClientDetail.objects.create(client=tenant,first_name=first_name,last_name=last_name,
+                                         ID_number=ID_number,phone_number=phone_number,city_or_town=city_or_town,
+                                         road_or_street=road_or_street,location_description=location_description,
+                                         website=website)
+                redirect_url = setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of_church)
                 return redirect(redirect_url)
         else:
-            print("demo_form invalid")
+            get_anvil_form = GetAnvilForm()
+        return render(request, 'getAnvil.html', {'get_anvil_form':get_anvil_form})
 
+def getDemo(request):
+        if request.method == 'POST':
+            demo_form = TryDemoForm(request.POST)
+            #try using the get anvil form
 
+            if demo_form.is_valid():
+                    first_name = demo_form.cleaned_data['first_name'].strip()
+                    last_name = demo_form.cleaned_data['last_name'].strip()
+                    email = demo_form.cleaned_data['email'].strip()
+                    phone_number = demo_form.cleaned_data['phone_number'].strip()
+                    #demo name
+                    demo_name = "demo" + str(random.choice(range(10000000)))
+                    #domain_url
+                    domain_url = demo_name +"."+ request.get_host().split(':')[0]
+                    name = first_name +" "+ last_name + " " + email + " " +phone_number
+                    tenant = Client(domain_url=domain_url, schema_name=demo_name,
+                                     name=name,paid_until=DEFAULT_DATE,on_trial=True)
+                    tenant.save()
+                    redirect_url = setupDemoDatabase(first_name,last_name,email,demo_name)
+                    return redirect(redirect_url)
 
-    else:
-        demo_form = TryDemoForm()
-        get_anvil_form = GetAnvilForm()
-    return render(request, 'index.html', {'demo_form':demo_form ,'get_anvil_form':get_anvil_form})
+                    import time
+                    # Wait for 5 seconds
+                    time.sleep(25)
+                    return render(request, 'index.html')
+
+        else:
+            demo_form = TryDemoForm()
+        return render(request, 'getDemo.html', {'demo_form':demo_form})
 
 def changePassword(request, username, church_name):
     if request.method == 'POST':

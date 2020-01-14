@@ -32,7 +32,7 @@ class DiscussionContributionSerializer(serializers.ModelSerializer):
     contributor = MemberSerializer()
     class Meta:
         model = DiscussionContribution
-        fields = ('id','discussion','contributor','contribution','votes_up','votes_down',)
+        fields = ('id','discussion','contributor','contribution','creation_time','votes_up','votes_down',)
         depth = 1
         extra_kwargs = {'id': {'read_only': False}}
 

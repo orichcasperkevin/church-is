@@ -69,8 +69,14 @@
       <h1 class="font-weight-bold">Welcome to anvil church</h1>
       <p class="lead ">move your church foward with simple,easy church management.</p>
       <div class="mt-4 ">
-        <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-        <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
+        <a class="btn btn-success ml-2"
+                href="{% url 'try_demo' %}">
+                try demo
+        </a>
+        <a class="btn btn-outline-success ml-2"
+                href="{% url 'get_anvil' %}">
+                get anvil
+        </a>
       </div>
     </div>
   </header>
@@ -104,7 +110,10 @@
               </p>
               <div class="mt-4 mb-4">
                 <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-                <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
+                <button class="btn btn-outline-success ml-2"
+                        href="{% url 'get_anvil' %}">
+                        get anvil church
+                </button>
               </div>
             </div>
             <div class="col-lg-2 col-sm-12">
@@ -312,14 +321,7 @@
   </footer>
 
   <!-- Bootstrap core JavaScript -->
-  <script>
-     function getAnvil(){
-       document.getElementById(getAnvilButton).lastChild.data = "setting up..."
-     }
-     function getDemo(){
-       document.getElementById(getDemoButton).lastChild.data = "setting up..."
-     }
-  </script>
+
   <script src="{% static 'site/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'site/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
