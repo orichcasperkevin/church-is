@@ -6,10 +6,16 @@ from tenant_schemas.utils import schema_context
 from member.models import Member
 from sms.models import SmsReceipients
 
+import schedule
+import time
+
 today = date.today()
 day = today.day
 month = today.month
 year = today.year
+PRICE_PER_MONTH = 5000
+PRICE_PER_DAY = (PRICE_PER_MONTH / 30)
+
 
 class Client(TenantMixin):
     #name is the name of the church
@@ -33,14 +39,16 @@ class ClientDetail(models.Model):
     #responsible person
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
-    ID_number = models.CharField(max_length=8)
-    phone_number = models.CharField(max_length=15)
+    ID_number = models.CharField(max_length=8,default="demo")
+    phone_number = models.CharField(max_length=15,default="demo")
     #church detail.
-    city_or_town = models.CharField(max_length=20)
-    road_or_street = models.CharField(max_length=20)
-    location_description = models.CharField(max_length=100)
+    city_or_town = models.CharField(max_length=20,default="demo")
+    road_or_street = models.CharField(max_length=20,default="demo")
+    location_description = models.CharField(max_length=100,default="demo")
     #Contact
-    website = models.CharField(max_length=50,null=True,blank=True)
+    website = models.CharField(max_length=50,null=True,blank=True,default="demo")
+    #amount of credit remaining
+    credit = models.DecimalField(max_digits=15, decimal_places=2,default=0.00,null=True,blank=True)
 
     def __str__(self):
         return str(self.client)
@@ -71,3 +79,7 @@ class ClientDetail(models.Model):
     def number_of_sms(self):
         with schema_context(self.client.schema_name):
             return SmsReceipients.objects.filter(date__month=month, date__year=year,status="Success").count()
+
+    @property
+    def apprx_number_of_days_left(self):
+        return int(float(self.credit) / PRICE_PER_DAY)

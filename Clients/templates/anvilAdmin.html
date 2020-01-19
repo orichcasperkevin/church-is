@@ -49,43 +49,42 @@
         <div class="card-body">
           <h5 class="card-title">
             {{client}}
-             <span class="badge badge-success">{{client.number_of_members}}</span>
-             <span class="badge badge-secondary">{{client.number_of_sms}}</span>
+             <span class="badge badge-success">{{client.number_of_members}} members</span>
+             <span class="badge badge-danger">LIVE</span>             
            </h5>
           <h6 class="card-subtitle mb-2">{{client.first_name}} {{client.last_name}} <span class="text-info">{{client.phone_number}}</span></h6>
           <h6 class="card-subtitle mb-2">church code<span class="text-info"> {{client.church_code}}</span></h6>
 
           <p class="card-text">{{client.city_or_town}},{{client.road_or_street}} {{client.location_description}}</p>
           <p class="card-text">{{client.website}}</p>
-          {% if client.paid %}
-          <a href="#" class="card-link text-success">paid</a>
-          {% endif %}
-          {% if not client.on_trial %}
-          <a href="#" class="card-link text-danger">not paid</a>
-          {% endif %}
 
-          {% if client.on_trial %}
-          <a href="#" class="card-link text-success">demo</a>
-          {% endif %}
-          {% if not client.on_trial %}
-          <a href="#" class="card-link text-danger">real</a>
-          {% endif %}
+          <a disabled class="btn btn-outline-success card-link ">{{client.credit}}
+            <span class="text-black">
+                (apprx {{client.apprx_number_of_days_left}} days left)
+            </span>
+          </a>
+
         </div>
       </div>
       {% endfor %}
 
 
       {% for demo in demos%}
-      <div class="card" style="width: 18rem;">
+      <div class="card border-danger" style="width: 18rem;">
         <div class="card-body">
           <h5 class="card-title">
             {{demo}}
              <span class="badge badge-success">{{demo.created_on}}</span>
              <span class="badge badge-secondary">demo</span>
            </h5>
-          <h6 class="card-subtitle mb-2">sduiueh<span class="text-info">suhiueh</span></h6>
-          <h6 class="card-subtitle mb-2">church code<span class="text-info"> rer</span></h6>
+          <h6 class="card-subtitle mb-2">church code<span class="text-info">---{{demo.church_code}}</span></h6>
+          <h6 class="card-subtitle mb-2">members<span class="text-info">--{{demo.number_of_members}}</span></h6>
 
+          <a disabled class="btn btn-outline-success card-link "> {{demo.credit}}
+            <span class="text-black">
+              (apprx {{demo.apprx_number_of_days_left}} days left)
+            </span>
+          </a>
         </div>
       </div>
       {% endfor %}
@@ -113,4 +112,5 @@
 
 </body>
 
-</html>
+</ht---ml>
+--

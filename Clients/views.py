@@ -162,13 +162,10 @@ def getDemo(request):
                     tenant = Client(domain_url=domain_url, schema_name=demo_name,
                                      name=name,paid_until=DEFAULT_DATE,on_trial=True)
                     tenant.save()
+                    # setup client details
+                    ClientDetail.objects.create(client=tenant,first_name=first_name,last_name=last_name,phone_number=phone_number)
                     redirect_url = setupDemoDatabase(first_name,last_name,email,demo_name)
                     return redirect(redirect_url)
-
-                    import time
-                    # Wait for 5 seconds
-                    time.sleep(25)
-                    return render(request, 'index.html')
 
         else:
             demo_form = TryDemoForm()
@@ -203,5 +200,5 @@ def passwordFail(request):
 @login_required
 def anvilAdmin(request):
     clients = ClientDetail.objects.all()
-    demos = Client.objects.filter(on_trial=True)
+    demos = ClientDetail.objects.filter(client__on_trial = True)
     return render(request, 'anvilAdmin.html' ,{'clients':clients,'demos':demos},)
