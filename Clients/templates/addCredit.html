@@ -41,57 +41,48 @@
     </div>
   </nav>
 
-  <header class=" text-muted">
-    <div class="container">
-    <div class="card-columns">
-      {% for client in clients%}
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">
-            {{client}}
-             <span class="badge badge-success">{{client.number_of_members}} members</span>
-             <span class="badge badge-danger">LIVE</span>
-           </h5>
-          <h6 class="card-subtitle mb-2">{{client.first_name}} {{client.last_name}} <span class="text-info">{{client.phone_number}}</span></h6>
-          <h6 class="card-subtitle mb-2">church code<span class="text-info"> {{client.church_code}}</span></h6>
 
-          <p class="card-text">{{client.city_or_town}},{{client.road_or_street}} {{client.location_description}}</p>
-          <p class="card-text">{{client.website}}</p>
+    <header class=" text-muted">
+      <div class="container border-0">
+        {% load widget_tweaks %}
+        <form  method="post" novalidate>
+          <img class="mr-0 "style="width: 150px ;height: auto" src="{% static '/site/images/undraw_process_e90d.svg' %}">
+          {% csrf_token %}
+          <p>add credit for {{client}}</p>
+          <div class="form-group font-weight-bold">
+            {% for field in add_credit_form.visible_fields %}
+              <div class="form-group">
+                {{ field.label_tag }}
 
-          <a  href="{% url 'add_credit' client.client.id %}"
-              disabled class="btn btn-outline-success card-link ">{{client.credit}}
-            <span class="text-black">
-                (apprx {{client.apprx_number_of_days_left}} days left)
-            </span>
-          </a>
+                {% if add_credit_form.is_bound %}
+                  {% if field.errors %}
+                    {% render_field field class="form-control is-invalid" %}
+                    {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% render_field field class="form-control is-valid" %}
+                  {% endif %}
+                {% else %}
+                  {% render_field field class="form-control" %}
+                {% endif %}
 
-        </div>
+                {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <button class="btn btn-success" type="submit" name="button"
+                  onclick="this.addEventListener('click', clickStopper, false);">
+            add credit
+          </button>
+        </form>
       </div>
-      {% endfor %}
+    </header>
 
-
-      {% for demo in demos%}
-      <div class="card border-danger" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">
-            {{demo}}
-             <span class="badge badge-success">{{demo.created_on}}</span>
-             <span class="badge badge-secondary">demo</span>
-           </h5>
-          <h6 class="card-subtitle mb-2">church code<span class="text-info">---{{demo.church_code}}</span></h6>
-          <h6 class="card-subtitle mb-2">members<span class="text-info">--{{demo.number_of_members}}</span></h6>
-
-          <a  href="{% url 'add_credit' demo.client.id %}"
-              disabled class="btn btn-outline-success card-link "> {{demo.credit}}
-            <span class="text-black">
-              (apprx {{demo.apprx_number_of_days_left}} days left)
-            </span>
-          </a>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </header>
 
   <!-- Footer -->
   <footer class="py-5 bg-dark">
@@ -103,6 +94,7 @@
 
   <!-- Bootstrap core JavaScript -->
   <script src="{% static 'site/vendor/jquery/jquery.min.js' %}"></script>
+
   <script src="{% static 'site/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   <!-- Plugin JavaScript -->
@@ -110,8 +102,15 @@
 
   <!-- Custom JavaScript for this theme -->
   <script src="{% static 'site/js/scrolling-nav.js' %}"></script>
+  <script >
+
+  function clickStopper(e){
+    alert("data submission in progress"); // ** you can remove this line **
+    e.preventDefault(); // equivalent to 'return false'
+  }
+
+  </script>
 
 </body>
 
-</ht---ml>
---
+</html>

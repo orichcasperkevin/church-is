@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from groups.api.serializers import  ChurchGroupSerializer, ChurchGroupMembershipSerializer
 from groups.models import  ChurchGroup,ChurchGroupMembership

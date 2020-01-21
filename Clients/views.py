@@ -202,3 +202,22 @@ def anvilAdmin(request):
     clients = ClientDetail.objects.all()
     demos = ClientDetail.objects.filter(client__on_trial = True)
     return render(request, 'anvilAdmin.html' ,{'clients':clients,'demos':demos},)
+
+@login_required
+def addCredit(request,client_id):
+    client = Client.objects.get(id=client_id)
+    if request.method == 'POST':
+        add_credit_form = AddCreditForm(request.POST)
+        if add_credit_form.is_valid():
+            added_amount = add_credit_form.cleaned_data['amount']
+            client_detail  = ClientDetail.objects.get(client_id=client_id)
+            initial_amount = client_detail.credit
+            final_amount = initial_amount + added_amount
+            client_detail.credit = final_amount
+            client_detail.save()
+            return redirect('anvilAdmin')
+
+    else:
+        add_credit_form = AddCreditForm()
+
+    return render (request , 'addCredit.html', {'add_credit_form':add_credit_form,'client':client})

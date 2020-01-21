@@ -108,3 +108,13 @@ class ChangePasswordForm(forms.Form):
 
         if new_password != confirm_password:
             raise forms.ValidationError('passwords do not match')
+
+class AddCreditForm(forms.Form):
+    amount = forms.IntegerField(widget = forms.NumberInput(attrs={'class':'form-control', 'placeholder':'amount'}))
+
+    def clean(self):
+        cleaned_data = super(AddCreditForm, self).clean()
+        amount = cleaned_data.get('amount')
+
+        if not amount:
+            raise forms.ValidationError('enter amount')

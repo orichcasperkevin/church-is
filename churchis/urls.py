@@ -21,11 +21,14 @@ from rest_framework_simplejwt import views as jwt_views
 from Clients import views as site_views
 
 urlpatterns = [
-    path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('anvilAdmin/' ,site_views.anvilAdmin, name="anvilAdmin"),
     path('admin/', admin.site.urls),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+
     path('', site_views.index,name='home'),
+    path('anvilAdmin/' ,site_views.anvilAdmin, name="anvilAdmin"),
+
     path('get-anvil/',site_views.getAnvil,name='get_anvil'),
+    path('add-credit/<slug:client_id>/',site_views.addCredit, name='add_credit'),
     path('try-demo/',site_views.getDemo,name='try_demo'),
     path('change-password/<slug:username>/<slug:church_name>/',site_views.changePassword, name='change_password'),
     path('password-fail', site_views.passwordFail),
