@@ -175,12 +175,14 @@ def changePassword(request, username, church_name):
     if request.method == 'POST':
         change_password_form = ChangePasswordForm(request.POST)
         if change_password_form.is_valid():
+            username = change_password_form.cleaned_data['username']
             new_password = change_password_form.cleaned_data['confirm_password']
             with schema_context(church_name):
                 member = Member.objects.get(member__username=username)
                 user = User.objects.get(id=member.member.id)
 
                 try:
+                    user.username = username
                     user.set_password(new_password)
                     user.save()
                 except:

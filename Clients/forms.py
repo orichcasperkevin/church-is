@@ -91,6 +91,9 @@ class GetAnvilForm(forms.Form):
                 raise forms.ValidationError('first name must be one word')
 
 class ChangePasswordForm(forms.Form):
+    username = forms.CharField(max_length=30,
+                            widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'set a username?'}))
+
     new_password = forms.CharField(max_length=30,
                             widget = forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'enter your new password'}))
 
@@ -100,10 +103,11 @@ class ChangePasswordForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(ChangePasswordForm, self).clean()
+        username = cleaned_data.get('username')
         new_password = cleaned_data.get('new_password')
         confirm_password = cleaned_data.get('confirm_password')
 
-        if not new_password and not confirm_password:
+        if not new_password and not confirm_password and not username:
             raise forms.ValidationError('all Fields are required')
 
         if new_password != confirm_password:
