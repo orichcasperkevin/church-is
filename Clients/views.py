@@ -87,7 +87,7 @@ def setupDemoDatabase(first_name,last_name,email,demo_name):
         setUpDemoGroups()
         setupDemoProjects()
 
-        change_password_url = 'change-password/' + username + '/'+ demo_name + '/'
+        change_password_url = '/change-password/' + username + '/'+ demo_name + '/'
         return change_password_url
 
 def setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of_church):
@@ -103,7 +103,7 @@ def setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of
         MemberContact.objects.create(member=member, phone = phone_number)
         Role.objects.create(role='member')
         Role.objects.create(role='group admin',group_admin=True)
-        change_password_url = 'change-password/' + username + '/'+ formated_name_of_church + '/'
+        change_password_url = '/change-password/' + username + '/'+ formated_name_of_church + '/'
         return change_password_url
 
 def index(request):
@@ -175,14 +175,14 @@ def changePassword(request, username, church_name):
     if request.method == 'POST':
         change_password_form = ChangePasswordForm(request.POST)
         if change_password_form.is_valid():
-            username = change_password_form.cleaned_data['username']
+            new_username = change_password_form.cleaned_data['username']
             new_password = change_password_form.cleaned_data['confirm_password']
             with schema_context(church_name):
                 member = Member.objects.get(member__username=username)
                 user = User.objects.get(id=member.member.id)
 
                 try:
-                    user.username = username
+                    user.username = new_username
                     user.set_password(new_password)
                     user.save()
                 except:

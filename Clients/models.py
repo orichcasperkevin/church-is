@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from django.db import models
 from tenant_schemas.models import TenantMixin
 from tenant_schemas.utils import schema_context
@@ -9,10 +9,6 @@ from sms.models import SmsReceipients
 import schedule
 import time
 
-today = date.today()
-day = today.day
-month = today.month
-year = today.year
 PRICE_PER_MONTH = 5000
 PRICE_PER_DAY = (PRICE_PER_MONTH / 30)
 
@@ -49,6 +45,7 @@ class ClientDetail(models.Model):
     website = models.CharField(max_length=50,null=True,blank=True,default="demo")
     #amount of credit remaining
     credit = models.DecimalField(max_digits=15, decimal_places=2,default=0.00,null=True,blank=True)
+    last_credited = models.DateTimeField(default=datetime.now(), blank=True)
 
     def __str__(self):
         return str(self.client)
@@ -78,7 +75,7 @@ class ClientDetail(models.Model):
     @property
     def number_of_sms(self):
         with schema_context(self.client.schema_name):
-            return SmsReceipients.objects.filter(date__month=month, date__year=year,status="Success").count()
+            return SmsReceipients.objects.filter(date__gt=self.last_credited,status="Success").count()
 
     @property
     def apprx_number_of_days_left(self):
