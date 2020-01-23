@@ -3,6 +3,7 @@ from decouple import config
 
 from member.models import MemberContact
 from sms.models import SmsReceipients, Sms
+from tenant_schemas.utils import schema_context
 
 # Initialize SDK
 username = config('AFRICAS_TALKING_USERNAME')
@@ -18,43 +19,50 @@ sms = africastalking.SMS
 
 
 class ChurchSysMessenger():
-    def __init__(self, sender_app, sending_member):
-        self.sender_app = sender_app
-        self.sending_member = sending_member
+    def __init__(self, schema):
+        self.schema = schema #what schema to use
 
     def receipients_phone_numbers(self, receipient_member_ids):
         '''
             get the a list of phone numbers from a list of receipient ids
         '''
-        phone_numbers = []
-        for data in receipient_member_ids:
-            try:
-                contact = MemberContact.objects.get(member__member_id = data)
-                member_phone_number = contact.phone
-                if not member_phone_number:
-                    continue
-                if member_phone_number[0] == '0':
-                    member_phone_number = member_phone_number.replace('0','+254',1)
-                if member_phone_number[:3] == '254':
-                    member_phone_number = member_phone_number.replace('254','+254',1)
+        with schema_context(self.schema):
+            phone_numbers = []
+            for data in receipient_member_ids:
+                try:
+                    contact = MemberContact.objects.get(member__member_id = data)
+                    member_phone_number = contact.phone
+                    if not member_phone_number:
+                        continue
+                    if member_phone_number[0] == '0':
+                        member_phone_number = member_phone_number.replace('0','+254',1)
+                    if member_phone_number[:3] == '254':
+                        member_phone_number = member_phone_number.replace('254','+254',1)
 
-                phone_numbers.append(member_phone_number)
+                    phone_numbers.append(member_phone_number)
 
-            except MemberContact.DoesNotExist:
-                pass
-                #TODO add a mechanism to generate this as a send sms error
-        return phone_numbers
+                except MemberContact.DoesNotExist:
+                    pass
+                    #TODO add a mechanism to generate this as a send sms error
+            return phone_numbers
 
     def record_members_who_received_sms(self, sent_messages):
         '''
             if message was sent, record the members who received it and on what status
         '''
-        for data in sent_messages['SMSMessageData']['Recipients']:
-            contact = MemberContact.objects.get(phone=data['number'])
-            member = contact.member
-            sms = Sms.objects.latest('id')
+        with schema_context(self.schema):
+            for data in sent_messages['SMSMessageData']['Recipients']:
+                try:
+                    contact = MemberContact.objects.filter(phone__contains=data['number'][slice(4,13)])[0]
+                    member = contact.member
+                    sms = Sms.objects.all()
+                    sms = Sms.objects.latest('id')
 
-            SmsReceipients.objects.create(sms=sms, receipient=member, cost=data['cost'], status=data['status'])
+                    reciever = SmsReceipients.objects.create(sms=sms, receipient=member, cost=data['cost'], status=data['status'])
+                except MemberContact.DoesNotExist:
+                    print('passed')
+                    pass
+                    #TODO add a mechanism to generate this as a send sms error
 
     def on_finish(self, error, response):
         '''

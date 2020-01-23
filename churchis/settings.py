@@ -39,7 +39,7 @@ SHARED_APPS = (
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.admin',    
+    'django.contrib.admin',
 )
 TENANT_APPS = (
     'django.contrib.contenttypes',

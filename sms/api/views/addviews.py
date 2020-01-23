@@ -7,7 +7,6 @@ from member.models import (Member)
 from sms.africastalking.at import ChurchSysMessenger
 from sms.api.serializers import (SmsSerializer)
 
-messenger = ChurchSysMessenger("sms app", "test member 2")
 
 
 class addSMS(APIView):
@@ -23,6 +22,9 @@ class addSMS(APIView):
         website = request.data.get("website")
         receipient_member_ids = request.data.get("receipient_member_ids")
 
+        schema = request.get_host().split('.')[0]
+        print(schema)
+        messenger = ChurchSysMessenger(schema)
         receipients = messenger.receipients_phone_numbers(receipient_member_ids)
         messenger.send_message(receipients,message)
 

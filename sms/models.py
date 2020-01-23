@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 from groups.models import ChurchGroup
@@ -17,6 +19,9 @@ class Sms(models.Model):
     date = models.DateField(auto_now_add=True)
     website = models.BooleanField(default=True, help_text='Publish on the website')
 
+    def __str__(self):
+        return self.message
+
     class Meta:
         ordering = ('-date',)
 
@@ -29,7 +34,6 @@ class SmsReceipients(models.Model):
     receipient = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='receipient')
     cost = models.CharField(max_length=20, default="0")
     status = models.CharField(max_length=10, default="0")
-    date = models.DateField(auto_now_add=True)
 
 
 class SmsReceipientGroups(models.Model):

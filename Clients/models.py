@@ -6,9 +6,6 @@ from tenant_schemas.utils import schema_context
 from member.models import Member
 from sms.models import SmsReceipients
 
-import schedule
-import time
-
 PRICE_PER_MONTH = 5000
 PRICE_PER_DAY = (PRICE_PER_MONTH / 30)
 
@@ -75,7 +72,7 @@ class ClientDetail(models.Model):
     @property
     def number_of_sms(self):
         with schema_context(self.client.schema_name):
-            return SmsReceipients.objects.filter(date__gt=self.last_credited,status="Success").count()
+            return SmsReceipients.objects.filter(sms__date__gt=self.last_credited,status="Success").count()
 
     @property
     def apprx_number_of_days_left(self):

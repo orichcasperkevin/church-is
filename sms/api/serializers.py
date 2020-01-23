@@ -5,7 +5,6 @@ from member.api.serializers import MemberSerializer
 from member.models import Member
 from sms.models import (Sms, SmsReceipients, SmsReceipientGroups)
 
-
 class SmsSerializer(serializers.ModelSerializer):
     sending_member = MemberSerializer()
 
