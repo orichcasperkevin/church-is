@@ -6,15 +6,7 @@ from sms.models import SmsReceipients, Sms
 from Clients.models import ClientDetail
 from tenant_schemas.utils import schema_context
 
-# Initialize SDK
-username = config('AFRICAS_TALKING_USERNAME')
-api_key = config('AFRICAS_TALKING_API_KEY')
 CREDIT_PER_SMS = 1.00
-
-africastalking.initialize(username, api_key)
-
-# Initialize a service e.g. SMS
-sms = africastalking.SMS
 '''
     this class adapts africastalking api to the sms app.
 '''
@@ -23,6 +15,18 @@ sms = africastalking.SMS
 class ChurchSysMessenger():
     def __init__(self, schema):
         self.schema = schema #what schema to use
+
+        username = ''
+        api_key = ''
+        if schema[slice(0,4)] == "demo":
+            username = config('DEMO_AFRICAS_TALKING_USERNAME')
+            api_key = config('DEMO_AFRICAS_TALKING_API_KEY')
+        else:
+            username = config('AFRICAS_TALKING_USERNAME')
+            api_key = config('AFRICAS_TALKING_API_KEY')
+        #initialize africastalking
+        africastalking.initialize(username, api_key)
+        self.sms_service = africastalking.SMS
 
     def updateClientCredit(self):
         client_detail = ClientDetail.objects.get(client__schema_name=self.schema)
@@ -88,4 +92,4 @@ class ChurchSysMessenger():
         '''
             send message
         '''
-        sms.send(message, receipients, callback=self.on_finish)
+        self.sms_service.send(message, receipients, callback=self.on_finish)
