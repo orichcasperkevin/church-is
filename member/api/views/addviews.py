@@ -246,10 +246,9 @@ class AddRoleMemberShip(APIView):
 
     def post(self, request):
         schema = request.get_host().split('.')[0]
-        print(schema)
         messenger = ChurchSysMessenger(schema)
-        messenger = ChurchSysMessenger("create member", "test member 2")
         member_id = request.data.get("member_id")
+
         queryset = Member.objects.filter(member_id=member_id)
         data = []
         for data in queryset:

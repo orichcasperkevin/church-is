@@ -3,11 +3,13 @@ from decouple import config
 
 from member.models import MemberContact
 from sms.models import SmsReceipients, Sms
+from Clients.models import ClientDetail
 from tenant_schemas.utils import schema_context
 
 # Initialize SDK
 username = config('AFRICAS_TALKING_USERNAME')
 api_key = config('AFRICAS_TALKING_API_KEY')
+CREDIT_PER_SMS = 1.00
 
 africastalking.initialize(username, api_key)
 
@@ -21,6 +23,13 @@ sms = africastalking.SMS
 class ChurchSysMessenger():
     def __init__(self, schema):
         self.schema = schema #what schema to use
+
+    def updateClientCredit(self):
+        client_detail = ClientDetail.objects.get(client__schema_name=self.schema)
+        old_credit = client_detail.credit
+        new_credit = float(old_credit) - CREDIT_PER_SMS
+        client_detail.credit = new_credit
+        client_detail.save()
 
     def receipients_phone_numbers(self, receipient_member_ids):
         '''
@@ -58,7 +67,10 @@ class ChurchSysMessenger():
                     sms = Sms.objects.all()
                     sms = Sms.objects.latest('id')
 
-                    reciever = SmsReceipients.objects.create(sms=sms, receipient=member, cost=data['cost'], status=data['status'])
+                    received_sms = SmsReceipients.objects.create(sms=sms, receipient=member, cost=data['cost'], status=data['status'])
+                    if received_sms.status == 'Success':
+                        self.updateClientCredit()
+
                 except MemberContact.DoesNotExist:
                     print('passed')
                     pass
