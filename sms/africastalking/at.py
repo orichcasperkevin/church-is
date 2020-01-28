@@ -62,7 +62,7 @@ class ChurchSysMessenger():
     def record_members_who_received_sms(self, sent_messages):
         '''
             if message was sent, record the members who received it and on what status
-        '''
+        '''        
         with schema_context(self.schema):
             for data in sent_messages['SMSMessageData']['Recipients']:
                 try:
@@ -71,7 +71,7 @@ class ChurchSysMessenger():
                     sms = Sms.objects.all()
                     sms = Sms.objects.latest('id')
 
-                    received_sms = SmsReceipients.objects.create(sms=sms, receipient=member, cost=data['cost'], status=data['status'])
+                    received_sms = SmsReceipients.objects.create(sms=sms, receipient=member, cost=CREDIT_PER_SMS, status=data['status'])
                     if received_sms.status == 'Success':
                         self.updateClientCredit()
 

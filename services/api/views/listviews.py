@@ -2,10 +2,9 @@ from datetime import date
 
 from rest_framework import generics
 
-from services.api.serializers import (ServiceTypeSerializer ,ServiceItemSerializer,
-    ServiceSerializer,ServiceTypeListSerializer)
-    
-from services.models import (ServiceType, ServiceItem, Service )
+from services.api.serializers import *
+
+from services.models import ServiceType, ServiceItem, Service 
 
 today = date.today()
 day = today.day

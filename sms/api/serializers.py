@@ -31,8 +31,7 @@ class SmsReceipientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SmsReceipients
-        fields = ('sms', 'receipient')
-        depth = 1
+        fields = ('sms', 'receipient','cost','status')        
 
 
 class SmsReceipientGroupsSerializer(serializers.ModelSerializer):

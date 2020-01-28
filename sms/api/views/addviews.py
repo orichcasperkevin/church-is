@@ -2,11 +2,25 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.api.serializers import (MemberSerializer)
-from member.models import (Member)
-from sms.africastalking.at import ChurchSysMessenger
-from sms.api.serializers import (SmsSerializer)
+from member.api.serializers import MemberSerializer
+from member.models import Member
+from Clients.models import Client
 
+from sms.africastalking.at import ChurchSysMessenger
+from sms.api.serializers import SmsSerializer
+
+
+def getSerializerData(queryset,serializer_class):
+    serializer = serializer_class(queryset[0])
+    return serializer.data
+
+def formattedMessage(message,sender_id,schema_name,context):
+    church = Client.objects.get(schema_name=schema_name)
+    church_name = church.name
+    sender = Member.objects.get(member_id=sender_id)
+    sender_name = sender.member.first_name +" "+ sender.member.last_name
+
+    return church_name.upper() +"\n"+ context.lower() +"\n\n" + message + "\n\n" + sender_name
 
 
 class addSMS(APIView):
@@ -23,18 +37,14 @@ class addSMS(APIView):
         receipient_member_ids = request.data.get("receipient_member_ids")
 
         schema = request.get_host().split('.')[0]
-        print(schema)
+        message = formattedMessage(message,sending_member_id,schema,app)
+
         messenger = ChurchSysMessenger(schema)
         receipients = messenger.receipients_phone_numbers(receipient_member_ids)
         messenger.send_message(receipients,message)
 
         queryset = Member.objects.filter(member_id=sending_member_id)
-
-        member = []
-        for member in queryset:
-            member = member
-        serializer = MemberSerializer(member)
-        sending_member = serializer.data
+        sending_member = getSerializerData(queryset,MemberSerializer)
 
         data = {'sending_member': sending_member, 'app': app, 'message': message, 'website': website}
         serializer = SmsSerializer(data=data)

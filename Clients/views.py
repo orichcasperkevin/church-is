@@ -201,7 +201,7 @@ def passwordFail(request):
 
 @login_required
 def anvilAdmin(request):
-    clients = ClientDetail.objects.all()
+    clients = ClientDetail.objects.filter(client__on_trial = False)
     demos = ClientDetail.objects.filter(client__on_trial = True)
     return render(request, 'anvilAdmin.html' ,{'clients':clients,'demos':demos},)
 

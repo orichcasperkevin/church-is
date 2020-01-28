@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews, detailviews
+from .views import listviews, addviews, detailviews, statviews
 
 # TODO add delete views
 urlpatterns = [
@@ -35,6 +35,9 @@ urlpatterns = [
     path('add-member-marital-status/', addviews.AddMemberMaritalStatus.as_view()),
     path('add-role-for-member/', addviews.AddRoleMemberShip.as_view()),
 
+    #statistics
+    path('new-member-count/', statviews.NewMembersCount.as_view()),
+    path('age-distribution/', statviews.AgeDistribution.as_view()),
 
 
 ]

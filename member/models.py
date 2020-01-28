@@ -17,6 +17,9 @@ class Member(models.Model):
             models.Index(fields=['gender']),
         ]
 
+    def __str__(self):
+        return str(self.member)
+
 
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
