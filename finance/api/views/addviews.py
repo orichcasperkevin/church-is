@@ -12,6 +12,9 @@ from groups.models import ChurchGroup
 from member.models import Member
 from services.models import Service,ServiceType
 
+def getSerializerData(queryset,serializer_class):
+    data = queryset[0]
+    return serializer_class(data).data
 
 class addPendingConfirmation(APIView):
     '''
@@ -84,25 +87,28 @@ class addOffering(APIView):
 
     def post(self, request):
         serializer_to_use = 0
+        '''offering type'''
+        offering_type = None
+        offering_type_id = request.data.get("offering_type")
+        if not offering_type:
+            queryset = OfferingType.objects.get_or_create(name="general offering",description="general offering")
+            offering_type = getSerializerData(queryset,OfferingTypeSerializer)
+        else:
+            queryset = OfferingType.objects.filter(id=offering_type_id)
+            offering_type = getSerializerData(queryset,OfferingTypeSerializer)
+
+        '''member'''
         member_id = request.data.get("member_id")
         if (member_id != None):
             queryset = Member.objects.filter(member_id=member_id)
-            data = []
-            for data in queryset:
-                data = data
-            serializer = MemberSerializer(data)
-            member = serializer.data
+            member = getSerializerData(queryset,MemberSerializer)
         else:
             member = None
             serializer_to_use = 1
 
         recording_member_id = request.data.get("recording_member_id")
         queryset = Member.objects.filter(member_id=recording_member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        recording_member = serializer.data
+        recording_member = getSerializerData(queryset,MemberSerializer)
 
         name_if_not_member = request.data.get("name_if_not_member")
         date = request.data.get("date")
@@ -110,9 +116,10 @@ class addOffering(APIView):
         amount = request.data.get("amount")
         narration = request.data.get("narration")
 
-        data = {'member': member, 'amount': amount, 'date': date, 'anonymous': anonymous,
+        data = {'type':offering_type,'member': member, 'amount': amount, 'date': date, 'anonymous': anonymous,
                 'name_if_not_member': name_if_not_member,
                 'recorded_by': recording_member}
+
         if (serializer_to_use == 0):
             serializer = AddMemberOfferingSerializer(data=data)
         if (serializer_to_use == 1):
@@ -135,22 +142,13 @@ class AddServiceOffering(APIView):
 
         recording_member = Member.objects.filter(member_id=recording_member_id)
         queryset = Member.objects.filter(member_id=recording_member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        recording_member = serializer.data
+        recording_member = getSerializerData(queryset,MemberSerializer)
 
         service_type_id = request.data.get("service_type_id")
         date = request.data.get("date")
 
         queryset = Service.objects.filter(type_id=service_type_id, date=date)
-        data = []
-        for data in queryset:
-            data = data
-            break
-        serializer = ServiceSerializer(data)
-        service = serializer.data
+        service = getSerializerData(queryset,ServiceSerializer)
 
         amount = request.data.get("amount")
         narration = request.data.get("narration")
@@ -173,19 +171,11 @@ class addIncome(APIView):
 
         recording_member_id = request.data.get("recording_member_id")
         queryset = Member.objects.filter(member_id=recording_member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        recording_member = serializer.data
+        recording_member = getSerializerData(queryset,MemberSerializer)
 
         income_type_id = request.data.get("income_type_id")
         queryset = IncomeType.objects.filter(id=income_type_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = IncomeTypeSerializer(data)
-        income_type = serializer.data
+        income_type = getSerializerData(queryset,IncomeTypeSerializer)
 
         amount = request.data.get("amount")
         narration = request.data.get("narration")
@@ -209,19 +199,11 @@ class addExpenditure(APIView):
 
         recording_member_id = request.data.get("recording_member_id")
         queryset = Member.objects.filter(member_id=recording_member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        recording_member = serializer.data
+        recording_member = getSerializerData(queryset,MemberSerializer)
 
         expenditure_type_id = request.data.get("expenditure_type_id")
         queryset = ExpenditureType.objects.filter(id=expenditure_type_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = ExpenditureTypeSerializer(data)
-        expenditure_type = serializer.data
+        expenditure_type = getSerializerData(queryset,ExpenditureTypeSerializer)
 
         amount = request.data.get("amount")
         narration = request.data.get("narration")

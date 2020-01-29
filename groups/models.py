@@ -13,10 +13,7 @@ class GroupOfChurchGroups(models.Model):
 
     @property
     def number_of_groups(self):
-        count = 0
-        for data in ChurchGroup.objects.filter(group_id = self.id):
-            count += 1
-        return count
+        return ChurchGroup.objects.filter(group_id = self.id).count()
 
 class ChurchGroupModelManager(models.Manager):
     '''
@@ -44,10 +41,8 @@ class ChurchGroup(models.Model):
 
     @property
     def number_of_members(self):
-        number = 0
-        for data in self.group_members.all():
-            number = number + 1
-        return number
+        return self.group_members.all().count()
+
     objects = ChurchGroupModelManager()
 
 class ChurchGroupMembershipModelManager(models.Manager):
@@ -81,18 +76,14 @@ class GroupMeeting(models.Model):
         a group meeting as hosted by a member, at a location on a certain date
     '''
     group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
-    host = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='group_meeting_host',
-                             help_text='Names of the host being visited.', blank=True)
-    location = models.CharField(max_length=20, help_text='The location of the meeting')
-    date = models.DateField(help_text='The visit date')
+    location = models.CharField(max_length=20)
+    description = models.CharField(max_length=160)
+    date = models.DateTimeField()
     attendees = models.ManyToManyField(Member, through='GroupMeetingRoster')
 
     @property
     def number_of_attendees(self):
-        number = 0
-        for data in self.attendees.all():
-            number = number + 1
-        return number
+        return self.attendees.all().count()
 
 
 class GroupMeetingRoster(models.Model):
@@ -101,15 +92,3 @@ class GroupMeetingRoster(models.Model):
     '''
     group_meeting = models.ForeignKey(GroupMeeting, on_delete=models.CASCADE)
     attendee = models.ForeignKey(Member, on_delete=models.CASCADE)
-
-
-class GroupPhoto(models.Model):
-    '''
-        the photos of grouped under a group,
-        can be tagged as belonging to a certain fellowship meeting that the attended
-        can also be tagged as belonging or containing a certain member or members
-    '''
-    group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
-    group_meeting = models.ForeignKey(GroupMeeting, on_delete=models.CASCADE, null=True, blank=True)
-    group_meeting_attendees = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True)
-    photo = models.ImageField(upload_to='fellowships/', null=True)

@@ -8,6 +8,11 @@ from finance.models import *
 class PendingConfirmations(generics.ListCreateAPIView):
     queryset = PendingConfirmation.objects.all()
     serializer_class = PendingConfirmationSerializer
+
+class OfferingType(generics.ListCreateAPIView) :
+    queryset = OfferingType.objects.all()
+    serializer_class = OfferingTypeSerializer
+
 class IncomeTypeList(generics.ListCreateAPIView):
     '''
         a list of all income types

@@ -19,17 +19,17 @@ class Event(models.Model):
 
     @property
     def end(self):
-        return self.end_datetime.strftime("%Y-%m-%d %H:%M")        
+        return self.end_datetime.strftime("%Y-%m-%d %H:%M")
 
 
-class EventAttendingGroup(models.Model):
+class GroupAttendingEvent(models.Model):
     '''
         what group is expected to attend the event
     '''
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
 
-class EventAttendedMember(models.Model):
+class MemberThatAttendedEvent(models.Model):
     '''
         the members who attended the event
     '''

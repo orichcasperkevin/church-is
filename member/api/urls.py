@@ -38,6 +38,7 @@ urlpatterns = [
     #statistics
     path('new-member-count/', statviews.NewMembersCount.as_view()),
     path('age-distribution/', statviews.AgeDistribution.as_view()),
+    path('marital-status-distribution/', statviews.MaritalStatusDistribution.as_view()),
 
 
 ]

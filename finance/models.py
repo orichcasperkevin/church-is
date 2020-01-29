@@ -2,6 +2,7 @@
 from datetime import date
 
 from django.db import models
+from django.db.models import Sum
 from django.utils.timezone import now
 
 from groups.models import ChurchGroup
@@ -38,8 +39,15 @@ class PendingConfirmation(models.Model):
             self.delete()
             return Tithe.objects.filter(id=tithe.id)
 
+class OfferingType(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=160,blank=True,null=True)
+
+    def __str__(self):
+        return self.name
 
 class Offering(models.Model):
+    type = models.ForeignKey(OfferingType, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(help_text='The Date of the offering collection')
     anonymous = models.BooleanField(default=False)
@@ -53,17 +61,15 @@ class Offering(models.Model):
 
     @property
     def total_this_month(self):
-        total = 0.00
-        for data in Offering.objects.filter(member_id=self.member_id, date__month=month, date__year=year):
-            total = total + float(data.amount)
-        return total
+        sum = Offering.objects.filter(member_id=self.member_id, date__month=month, date__year=year)\
+                        .aggregate(Sum('amount'))
+        return sum['amount__sum']
 
     @property
     def total_this_year(self):
-        total = 0.00
-        for data in Offering.objects.filter(member_id=self.member_id, date__year=year):
-            total = total + float(data.amount)
-        return total
+        sum = Offering.objects.filter(member_id=self.member_id, date__year=year)\
+                                    .aggregate(Sum('amount'))
+        return sum['amount__sum']
 
 
 class GroupOffering(models.Model):

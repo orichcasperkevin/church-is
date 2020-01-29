@@ -24,13 +24,19 @@ class PendingConfirmationSerializer(serializers.ModelSerializer):
         pending_confirmation = PendingConfirmation.objects.create(confirming_for=member,**validated_data)
         return pending_confirmation
 
+class OfferingTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OfferingType
+        fields = ('id','name','description')
+        extra_kwargs = {'id': {'read_only': False}}
+
 class OfferingSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
     recorded_by = MemberSerializer()
 
     class Meta:
         model = Offering
-        fields = ('amount', 'date', 'anonymous', 'name_if_not_member', 'church_group', 'member',
+        fields = ('type','amount', 'date', 'anonymous', 'name_if_not_member', 'church_group', 'member',
                   'service','narration','recorded_by', 'total_this_month', 'total_this_year')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
@@ -38,17 +44,22 @@ class OfferingSerializer(serializers.ModelSerializer):
 
 
 class AddMemberOfferingSerializer(serializers.ModelSerializer):
+    type = OfferingTypeSerializer()
     member = MemberSerializer()
     recorded_by = MemberSerializer()
 
     class Meta:
         model = Offering
-        fields = ('amount', 'date', 'anonymous', 'name_if_not_member', 'church_group', 'member',
+        fields = ('type','amount', 'date', 'anonymous', 'name_if_not_member', 'church_group', 'member',
                   'narration','recorded_by', 'total_this_month', 'total_this_year')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 
     def create(self, validated_data):
+        offering_type_data = validated_data.pop('type')
+        offering_type = {}
+        offering_type = OfferingType.objects.get(id=offering_type_data["id"])
+
         member_data = validated_data.pop('member')
         member = {}
         member = Member.objects.get(member_id=member_data["member"]["id"])
@@ -57,7 +68,7 @@ class AddMemberOfferingSerializer(serializers.ModelSerializer):
         recording_member = {}
         recording_member = Member.objects.get(member_id=recording_member_data["member"]["id"])
 
-        offering = Offering.objects.create(member=member, recorded_by=recording_member, **validated_data)
+        offering = Offering.objects.create(type=offering_type, member=member, recorded_by=recording_member, **validated_data)
         return offering
 
 

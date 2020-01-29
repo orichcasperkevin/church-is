@@ -4,7 +4,7 @@ from rest_framework import generics,status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from events.api.serializers import AddEventSerializer
+from events.api.serializers import AddEventSerializer,AddGroupAttendingEventSerializer,AddMemberThatAttendedEventSerializer
 
 from events.models import Event
 
@@ -33,6 +33,42 @@ class AddEvent(APIView):
                 'start_datetime':start_datetime, 'end_datetime':end_datetime}
 
         serializer = AddEventSerializer(data=data)
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddGroupAttendingEvent(APIView):
+    '''
+    post:
+    add group that is expected to attend the event
+    '''
+    def post(self,request):
+        group = request.data.get("group_id")
+        event = request.data.get("event_id")
+
+        data={'group':group, 'event':event,}
+
+        serializer = AddGroupAttendingEventSerializer(data=data)
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RecordMemberThatAttendedEvent(APIView):
+    '''
+    post:
+    record a member that attended an event
+    '''
+    def post(self,request):
+        member = request.data.get("member_id")
+        event = request.data.get("event_id")
+
+        data={'member':member, 'event':event,}
+
+        serializer = AddMemberThatAttendedEventSerializer(data=data)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

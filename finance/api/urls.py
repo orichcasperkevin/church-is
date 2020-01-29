@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews, updateviews
+from .views import listviews, addviews, updateviews, statviews
 
 # TODO add delete views
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     path('tithe-by-members-this-month/', listviews.TitheThisMonth.as_view()),
     path('tithe-stats/', listviews.TitheStats.as_view()),
 
+    path('offering-types/', listviews.OfferingType.as_view()),
     path('offerings-by-members-this-month/', listviews.OfferingThisMonth.as_view()),
     path('offering-stats-for-member/<int:id>/', listviews.OfferingStatsForMember.as_view()),
     path('offering-stats/', listviews.OfferingStats.as_view()),
@@ -34,7 +35,10 @@ urlpatterns = [
     path('add-expenditure/', addviews.addExpenditure.as_view()),
     path('add-pending-confirmation/', addviews.addPendingConfirmation.as_view()),
 
-    path('confirm-payment/<int:pending_confirmation_id>/', updateviews.ConfirmPayment.as_view())
+    path('confirm-payment/<int:pending_confirmation_id>/', updateviews.ConfirmPayment.as_view()),
+
+    path('offering-by-member-stats/', statviews.OfferingFromMembers.as_view()),
+    path('offering-by-type-stats/', statviews.OfferingByType.as_view()),
 
 ]
 

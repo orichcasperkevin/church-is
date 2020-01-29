@@ -4,7 +4,7 @@ from datetime import date
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.models import Member,MemberAge
+from member.models import Member,MemberAge,MemberMaritalStatus
 
 today = date.today()
 
@@ -58,5 +58,53 @@ class AgeDistribution(APIView):
 
         date_ranges = [self.dateRange(0,14),self.dateRange(15,25),self.dateRange(26,35),self.dateRange(36,60),self.dateRange(61,150)]
         self.appendData(date_ranges,dict,members_with_recorded_ages)
+
+        return Response(dict)
+
+class MaritalStatusDistribution(APIView):
+    '''
+        get:
+        the distribution of marital status in the church
+    '''
+    def get(self,request):
+        dict = []
+        recorded_marital_status = MemberMaritalStatus.objects.all().count()
+        dict.append({"recorded_marital_status":recorded_marital_status})
+
+        #married
+        married_count = MemberMaritalStatus.objects.filter(status="M").count()
+        percentage = 0
+        try:
+            percentage = (married_count / recorded_marital_status) * 100
+        except:
+            pass
+        dict.append({"married_count":married_count,"percentage":percentage})
+
+        #single
+        single_count = MemberMaritalStatus.objects.filter(status="S").count()
+        percentage = 0
+        try:
+            percentage = (single_count / recorded_marital_status) * 100
+        except:
+            pass
+        dict.append({"single_count":single_count,"percentage":percentage})
+
+        #Widowed
+        widowed_count = MemberMaritalStatus.objects.filter(status="W").count()
+        percentage = 0
+        try:
+            percentage = (widowed_count / recorded_marital_status) * 100
+        except:
+            pass
+        dict.append({"widowed_count":widowed_count,"percentage":percentage})
+
+        #Divorced
+        divorced_count = MemberMaritalStatus.objects.filter(status="D").count()
+        percentage = 0
+        try:
+            percentage = (divorced_count / recorded_marital_status) * 100
+        except:
+            pass
+        dict.append({"divorced_count":divorced_count,"percentage":percentage})
 
         return Response(dict)
