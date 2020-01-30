@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews
+from .views import listviews, addviews, statviews
 
 # TODO add delete views
 urlpatterns = [
@@ -28,6 +28,8 @@ urlpatterns = [
 
     path('confirm-payment/<int:pending_confirmation_id>/', listviews.ConfirmPayment.as_view()),
 
+    #stats for projects
+    path('project-general-stats/', statviews.ProjectStats.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
