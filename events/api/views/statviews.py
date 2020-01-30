@@ -13,6 +13,14 @@ def getPercentageIncrease(current,previous):
         pass
     return percentage_increase
 
+def getPercentageToTotal(figure,total):
+    percentage = 0
+    try:
+        percentage = (figure/total)*100
+    except:
+        pass
+    return percentage
+
 class EventsCount(APIView):
     '''
         get:
@@ -22,10 +30,10 @@ class EventsCount(APIView):
         dict = []
 
         for month in range(1,today.month + 1):
-            count = Event.objects.filter(start_datetime__month=month).count()
-            count_last_month = Event.objects.filter(start_datetime__month=month-1).count()
+            count = Event.objects.filter(start_datetime__month=month).count() or 0
+            count_last_month = Event.objects.filter(start_datetime__month=month-1).count() or 0
             percentage_increase = getPercentageIncrease(count,count_last_month)
-                
+
             dict.append({month:count,'percentage_increase':percentage_increase})
 
             return Response(dict)
@@ -45,13 +53,9 @@ class EventAttendance(APIView):
                 total_expected_to_attend += group.group.number_of_members
 
             #member that  attended events.
-            attendee_members_count = MemberThatAttendedEvent.objects.filter(event__start_datetime__month=month).count()
+            attendee_members_count = MemberThatAttendedEvent.objects.filter(event__start_datetime__month=month).count() or 0
+            percentage_attendance = getPercentageToTotal(attendee_members_count,total_expected_to_attend )
 
-            percentage_attendance = 0
-            try:
-                percentage_attendance = (attendee_members_count / total_expected_to_attend ) * 100
-            except:
-                pass
             dict.append({"month":month,"expected":total_expected_to_attend,"attended":attendee_members_count,
                             "percentage_attendance":percentage_attendance})
 

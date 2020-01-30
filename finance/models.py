@@ -62,13 +62,13 @@ class Offering(models.Model):
     @property
     def total_this_month(self):
         sum = Offering.objects.filter(member_id=self.member_id, date__month=month, date__year=year)\
-                        .aggregate(Sum('amount'))
+                        .aggregate(Sum('amount')) or 0
         return sum['amount__sum']
 
     @property
     def total_this_year(self):
         sum = Offering.objects.filter(member_id=self.member_id, date__year=year)\
-                                    .aggregate(Sum('amount'))
+                                    .aggregate(Sum('amount')) or 0
         return sum['amount__sum']
 
 
@@ -92,38 +92,32 @@ class Tithe(models.Model):
 
     @property
     def total_this_month(self):
-        total = 0.00
-        for data in Tithe.objects.filter(member_id=self.member_id, date__month=month, date__year=year):
-            total = total + float(data.amount)
-        return total
+        sum = Tithe.objects.filter(member_id=self.member_id, date__month=month, date__year=year).aggregate(Sum('amount')) or 0
+        return sum['amount__sum']
 
     @property
     def total_this_year(self):
-        total = 0.00
-        for data in Tithe.objects.filter(member_id=self.member_id, date__year=year):
-            total = total + float(data.amount)
-        return total
+        sum = Tithe.objects.filter(member_id=self.member_id, date__year=year).aggregate(Sum('amount')) or 0
+        return sum['amount__sum']
 
 
 class IncomeType(models.Model):
     id = models.AutoField(primary_key=True)
-    type_name = models.CharField(max_length=100,
-                                 help_text='Other type of income apart from tithes,offertory or contribution')
+    type_name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.type_name
 
     @property
     def total_this_month(self):
-        total = 0
-        for data in Income.objects.filter(type_id=self.id, date__month=month, date__year=year):
-            total = total + data.amount
-        return total
+        sum = Income.objects.filter(type_id=self.id, date__month=month, date__year=year).aggregate(Sum('amount')) or 0
+        return sum['amount__sum']
 
     @property
     def total_this_year(self):
-        total = 0
-        for data in Income.objects.filter(type_id=self.id, date__year=year):
-            total = total + data.amount
-        return total
+        sum = Income.objects.filter(type_id=self.id, date__year=year).aggregate(Sum('amount')) or 0
+        return sum['amount__sum']
 
 
 class Income(models.Model):
@@ -135,38 +129,32 @@ class Income(models.Model):
 
     @property
     def total_overall_income_this_month(self):
-        total = 0
-        for data in Income.objects.filter(date__month=month, date__year=year):
-            total = total + data.amount
-        return total
+        sum = Income.objects.filter(date__month=month, date__year=year).aggregate(Sum('amount')) or 0
+        return sum['amount__sum']
 
     @property
     def total_overall_income_this_year(self):
-        total = 0
-        for data in Income.objects.filter(date__year=year):
-            total = total + data.amount
-        return total
+        sum = Income.objects.filter(date__year=year).aggregate(Sum('amount'))
+        return sum['amount__sum']
 
 
 class ExpenditureType(models.Model):
     id = models.AutoField(primary_key=True)
-    type_name = models.CharField(max_length=100,
-                                 help_text='Type of church expenditure')
+    type_name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.type_name
 
     @property
     def total_this_month(self):
-        total = 0
-        for data in Expenditure.objects.filter(type_id=self.id,date__month=month, date__year=year):
-            total = total + data.amount
-        return total
+        sum = Expenditure.objects.filter(type_id=self.id,date__month=month, date__year=year).aggregate(Sum('amount')) or 0
+        return sum['amount__sum']
 
     @property
     def total_this_year(self):
-        total = 0
-        for data in Expenditure.objects.filter(type_id=self.id,date__year=year):
-            total = total + data.amount
-        return total
+        sum = Expenditure.objects.filter(type_id=self.id,date__year=year).aggregate(Sum('amount')) or 0
+        return sum['amount__sum']
 
 
 class Expenditure(models.Model):

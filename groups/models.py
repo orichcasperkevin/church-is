@@ -13,7 +13,7 @@ class GroupOfChurchGroups(models.Model):
 
     @property
     def number_of_groups(self):
-        return ChurchGroup.objects.filter(group_id = self.id).count()
+        return ChurchGroup.objects.filter(group_id = self.id).count() or 0
 
 class ChurchGroupModelManager(models.Manager):
     '''
@@ -41,7 +41,7 @@ class ChurchGroup(models.Model):
 
     @property
     def number_of_members(self):
-        return self.group_members.all().count()
+        return self.group_members.all().count() or 0
 
     objects = ChurchGroupModelManager()
 
@@ -83,7 +83,7 @@ class GroupMeeting(models.Model):
 
     @property
     def number_of_attendees(self):
-        return self.attendees.all().count()
+        return self.attendees.all().count() or 0
 
 
 class GroupMeetingRoster(models.Model):

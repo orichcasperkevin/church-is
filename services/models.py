@@ -9,6 +9,9 @@ class ServiceType(models.Model):
     description = models.CharField(max_length=150)
     church_groups = models.ManyToManyField(ChurchGroup, through='ChurchGroupMembership')
 
+    def __str__(self):
+        return self.name
+
 class ChurchGroupMembership(models.Model):
     church_group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, related_name='church_group_memberships')
     service = models.ForeignKey(ServiceType, on_delete=models.CASCADE, related_name='church_group_memberships')

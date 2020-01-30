@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Sum,Avg
 from django.template.defaultfilters import floatformat
 
 from groups.models import ChurchGroup
@@ -19,8 +20,7 @@ class Project(models.Model):
     start = models.DateField(verbose_name='Starting Date', help_text='Start date of the project')
     stop = models.DateField(verbose_name='Completion Date', help_text='Completion date of the project')
     description = models.TextField(help_text='Description of the project')
-    required_amount = models.DecimalField(max_digits=15, decimal_places=2,
-                                          validators=[MinValueValidator(Decimal('0.00'))], default=Decimal('0.00'))
+    required_amount = models.DecimalField(max_digits=15, decimal_places=2,validators=[MinValueValidator(Decimal('0.00'))], default=Decimal('0.00'))
 
     @property
     def raised_amount(self):
@@ -28,40 +28,24 @@ class Project(models.Model):
           This is cumulatively added when members bring in contributions or
           service their pledges.
         '''
-        project_id = self.id
-        queryset = PledgePayment.objects.filter(pledge__project__id=project_id)
-        raised_amount = 0
-        for payment in queryset:
-            raised_amount += payment.payment_amount
+        pledge_payment = PledgePayment.objects.filter(pledge__project__id=self.id).aggregate(Sum('payment_amount'))['payment_amount__sum'] or 0
+        contributions = Contribution.objects.filter(project_id=self.id).aggregate(Sum('amount'))['amount__sum'] or 0
 
-        queryset = Contribution.objects.filter(project_id=project_id)
-        for contribution in queryset:
-            raised_amount += contribution.amount
-        return raised_amount
+        return pledge_payment + contributions
 
     @property
     def total_in_pledges(self):
         '''
             the total amount that has been pledged so far.
         '''
-        project_id = self.id
-        queryset = Pledge.objects.filter(project_id=project_id)
-        total_in_pledge = 0
-        for pledge in queryset:
-            total_in_pledge += pledge.amount
-        return total_in_pledge
+        return Pledge.objects.filter(project_id=self.id).aggregate(Sum('amount'))['amount__sum'] or 0
 
     @property
     def total_in_settled_pledges(self):
         '''
             the total amount that has been settled in pledges
         '''
-        project_id = self.id
-        queryset = PledgePayment.objects.filter(pledge__project__id=project_id)
-        total_in_settled_pledges = 0
-        for payment in queryset:
-            total_in_settled_pledges += payment.payment_amount
-        return total_in_settled_pledges
+        return  PledgePayment.objects.filter(pledge__project__id=self.id).aggregate(Sum('payment_amount'))['payment_amount__sum'] or 0
 
     @property
     def percentage_of_pledge_settled(self):
@@ -122,11 +106,7 @@ class Pledge(models.Model):
 
     @property
     def amount_so_far(self):
-        queryset = PledgePayment.objects.filter(pledge_id=self.id)
-        amount_so_far = 0
-        for pledge_payment in queryset:
-            amount_so_far += pledge_payment.payment_amount
-        return amount_so_far
+        return  PledgePayment.objects.filter(pledge_id=self.id).aggregate(Sum('payment_amount'))['payment_amount__sum'] or 0
 
     @property
     def remaining_amount(self):

@@ -39,6 +39,10 @@ urlpatterns = [
 
     path('offering-by-member-stats/', statviews.OfferingFromMembers.as_view()),
     path('offering-by-type-stats/', statviews.OfferingByType.as_view()),
+    path('offering-from-service-stats/', statviews.OfferingFromService.as_view()),
+    path('tithe-general-stats/', statviews.TitheStats.as_view()),
+    path('income-general-stats/', statviews.IncomeStats.as_view()),
+    path('expenditure-general-stats/', statviews.ExpenditureStats.as_view()),
 
 ]
 
