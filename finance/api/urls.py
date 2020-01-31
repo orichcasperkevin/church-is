@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews, updateviews, statviews
+from .views import listviews, addviews, updateviews, statviews, fileviews
 
 # TODO add delete views
 urlpatterns = [
@@ -43,6 +43,10 @@ urlpatterns = [
     path('tithe-general-stats/', statviews.TitheStats.as_view()),
     path('income-general-stats/', statviews.IncomeStats.as_view()),
     path('expenditure-general-stats/', statviews.ExpenditureStats.as_view()),
+
+    #fileviews
+    path('csv-test/',fileviews.some_view),
+    path('get-tithes-as-csv/<slug:date>/',fileviews.get_tithes_csv),
 
 ]
 

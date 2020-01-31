@@ -1,8 +1,8 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from groups.api.serializers import GroupOfChurchGroupSerializer, ChurchGroupSerializer, ChurchGroupMeetingSerializer
-from groups.models import GroupOfChurchGroups, ChurchGroup, GroupMeeting
+from groups.api.serializers import GroupOfChurchGroupSerializer, ChurchGroupSerializer
+from groups.models import GroupOfChurchGroups, ChurchGroup
 
 class GroupOfChurchGroupsList(generics.ListCreateAPIView):
     '''
@@ -17,14 +17,3 @@ class ChurchGroupList(generics.ListCreateAPIView):
     '''
     queryset = ChurchGroup.objects.all()
     serializer_class = ChurchGroupSerializer
-
-
-class ChurchGroupMeetingList(APIView):
-    '''
-        a list of church_group meetings with for a church_group with Id <id>
-    '''
-
-    def get(self, request, id):
-        church_group_meeting = GroupMeeting.objects.filter(group_id=id)
-        data = ChurchGroupMeetingSerializer(church_group_meeting, many=True).data
-        return Response(data)

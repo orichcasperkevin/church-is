@@ -1,14 +1,13 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, detailviews, addviews
+from .views import listviews, detailviews, addviews, statviews
 
 # TODO add delete views
 urlpatterns = [
     # listing
     path('group-of-church-groups-list/', listviews.GroupOfChurchGroupsList.as_view()),
     path('church-group-list/', listviews.ChurchGroupList.as_view()),
-    path('church-group-meeting-list/<int:id>/', listviews.ChurchGroupMeetingList.as_view()),
 
     # detailviews
     path('church-groups-not-in-group/', detailviews.GetIndependentGroups.as_view()),
@@ -21,6 +20,10 @@ urlpatterns = [
     # urls to add views
     path('add-group/', addviews.AddGroup.as_view()),
     path('add-member-to-group/', addviews.AddMemberToGroup.as_view()),
+
+    #stats
+    path("group-general-stats/", statviews.MemberCountStats.as_view()),
+    path('group-attendance-stats/', statviews.EventAttendanceStats.as_view()),
 
 ]
 

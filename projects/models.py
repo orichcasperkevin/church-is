@@ -22,6 +22,9 @@ class Project(models.Model):
     description = models.TextField(help_text='Description of the project')
     required_amount = models.DecimalField(max_digits=15, decimal_places=2,validators=[MinValueValidator(Decimal('0.00'))], default=Decimal('0.00'))
 
+    def __str__(self):
+        return self.name
+        
     @property
     def raised_amount(self):
         '''

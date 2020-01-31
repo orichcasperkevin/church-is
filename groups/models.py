@@ -39,6 +39,9 @@ class ChurchGroup(models.Model):
     group_members = models.ManyToManyField(Member, through='ChurchGroupMembership', blank=True)
     anvil_space_only = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+        
     @property
     def number_of_members(self):
         return self.group_members.all().count() or 0
@@ -69,26 +72,3 @@ class ChurchGroupMembership(models.Model):
     date_joined = models.DateField(auto_now_add=True)
 
     objects = ChurchGroupMembershipModelManager()
-
-
-class GroupMeeting(models.Model):
-    '''
-        a group meeting as hosted by a member, at a location on a certain date
-    '''
-    group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
-    location = models.CharField(max_length=20)
-    description = models.CharField(max_length=160)
-    date = models.DateTimeField()
-    attendees = models.ManyToManyField(Member, through='GroupMeetingRoster')
-
-    @property
-    def number_of_attendees(self):
-        return self.attendees.all().count() or 0
-
-
-class GroupMeetingRoster(models.Model):
-    '''
-        a member that attended the group meeting
-    '''
-    group_meeting = models.ForeignKey(GroupMeeting, on_delete=models.CASCADE)
-    attendee = models.ForeignKey(Member, on_delete=models.CASCADE)

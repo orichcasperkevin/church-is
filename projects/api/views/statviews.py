@@ -24,7 +24,19 @@ def getPercentageToTotal(figure,total):
         pass
     return percentage
 
-class ProjectStats(APIView):
+class ProjectSizeStats(APIView):
+    def get(self,request):
+        dict = []        
+        projects_count = Project.objects.filter(start__year=today.year).count() or 0
+        total_project_size = Project.objects.filter(start__year=today.year).aggregate(Sum('required_amount'))['required_amount__sum']
+        for project in Project.objects.filter(start__year=today.year):
+            size = project.required_amount
+            percentage_to_total = getPercentageToTotal(size,total_project_size)
+            project_tuple = {"project":str(project),"size":size,"percentage_to_total":percentage_to_total}
+            dict.append(project_tuple)
+        return Response(dict)
+
+class ProjectFinancingStats(APIView):
     def get(self,request):
         dict = []
         for year in range(2019,today.year + 1):

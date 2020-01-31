@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from groups.models import GroupOfChurchGroups, ChurchGroup, ChurchGroupMembership, GroupMeeting
+from groups.models import GroupOfChurchGroups, ChurchGroup, ChurchGroupMembership
 from member.api.serializers import MemberSerializer, RoleSerializer
 from member.models import Member, Role
 
@@ -68,11 +68,3 @@ class AddMemberToChurchGroupSerializer(serializers.ModelSerializer):
         church_group_membership = ChurchGroupMembership.objects.create(church_group=church_group, member=member,
                                                                        role=role, **validated_data)
         return church_group_membership
-
-
-class ChurchGroupMeetingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GroupMeeting
-        fields = ('id', 'host', 'location', 'date', 'number_of_attendees')
-        depth = 2
-        extra_kwargs = {'id': {'read_only': True}}

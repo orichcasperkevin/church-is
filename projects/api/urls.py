@@ -29,7 +29,8 @@ urlpatterns = [
     path('confirm-payment/<int:pending_confirmation_id>/', listviews.ConfirmPayment.as_view()),
 
     #stats for projects
-    path('project-general-stats/', statviews.ProjectStats.as_view()),
+    path('project-general-stats/', statviews.ProjectFinancingStats.as_view()),
+    path('project-size-stats/',statviews.ProjectSizeStats.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
