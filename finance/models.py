@@ -62,14 +62,14 @@ class Offering(models.Model):
     @property
     def total_this_month(self):
         sum = Offering.objects.filter(member_id=self.member_id, date__month=month, date__year=year)\
-                        .aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+                        .aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
     @property
     def total_this_year(self):
         sum = Offering.objects.filter(member_id=self.member_id, date__year=year)\
-                                    .aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+                                    .aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
 
 class GroupOffering(models.Model):
@@ -92,13 +92,13 @@ class Tithe(models.Model):
 
     @property
     def total_this_month(self):
-        sum = Tithe.objects.filter(member_id=self.member_id, date__month=month, date__year=year).aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+        sum = Tithe.objects.filter(member_id=self.member_id, date__month=month, date__year=year).aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
     @property
     def total_this_year(self):
-        sum = Tithe.objects.filter(member_id=self.member_id, date__year=year).aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+        sum = Tithe.objects.filter(member_id=self.member_id, date__year=year).aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
 
 class IncomeType(models.Model):
@@ -111,13 +111,13 @@ class IncomeType(models.Model):
 
     @property
     def total_this_month(self):
-        sum = Income.objects.filter(type_id=self.id, date__month=month, date__year=year).aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+        sum = Income.objects.filter(type_id=self.id, date__month=month, date__year=year).aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
     @property
     def total_this_year(self):
-        sum = Income.objects.filter(type_id=self.id, date__year=year).aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+        sum = Income.objects.filter(type_id=self.id, date__year=year).aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
 
 class Income(models.Model):
@@ -129,13 +129,13 @@ class Income(models.Model):
 
     @property
     def total_overall_income_this_month(self):
-        sum = Income.objects.filter(date__month=month, date__year=year).aggregate(Sum('amount')) or 0
+        sum = Income.objects.filter(date__month=month, date__year=year).aggregate(Sum('amount'))
         return sum['amount__sum']
 
     @property
     def total_overall_income_this_year(self):
         sum = Income.objects.filter(date__year=year).aggregate(Sum('amount'))
-        return sum['amount__sum']
+        return sum['amount__sum'] or 0
 
 
 class ExpenditureType(models.Model):
@@ -148,13 +148,13 @@ class ExpenditureType(models.Model):
 
     @property
     def total_this_month(self):
-        sum = Expenditure.objects.filter(type_id=self.id,date__month=month, date__year=year).aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+        sum = Expenditure.objects.filter(type_id=self.id,date__month=month, date__year=year).aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
     @property
     def total_this_year(self):
-        sum = Expenditure.objects.filter(type_id=self.id,date__year=year).aggregate(Sum('amount')) or 0
-        return sum['amount__sum']
+        sum = Expenditure.objects.filter(type_id=self.id,date__year=year).aggregate(Sum('amount'))
+        return sum['amount__sum'] or 0
 
 
 class Expenditure(models.Model):

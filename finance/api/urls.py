@@ -48,6 +48,9 @@ urlpatterns = [
     path('csv-test/',fileviews.some_view),
     path('get-tithes-as-csv/<slug:date>/',fileviews.get_tithes_csv),
     path('get-member-offering-csv/<slug:date>/',fileviews.get_member_offering_csv),
+    path('get-service-offering-csv/<slug:date>/',fileviews.get_service_offering_csv),
+    path('get-income-csv/<slug:date>/',fileviews.get_income_csv),
+    path('get-expenditure-csv/<slug:date>/',fileviews.get_expenditure_csv),
 
 ]
 
