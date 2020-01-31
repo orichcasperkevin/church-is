@@ -47,6 +47,7 @@ urlpatterns = [
     #fileviews
     path('csv-test/',fileviews.some_view),
     path('get-tithes-as-csv/<slug:date>/',fileviews.get_tithes_csv),
+    path('get-member-offering-csv/<slug:date>/',fileviews.get_member_offering_csv),
 
 ]
 
