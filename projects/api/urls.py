@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews, statviews
+from .views import listviews, addviews, statviews, fileviews
 
 # TODO add delete views
 urlpatterns = [
@@ -31,6 +31,9 @@ urlpatterns = [
     #stats for projects
     path('project-general-stats/', statviews.ProjectFinancingStats.as_view()),
     path('project-size-stats/',statviews.ProjectSizeStats.as_view()),
+
+    #files.
+    path('get-project-general-stats-as-csv/<slug:date>/',fileviews.get_project_stats_as_csv),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

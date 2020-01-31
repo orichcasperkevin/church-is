@@ -44,8 +44,7 @@ urlpatterns = [
     path('income-general-stats/', statviews.IncomeStats.as_view()),
     path('expenditure-general-stats/', statviews.ExpenditureStats.as_view()),
 
-    #fileviews
-    path('csv-test/',fileviews.some_view),
+    #fileviews    
     path('get-tithes-as-csv/<slug:date>/',fileviews.get_tithes_csv),
     path('get-member-offering-csv/<slug:date>/',fileviews.get_member_offering_csv),
     path('get-service-offering-csv/<slug:date>/',fileviews.get_service_offering_csv),
