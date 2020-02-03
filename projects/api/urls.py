@@ -33,7 +33,8 @@ urlpatterns = [
     path('project-size-stats/',statviews.ProjectSizeStats.as_view()),
 
     #files.
-    path('get-project-general-stats-as-csv/<slug:date>/',fileviews.get_project_stats_as_csv),
+    path('get-project-general-stats-as-csv/<slug:date>/',fileviews.get_project_general_stats_as_csv),
+    path('get-project-contributions-as-csv/<int:project_id>/',fileviews.get_project_contribution_stats_as_csv),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
