@@ -39,11 +39,10 @@ def get_project_general_stats_as_csv(request,date):
 
 def get_project_contribution_stats_as_csv(request,project_id):
     project =  Project.objects.get(id=project_id)
-    filename = "project_stats_for" + project.name.strip().replace(" ","")
+    filename = "project_contributions_for" + project.name.strip().replace(" ","")
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=filename'
 
-    #date = datetime.datetime(date)
     writer = csv.writer(response)
     writer.writerow([project.name.upper()])
     writer.writerow(["required amount:" + " " + str(project.required_amount)])
@@ -81,3 +80,57 @@ def get_project_contribution_stats_as_csv(request,project_id):
     writer.writerow(["AVERAGE:",round(average,2)])
 
     return response
+
+def get_pledge_payments_as_csv(request,project_id):
+        project =  Project.objects.get(id=project_id)
+        filename = "project_contributions_for" + project.name.strip().replace(" ","")
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=filename'
+
+        writer = csv.writer(response)
+        writer.writerow([project.name.upper()])
+        writer.writerow(["required amount:" + " " + str(project.required_amount)])
+        writer.writerow([])
+
+        writer.writerow(["MEMBERS"])
+        writer.writerow(["member","pledge","settlement","amount_so_far","amount_remaining"])
+
+        for pledge_settlement in PledgePayment.objects.filter(pledge__project_id=project_id,pledge__member__isnull=False):
+            member = pledge_settlement.pledge.member.member.first_name + " " + pledge_settlement.pledge.member.member.last_name
+            pledge = pledge_settlement.pledge.amount
+            settlement = pledge_settlement.payment_amount
+            amount_so_far = pledge_settlement.pledge.amount_so_far
+            amount_remaining = pledge_settlement.pledge.remaining_amount
+
+            writer.writerow([member,pledge,settlement,amount_so_far,amount_remaining])
+
+        total = PledgePayment.objects.filter(pledge__project_id=project_id,pledge__member__isnull=False).aggregate(Sum('payment_amount'))['payment_amount__sum'] or 0
+        average = PledgePayment.objects.filter(pledge__project_id=project_id,pledge__member__isnull=False).aggregate(Avg('payment_amount'))['payment_amount__avg'] or 0
+        writer.writerow(["","TOTAL",total])
+        writer.writerow(["","AVERAGE",round(average,2)])
+
+        '''
+         NON MEMBERS
+        '''
+
+        writer.writerow([])
+
+        writer.writerow(["NON MEMBERS"])
+        writer.writerow(["name","phone","pledge","settlement","amount_so_far","amount_remaining"])
+
+        for pledge_settlement in PledgePayment.objects.filter(pledge__project_id=project_id,pledge__member__isnull=True):
+            names = pledge_settlement.pledge.names
+            phone = pledge_settlement.pledge.phone
+            pledge = pledge_settlement.pledge.amount
+            settlement = pledge_settlement.payment_amount
+            amount_so_far = pledge_settlement.pledge.amount_so_far
+            amount_remaining = pledge_settlement.pledge.remaining_amount
+
+            writer.writerow([names,phone,pledge,settlement,amount_so_far,amount_remaining])
+
+        total = PledgePayment.objects.filter(pledge__project_id=project_id,pledge__member__isnull=True).aggregate(Sum('payment_amount'))['payment_amount__sum'] or 0
+        average = PledgePayment.objects.filter(pledge__project_id=project_id,pledge__member__isnull=True).aggregate(Avg('payment_amount'))['payment_amount__avg'] or 0
+        writer.writerow(["","TOTAL",total])
+        writer.writerow(["","AVERAGE",round(average,2)])
+
+        return response
