@@ -37,6 +37,7 @@ urlpatterns = [
 
     path('confirm-payment/<int:pending_confirmation_id>/', updateviews.ConfirmPayment.as_view()),
 
+    #statistics
     path('offering-by-member-stats/', statviews.OfferingFromMembers.as_view()),
     path('offering-by-type-stats/', statviews.OfferingByType.as_view()),
     path('offering-from-service-stats/', statviews.OfferingFromService.as_view()),
@@ -44,7 +45,7 @@ urlpatterns = [
     path('income-general-stats/', statviews.IncomeStats.as_view()),
     path('expenditure-general-stats/', statviews.ExpenditureStats.as_view()),
 
-    #fileviews    
+    #fileviews
     path('get-tithes-as-csv/<slug:date>/',fileviews.get_tithes_csv),
     path('get-member-offering-csv/<slug:date>/',fileviews.get_member_offering_csv),
     path('get-service-offering-csv/<slug:date>/',fileviews.get_service_offering_csv),

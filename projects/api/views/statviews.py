@@ -26,7 +26,7 @@ def getPercentageToTotal(figure,total):
 
 class ProjectSizeStats(APIView):
     def get(self,request):
-        dict = []        
+        dict = []
         projects_count = Project.objects.filter(start__year=today.year).count() or 0
         total_project_size = Project.objects.filter(start__year=today.year).aggregate(Sum('required_amount'))['required_amount__sum']
         for project in Project.objects.filter(start__year=today.year):
@@ -39,7 +39,7 @@ class ProjectSizeStats(APIView):
 class ProjectFinancingStats(APIView):
     def get(self,request):
         dict = []
-        for year in range(2019,today.year + 1):
+        for year in range(today.year,today.year + 1):
             projects_count = Project.objects.filter(start__year=year).count() or 0
             avg_size_this_year = Project.objects.filter(start__year=year).aggregate(Avg('required_amount'))['required_amount__avg'] or 0
             avg_size_last_year = Project.objects.filter(start__year=year-1).aggregate(Avg('required_amount'))['required_amount__avg'] or 0
