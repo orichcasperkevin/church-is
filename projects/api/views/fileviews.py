@@ -22,6 +22,7 @@ def get_project_general_stats_as_csv(request,date):
     #date = datetime.datetime(date)
     writer = csv.writer(response)
     date = date_format(date)
+    writer.writerow(["name","start","stop","stop","description","required"])
     for project in Project.objects.filter(start__year=date["year"]):
         name = project.name
         start = project.start
@@ -56,8 +57,8 @@ def get_project_contribution_stats_as_csv(request,project_id):
         date = contribution.recorded_at
 
         writer.writerow([member,amount,date])
-    total = Contribution.objects.filter(project_id=project.id,member__member__isnull=False).aggregate(Sum('amount'))['amount__sum']
-    average = Contribution.objects.filter(project_id=project.id,member__member__isnull=False).aggregate(Avg('amount'))['amount__avg']
+    total = Contribution.objects.filter(project_id=project.id,member__member__isnull=False).aggregate(Sum('amount'))['amount__sum'] or 0
+    average = Contribution.objects.filter(project_id=project.id,member__member__isnull=False).aggregate(Avg('amount'))['amount__avg'] or 0
     writer.writerow(["TOTAL:",total])
     writer.writerow(["AVERAGE:",round(average,2)])
 
@@ -74,8 +75,8 @@ def get_project_contribution_stats_as_csv(request,project_id):
         date = contribution.recorded_at
 
         writer.writerow([names,amount,phone,date])
-    total = Contribution.objects.filter(project_id=project.id,member__member__isnull=True).aggregate(Sum('amount'))['amount__sum']
-    average = Contribution.objects.filter(project_id=project.id,member__member__isnull=True).aggregate(Avg('amount'))['amount__avg']
+    total = Contribution.objects.filter(project_id=project.id,member__member__isnull=True).aggregate(Sum('amount'))['amount__sum'] or 0
+    average = Contribution.objects.filter(project_id=project.id,member__member__isnull=True).aggregate(Avg('amount'))['amount__avg'] or 0
     writer.writerow(["TOTAL:",total])
     writer.writerow(["AVERAGE:",round(average,2)])
 

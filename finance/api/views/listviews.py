@@ -143,7 +143,7 @@ class TitheThisMonth(APIView):
     '''
 
     def get(self, request):
-        tithe = Tithe.objects.filter(date__month=month)
+        tithe = Tithe.objects.filter(date__month=month).order_by('-date')
         data = TitheSerializer(tithe, many=True).data
         return Response(data)
 
@@ -177,7 +177,7 @@ class OfferingByMember(APIView):
     '''
 
     def get(self, request, id):
-        offering = Offering.objects.filter(member__member_id=id)
+        offering = Offering.objects.filter(member__member_id=id).order_by('-date')
         data = OfferingSerializer(offering, many=True).data
         return Response(data)
 
@@ -199,7 +199,7 @@ class OfferingThisMonth(APIView):
     '''
 
     def get(self, request):
-        tithe = Offering.objects.filter(date__month=month)
+        tithe = Offering.objects.filter(date__month=month).order_by('-date')
         data = OfferingSerializer(tithe, many=True).data
         return Response(data)
 

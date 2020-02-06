@@ -63,8 +63,8 @@ def get_member_offering_csv(request,date):
         total_in_offering =  Offering.objects.filter(type_id=type.id,member__isnull=False,date__month=date["month"],date__year=date["year"]).aggregate(Sum('amount'))['amount__sum'] or 0
         avg_offering =  Offering.objects.filter(type_id=type.id,member__isnull=False,date__month=date["month"],date__year=date["year"]).aggregate(Avg('amount'))['amount__avg'] or 0
 
-        writer.writerow(["TOTAL", total_in_offering])
-        writer.writerow(["AVERAGE", round(avg_offering,2)])
+        writer.writerow(["","TOTAL", total_in_offering])
+        writer.writerow(["","AVERAGE", round(avg_offering,2)])
         writer.writerow([])
 
     return response

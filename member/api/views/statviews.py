@@ -36,7 +36,7 @@ class NewMembersCount(APIView):
             count_last_month =  Member.objects.filter(member__date_joined__month=month-1,member__date_joined__year=today.year).count() or 0
             percentage_increase = getPercentageIncrease(count,count_last_month)
 
-            dict.append({month:count,'percentage_increase':percentage_increase})
+            dict.append({"month":month,"total":count,'percentage_increase':percentage_increase})
         return Response(dict)
 
 class AgeDistribution(APIView):
@@ -56,15 +56,15 @@ class AgeDistribution(APIView):
             count = MemberAge.objects.filter(d_o_b__gt=date_range["from_date"],d_o_b__lt=date_range["to_date"]).count() or 0
             percentage = getPercentageToTotal(count,total)
 
-            dict.append({name:count,"percentage":percentage})
+            dict.append({"range":name,"total":count,"percentage":percentage})
 
     def get(self,request):
         dict = []
         members_with_recorded_ages = MemberAge.objects.all().count() or 0
-        dict.append({"members_with_recorded_ages":members_with_recorded_ages})
+        dict.append({"members_with_recorded_ages":members_with_recorded_ages,"stats":[]})        
 
         date_ranges = [self.dateRange(0,14),self.dateRange(15,25),self.dateRange(26,35),self.dateRange(36,60),self.dateRange(61,150)]
-        self.appendData(date_ranges,dict,members_with_recorded_ages)
+        self.appendData(date_ranges,dict[0]["stats"],members_with_recorded_ages)
 
         return Response(dict)
 
