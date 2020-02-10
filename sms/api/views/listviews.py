@@ -13,5 +13,5 @@ class SmsList(generics.ListCreateAPIView):
     '''
         a list of sms sent this month
     '''
-    queryset = SmsReceipients.objects.filter(sms__date__year=year,sms__date__month=month)[:100]
+    queryset = SmsReceipients.objects.filter(sms__date__year=year,sms__date__month=month).order_by('-sms__date')[:100]
     serializer_class = SmsReceipientSerializer

@@ -16,7 +16,7 @@ class Sms(models.Model):
     sending_member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='sending_member')
     receipients = models.ManyToManyField(Member, through='smsReceipients')
     church_groups = models.ManyToManyField(ChurchGroup, blank=True)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     website = models.BooleanField(default=True, help_text='Publish on the website')
 
     def __str__(self):

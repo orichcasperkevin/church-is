@@ -14,6 +14,9 @@ loader = CSVLoader()
 
 STARTER_PASSWORD = "changeMe"
 
+def getSerializerData(queryset,serializer_class):
+    data = queryset[0]
+    return serializer_class(data).data
 
 class addMember(APIView):
     '''
@@ -124,11 +127,7 @@ class AddMemberContact(APIView):
 
         member_id = request.data.get("member_id")
         queryset = Member.objects.filter(member_id=member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        member = serializer.data
+        member = getSerializerData(queryset,MemberSerializer)
 
         postal = request.data.get("postal_address")
         phone = request.data.get("phone")
@@ -157,15 +156,10 @@ class AddMemberD_O_B(APIView):
 
     def post(self, request):
 
+        d_o_b = request.data.get("d_o_b")
         member_id = request.data.get("member_id")
         queryset = Member.objects.filter(member_id=member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        member = serializer.data
-
-        d_o_b = request.data.get("d_o_b")
+        member = getSerializerData(queryset,MemberSerializer)
 
         data = {'member': member, 'd_o_b': d_o_b}
 
@@ -187,11 +181,7 @@ class AddMemberResidence(APIView):
 
         member_id = request.data.get("member_id")
         queryset = Member.objects.filter(member_id=member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        member = serializer.data
+        member = getSerializerData(queryset,MemberSerializer)
 
         town = request.data.get("town")
         road = request.data.get("road")
@@ -218,15 +208,11 @@ class AddMemberMaritalStatus(APIView):
 
     def post(self, request):
 
+        marital_status = request.data.get("status")
         member_id = request.data.get("member_id")
         queryset = Member.objects.filter(member_id=member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        member = serializer.data
+        member = getSerializerData(queryset,MemberSerializer)
 
-        marital_status = request.data.get("status")
 
         data = {'member': member, 'status': marital_status}
 
@@ -250,19 +236,11 @@ class AddRoleMemberShip(APIView):
         member_id = request.data.get("member_id")
 
         queryset = Member.objects.filter(member_id=member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        member = serializer.data
+        marital_status = request.data.get("status")
 
         role_id = request.data.get("role_id")
         queryset = Role.objects.filter(id=role_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = RoleSerializer(data)
-        role = serializer.data
+        role = getSerializerData(queryset,RoleSerializer)
 
         data = {'member': member, 'role': role}
 

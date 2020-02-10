@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews, detailviews, statviews
+from .views import listviews, addviews, detailviews, updateviews ,statviews
 
 # TODO add delete views
 urlpatterns = [
@@ -20,7 +20,6 @@ urlpatterns = [
     path('residence-for-member/<int:id>/', detailviews.GetResidenceForMemberWithId.as_view()),
     path('marital-status-for-member/<int:id>/', detailviews.GetMaritalStatusForMemberWithId.as_view()),
     path('family-for-member/<int:id>/', detailviews.GetFamilyForMemberWithId.as_view()),
-    path('family-tree-for-member/<int:id>/', detailviews.GetMemberFamilyTree.as_view()),
     path('roles-for-member/<int:id>/', detailviews.GetRolesForMemberWithId.as_view()),
     re_path(r'^preview-csv/(?P<file_name>.*)/$', detailviews.PreviewCSV.as_view()),
 
@@ -35,6 +34,8 @@ urlpatterns = [
     path('add-member-marital-status/', addviews.AddMemberMaritalStatus.as_view()),
     path('add-role-for-member/', addviews.AddRoleMemberShip.as_view()),
 
+    #updating
+    path('update-user/',updateviews.UpdateMemberData.as_view()),
     #statistics
     path('new-member-count/', statviews.NewMembersCount.as_view()),
     path('age-distribution/', statviews.AgeDistribution.as_view()),

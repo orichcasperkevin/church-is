@@ -10,7 +10,7 @@ class SmsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sms
-        fields = ('id', 'app', 'message', 'sending_member', 'receipients', 'church_groups',
+        fields = ('id', 'app', 'message', 'sending_member',
                   'date', 'website')
         depth = 2
 
@@ -31,7 +31,7 @@ class SmsReceipientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SmsReceipients
-        fields = ('sms', 'receipient','cost','status')        
+        fields = ('sms', 'receipient','cost','status')
 
 
 class SmsReceipientGroupsSerializer(serializers.ModelSerializer):

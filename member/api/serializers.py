@@ -48,7 +48,7 @@ class MemberContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MemberContact
-        fields = ('id', 'member', 'postal', 'phone', 'contact')
+        fields = ('id', 'member', 'phone', 'phone2')
         depth = 2
         extra_kwargs = {'id': {'read_only': True}}
 

@@ -3,6 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Member(models.Model):
+    ##fundamental design flaw at the beginning of the project...should've  used OneToOneField
     member = models.ForeignKey(User, on_delete=models.CASCADE)
     middle_name = models.CharField(max_length=15, blank=True,  default=" ")
     GENDER = (
@@ -18,15 +19,14 @@ class Member(models.Model):
         ]
 
     def __str__(self):
-        return str(self.member)
+        return str(self.member.first_name + " " + self.member.last_name )
 
 
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
-    member = models.OneToOneField(Member, on_delete=models.CASCADE)
-    postal = models.CharField(max_length=200, blank=True, verbose_name='Postal Address')
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
     phone = models.CharField(max_length=15, blank=True, verbose_name='Telephone(Mobile)')
-    contact = models.CharField(max_length=200, blank=True, verbose_name='Contact No.')
+    phone2 = models.CharField(max_length=15, blank=True, verbose_name='Telephone(Mobile)')
 
     def __str__(self):
         return str(self.member)
@@ -34,9 +34,11 @@ class MemberContact(models.Model):
 
 class MemberAge(models.Model):
     id = models.AutoField(primary_key=True)
-    member = models.OneToOneField(Member, on_delete=models.CASCADE)
-    d_o_b = models.DateField()
+    member = models.OneToOneField(Member, on_delete=models.CASCADE,null=True)
+    d_o_b = models.DateField(null=True)
 
+    def __str__(self):
+        return str(self.member)
 
 class MemberMaritalStatus(models.Model):
     STATUS = (
@@ -45,17 +47,16 @@ class MemberMaritalStatus(models.Model):
         ('D', 'Divorced'),
         ('W', 'Widowed'),
     )
-    member = models.OneToOneField(Member, on_delete=models.CASCADE)
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=2, null=True, choices=STATUS)
 
 
 class MemberResidence(models.Model):
     id = models.AutoField(primary_key=True)
-    member = models.OneToOneField(Member, on_delete=models.CASCADE)
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
     town = models.CharField(max_length=15, blank=True, verbose_name='town')
     road = models.CharField(max_length=15, blank=True, verbose_name='Road')
     street = models.CharField(max_length=15, blank=True, verbose_name='street')
-    village_estate = models.CharField(max_length=15, blank=True, verbose_name='village/estate')
     description = models.CharField(max_length=30, blank=True, verbose_name='description')
 
     def __str__(self):
@@ -88,8 +89,6 @@ class Family(models.Model):
         a family  in church
     '''
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=15, blank=True, null=True)
-    head = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, related_name="familyHeads")
     members = models.ManyToManyField(Member, through='FamilyMembership')
 
 class FamilyMembership(models.Model):
@@ -98,28 +97,6 @@ class FamilyMembership(models.Model):
     '''
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
-
-class ParentRelation(models.Model):
-    '''
-         member - parent relation
-    '''
-    member = models.OneToOneField(Member,on_delete=models.CASCADE)
-    mom = models.ForeignKey(Member,on_delete=models.CASCADE, blank=True, null=True, related_name="moms")
-    dad = models.ForeignKey(Member,on_delete=models.CASCADE, blank=True, null=True, related_name="dads")
-
-class SiblingRelation(models.Model):
-    '''
-        Member - sibling relation
-    '''
-    member = models.OneToOneField(Member,on_delete=models.CASCADE)
-    sibling = models.ForeignKey(Member,on_delete=models.CASCADE, related_name="siblings")
-
-class SpouseRelation(models.Model):
-    '''
-        Member - spouse relation
-    '''
-    member = models.OneToOneField(Member,on_delete=models.CASCADE)
-    spouse = models.ForeignKey(Member,on_delete=models.CASCADE, related_name="spouses")
 
 class ImportantDateType(models.Model):
     '''
@@ -139,6 +116,13 @@ class MemberImportantDate(models.Model):
     overseen_by_non_member = models.CharField(max_length=50, blank=True, null=True)
     non_member_description = models.CharField(max_length=160, blank=True, null=True)
 
+class MemberNote(models.Model):
+    '''
+        notes made on a member.
+    '''
+    member = models.ForeignKey(Member,on_delete=models.CASCADE, related_name='mote_for')
+    note_by = models.ForeignKey(Member,on_delete=models.CASCADE, related_name='note_by')
+    note = models.CharField(max_length=160)
 
 class CSV(models.Model):
     '''
