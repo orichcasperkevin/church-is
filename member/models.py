@@ -25,8 +25,8 @@ class Member(models.Model):
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
-    phone = models.CharField(max_length=15, blank=True, verbose_name='Telephone(Mobile)')
-    phone2 = models.CharField(max_length=15, blank=True, verbose_name='Telephone(Mobile)')
+    phone = models.CharField(max_length=15, null=True)
+    phone2 = models.CharField(max_length=15, null=True)
 
     def __str__(self):
         return str(self.member)
@@ -54,10 +54,11 @@ class MemberMaritalStatus(models.Model):
 class MemberResidence(models.Model):
     id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
-    town = models.CharField(max_length=15, blank=True, verbose_name='town')
-    road = models.CharField(max_length=15, blank=True, verbose_name='Road')
-    street = models.CharField(max_length=15, blank=True, verbose_name='street')
-    description = models.CharField(max_length=30, blank=True, verbose_name='description')
+    town = models.CharField(max_length=15, null=True)
+    road = models.CharField(max_length=15, null=True)
+    street = models.CharField(max_length=15, null=True)
+    village_estate = models.CharField(max_length=15, null=True)
+    description = models.CharField(max_length=30, null=True)
 
     def __str__(self):
         return str(self.member)

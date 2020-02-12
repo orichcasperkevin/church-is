@@ -35,7 +35,12 @@ urlpatterns = [
     path('add-expenditure/', addviews.addExpenditure.as_view()),
     path('add-pending-confirmation/', addviews.addPendingConfirmation.as_view()),
 
+
+    #update.
     path('confirm-payment/<int:pending_confirmation_id>/', updateviews.ConfirmPayment.as_view()),
+    path('update-offering/',updateviews.UpdateOffering.as_view()),
+    path('update-tithe/',updateviews.UpdateTithe.as_view()),
+    path('update-expenditure/',updateviews.UpdateExpenditure.as_view()),
 
     #statistics
     path('offering-by-member-stats/', statviews.OfferingFromMembers.as_view()),

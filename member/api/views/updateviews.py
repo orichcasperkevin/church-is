@@ -5,8 +5,8 @@ from member.models import *
 
 def updateModelField(model_object,field,data):
     if data:
-        #get model object field.
-        attr = getattr(model_object,field)
+        #get model object field.(for debugging purposes)
+        #attr = getattr(model_object,field)
         #change it to something else.
         setattr(model_object,field,data)
         #save.
@@ -26,8 +26,6 @@ class UpdateMemberData(APIView):
         try:
             user = User.objects.get(id=member_id)
             member  = Member.objects.get(member__id=member_id)
-            member_marital_status = MemberContact.objects.get_or_create(member__member__id=member_id)
-            member_age = MemberAge.objects.get_or_create(member__member__id=member_id)
 
             updateModelField(user,'first_name',request.data.get("first_name"))
             updateModelField(user,'last_name',request.data.get("last_name"))
@@ -35,8 +33,13 @@ class UpdateMemberData(APIView):
             updateModelField(member,'middle_name',request.data.get("middle_name"))
             updateModelField(member,'gender',request.data.get("gender"))
 
-            updateModelField(member_age,'d_o_b',request.data.get("d_o_b"))
-            updateModelField(member_marital_status,'status',request.data.get("marital_status"))
+            if (request.data.get("d_o_b")):
+                member_age = MemberAge.objects.get_or_create(member=member)[0]
+                updateModelField(member_age,'d_o_b',request.data.get("d_o_b"))
+
+            if (request.data.get("marital_status")):
+                member_marital_status = MemberMaritalStatus.objects.get_or_create(member=member)[0]
+                updateModelField(member_marital_status,'status',request.data.get("marital_status"))
 
             return Response(status=status.HTTP_204_NO_CONTENT)
         except:
@@ -49,13 +52,12 @@ class UpdateMemberContact(APIView):
     '''
     def patch(self, request):
         member_id = request.data.get("member_id")
-
+        member  = Member.objects.get(member__id=member_id)
         try:
             user = User.objects.get(id=member_id)
-            member_contact = MemberContact.objects.get_or_create(member__member__id=member_id)
+            member_contact = MemberContact.objects.get_or_create(member=member)[0]            
 
             updateModelField(user,'email',request.data.get("email"))
-
             updateModelField(member_contact,'phone',request.data.get("phone"))
             updateModelField(member_contact,'phone2',request.data.get("phone2"))
 
@@ -70,13 +72,15 @@ class UpdateMemberResidence(APIView):
     '''
     def patch(self, request):
         member_id = request.data.get("member_id")
+        member  = Member.objects.get(member__id=member_id)
 
         try:
-            member_residence = MemberResidence.objects.get_or_create(member__member__id=member_id)
+            member_residence = MemberResidence.objects.get_or_create(member=member)[0]
 
             updateModelField(member_residence,'town',request.data.get("town"))
             updateModelField(member_residence,'road',request.data.get("road"))
             updateModelField(member_residence,'street',request.data.get("street"))
+            updateModelField(member_residence,'village_estate',request.data.get("estate"))
             updateModelField(member_residence,'description',request.data.get("description"))
 
             return Response(status=status.HTTP_204_NO_CONTENT)

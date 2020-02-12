@@ -84,7 +84,7 @@ class Tithe(models.Model):
     '''
         tithe collected for a member
     '''
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(auto_now_add=True)
     narration = models.TextField(blank=True)

@@ -35,7 +35,10 @@ urlpatterns = [
     path('add-role-for-member/', addviews.AddRoleMemberShip.as_view()),
 
     #updating
-    path('update-user/',updateviews.UpdateMemberData.as_view()),
+    path('update-member-detail/',updateviews.UpdateMemberData.as_view()),
+    path('update-member-residence/',updateviews.UpdateMemberResidence.as_view()),
+    path('update-member-contact/',updateviews.UpdateMemberContact.as_view()),
+
     #statistics
     path('new-member-count/', statviews.NewMembersCount.as_view()),
     path('age-distribution/', statviews.AgeDistribution.as_view()),

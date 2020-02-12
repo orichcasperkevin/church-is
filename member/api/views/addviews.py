@@ -26,6 +26,7 @@ class addMember(APIView):
 
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
+        middle_name = request.data.get("middle_name")
         username = first_name.lower() + last_name.lower()
         email = request.data.get("email")
         gender = request.data.get("gender")
@@ -51,7 +52,7 @@ class addMember(APIView):
         serializer = UserSerializer(member)
         member = serializer.data
 
-        data = {'member': member, 'gender': gender}
+        data = {'member': member, 'gender': gender,'middle_name':middle_name}
         serializer = CreateMemberSerializer(data=data)
 
         if serializer.is_valid():
