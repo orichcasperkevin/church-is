@@ -1,8 +1,38 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from events.models import GroupAttendingEvent,MemberThatAttendedEvent
+from events.models import Event,GroupAttendingEvent,MemberThatAttendedEvent
 from events.api.serializers import EventSerializer,GroupAttendingEventSerializer,MemberThatAttendedEventSerializer
+
+class GetEvent(APIView):
+    '''
+        get an event using its id.
+    '''
+    def get(self,request,event_id):
+        event = Event.objects.filter(id=event_id)
+        data = EventSerializer(event,many=True).data
+        return Response(data)
+
+class GetEventWhereTitleLikePattern(APIView):
+    '''
+        get:
+        returns a list of events whose title contains the string pattern described in the slug parameter
+    '''
+
+    def get(self, request, pattern):
+        result = Event.objects.filter(title__icontains=pattern).order_by('-start_datetime')[:10]
+        data = EventSerializer(result, many=True).data
+        return Response(data)
+
+
+class GetGroupsAttendingEvent(APIView):
+    '''
+        get group attending event.
+    '''
+    def get(self,request,event_id):
+        groups = GroupAttendingEvent.objects.filter(event_id=event_id)[:1]
+        data = GroupAttendingEventSerializer(groups, many=True).data
+        return Response(data)
 
 class GetEventsAttendedByGroup(APIView):
     '''

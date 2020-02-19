@@ -60,8 +60,8 @@ class AgeDistribution(APIView):
 
     def get(self,request):
         dict = []
-        members_with_recorded_ages = MemberAge.objects.all().count() or 0
-        dict.append({"members_with_recorded_ages":members_with_recorded_ages,"stats":[]})        
+        members_with_recorded_ages = MemberAge.objects.filter(member__isnull=False,d_o_b__isnull=False).count() or 0
+        dict.append({"members_with_recorded_ages":members_with_recorded_ages,"stats":[]})
 
         date_ranges = [self.dateRange(0,14),self.dateRange(15,25),self.dateRange(26,35),self.dateRange(36,60),self.dateRange(61,150)]
         self.appendData(date_ranges,dict[0]["stats"],members_with_recorded_ages)

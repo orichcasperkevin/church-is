@@ -30,10 +30,20 @@ class ChurchSysMessenger():
 
     def updateClientCredit(self):
         client_detail = ClientDetail.objects.get(client__schema_name=self.schema)
-        old_credit = client_detail.credit
-        new_credit = float(old_credit) - CREDIT_PER_SMS
-        client_detail.credit = new_credit
-        client_detail.save()
+
+        #while we still have sms quota left.
+        if sms_quota > 0:
+            sms_quota = client_detail.sms_quota
+            new_quota = sms_quota - 1
+            client_detail.sms_quota = new_quota
+            client_detail.save()
+
+        #if we are out of our sms quota
+        if sms_quota == 0:
+            old_credit = client_detail.credit
+            new_credit = float(old_credit) - CREDIT_PER_SMS
+            client_detail.credit = new_credit
+            client_detail.save()
 
     def receipients_phone_numbers(self, receipient_member_ids):
         '''

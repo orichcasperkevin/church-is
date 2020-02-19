@@ -121,7 +121,7 @@ class TitheForMember(APIView):
     '''
 
     def get(self, request, id):
-        tithe = Tithe.objects.filter(member__member_id=id)
+        tithe = Tithe.objects.filter(member__member_id=id)[:50]
         data = TitheSerializer(tithe, many=True).data
         return Response(data)
 
@@ -137,13 +137,13 @@ class TitheStatsForMember(APIView):
         return Response(data)
 
 
-class TitheThisMonth(APIView):
+class Tithes(APIView):
     '''
-        tithes as given by members this month
+        tithes as given by members (the last 50)
     '''
 
     def get(self, request):
-        tithe = Tithe.objects.filter(date__month=month).order_by('-date')
+        tithe = Tithe.objects.all().order_by('-date')[:50]
         data = TitheSerializer(tithe, many=True).data
         return Response(data)
 
@@ -199,8 +199,8 @@ class OfferingThisMonth(APIView):
     '''
 
     def get(self, request):
-        tithe = Offering.objects.filter(date__month=month).order_by('-date')
-        data = OfferingSerializer(tithe, many=True).data
+        offering = Offering.objects.filter(member__isnull=False).order_by('-timestamp')[:50]
+        data = OfferingSerializer(offering, many=True).data
         return Response(data)
 
 

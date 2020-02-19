@@ -16,10 +16,11 @@ class Command(BaseCommand):
     def job(self):
         for client_detail in ClientDetail.objects.all():
             initial_credit = client_detail.credit
-            final_credit = float(initial_credit) - (PRICE_PER_MONTH / 30)
+            price_per_month = client_detail.tier['price_per_month']
+            final_credit = float(initial_credit) - (price_per_month / 30)
             client_detail.credit = final_credit
             client_detail.save()
-        
+
     def scheduleJobs(self):
         schedule.every().day.at("00:00").do(self.job)
         #logging

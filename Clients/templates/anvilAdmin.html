@@ -50,8 +50,11 @@
           <h5 class="card-title">
             {{client}}
              <span class="badge badge-success">{{client.number_of_members}} members</span>
+              <span class="badge badge-secondary">{{client.tier.tier}}</span>
+              <span class="badge badge-info">{{client.sms_quota}} free sms left</span>
              <span class="badge badge-danger">LIVE</span>
            </h5>
+           <h6 class="card-subtitle mb-2"><span class="text-info"> {{client.client.domain_url}}</span></h6>
           <h6 class="card-subtitle mb-2">{{client.first_name}} {{client.last_name}} <span class="text-info">{{client.phone_number}}</span></h6>
           <h6 class="card-subtitle mb-2">church code<span class="text-info"> {{client.church_code}}</span></h6>
 
@@ -76,8 +79,10 @@
           <h5 class="card-title">
             {{demo}}
              <span class="badge badge-success">{{demo.created_on}}</span>
+             <span class="badge badge-info">{{demo.sms_quota}} free sms left</span>
              <span class="badge badge-secondary">demo</span>
            </h5>
+            <h6 class="card-subtitle mb-2"><span class="text-info"> {{demo.client.domain_url}}</span></h6>
           <h6 class="card-subtitle mb-2">church code<span class="text-info">---{{demo.church_code}}</span></h6>
           <h6 class="card-subtitle mb-2">members<span class="text-info">--{{demo.number_of_members}}</span></h6>
 

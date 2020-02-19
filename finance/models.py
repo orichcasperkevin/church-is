@@ -54,6 +54,7 @@ class Offering(models.Model):
     name_if_not_member = models.CharField(max_length=20, blank=True, null=True)
     church_group = models.ManyToManyField(ChurchGroup, blank=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     # the service this offering was collected from
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
     narration = models.TextField(blank=True)
@@ -86,7 +87,7 @@ class Tithe(models.Model):
     '''
     member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='tithe_recorded_by')
 

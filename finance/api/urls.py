@@ -14,7 +14,7 @@ urlpatterns = [
 
     path('tithe-for-member/<int:id>/', listviews.TitheForMember.as_view()),
     path('tithe-stats-for-member/<int:id>/', listviews.TitheStatsForMember.as_view()),
-    path('tithe-by-members-this-month/', listviews.TitheThisMonth.as_view()),
+    path('tithes-by-members/', listviews.Tithes.as_view()),
     path('tithe-stats/', listviews.TitheStats.as_view()),
 
     path('offering-types/', listviews.OfferingType.as_view()),

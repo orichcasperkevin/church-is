@@ -13,6 +13,7 @@ urlpatterns = [
     path('church-groups-not-in-group/', detailviews.GetIndependentGroups.as_view()),
     path('church-groups-in-group/<int:id>/', detailviews.GetGroupsInGroupWithId.as_view()),
     path('church-group/<int:id>/', detailviews.GetChurchGroupWithId.as_view()),
+    path('church-group-where-name-like/<slug:pattern>/',detailviews.GetGroupWhereNameLikePattern.as_view()),
     path('church-groups-for-a-member/<int:id>/', detailviews.GetChurchGroupsAMemberBelongsTo.as_view()),
     path('church-group-members/<int:id>/', detailviews.GetMembersOfChurchGroupWithId.as_view()),
 

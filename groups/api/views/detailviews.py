@@ -16,6 +16,17 @@ class GetChurchGroupWithId(APIView):
         data = ChurchGroupSerializer(church_group, many=True).data
         return Response(data)
 
+class GetGroupWhereNameLikePattern(APIView):
+    '''
+        get:
+        returns a list of groups whose names contains the string pattern described in the slug parameter
+    '''
+
+    def get(self, request, pattern):
+        result = ChurchGroup.objects.filter(name__icontains=pattern)
+        data = ChurchGroupSerializer(result, many=True).data
+        return Response(data)
+
 class GetGroupsInGroupWithId(APIView):
     '''
         get:

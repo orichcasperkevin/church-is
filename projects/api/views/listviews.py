@@ -58,7 +58,7 @@ class ContributionsForAProject(APIView):
     '''
 
     def get(self, request, id):
-        contribution = Contribution.objects.filter(project_id=id).order_by('-recorded_at')
+        contribution = Contribution.objects.filter(project_id=id).order_by('-recorded_at')[:50]
         data = ContributionSerializer(contribution, many=True).data
         return Response(data)
 
@@ -70,7 +70,7 @@ class ContributionsByAMember(APIView):
     '''
 
     def get(self, request, id):
-        contribution = Contribution.objects.filter(member__member_id=id).order_by('-recorded_at')
+        contribution = Contribution.objects.filter(member__member_id=id).order_by('-recorded_at')[:50]
         data = ContributionSerializer(contribution, many=True).data
         return Response(data)
 
@@ -82,7 +82,7 @@ class PledgesForAProject(APIView):
     '''
 
     def get(self, request, id):
-        pledge = Pledge.objects.filter(project_id=id)
+        pledge = Pledge.objects.filter(project_id=id).order_by('-recorded_at')[:50]
         data = PledgeSerializer(pledge, many=True).data
         return Response(data)
 
@@ -94,7 +94,7 @@ class PledgesByAmember(APIView):
     '''
 
     def get(self, request, id):
-        pledge = Pledge.objects.filter(member__member_id=id)
+        pledge = Pledge.objects.filter(member__member_id=id)[:50]
         data = PledgeSerializer(pledge, many=True).data
         return Response(data)
 
@@ -106,7 +106,7 @@ class PledgePaymentForAProject(APIView):
     '''
 
     def get(self, request, id):
-        pledge_payment = PledgePayment.objects.filter(project_id=id)
+        pledge_payment = PledgePayment.objects.filter(project_id=id).order_by('-payment_recorded_on')[:50]
         data = PledgePaymentSerializer(pledge_payment, many=True).data
         return Response(data)
 
@@ -118,6 +118,6 @@ class PledgePaymentForAMember(APIView):
     '''
 
     def get(self, request, id, project_id):
-        pledge_payment = PledgePayment.objects.filter(pledge__project_id=project_id, pledge__member__member_id=id)
+        pledge_payment = PledgePayment.objects.filter(pledge__project_id=project_id, pledge__member__member_id=id)[:50]
         data = PledgePaymentSerializer(pledge_payment, many=True).data
         return Response(data)

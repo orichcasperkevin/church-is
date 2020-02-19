@@ -10,6 +10,9 @@ urlpatterns = [
 
     #detail
     path('events-by-group/<int:group_id>/',detailviews.GetEventsAttendedByGroup.as_view()),
+    path('event/<int:event_id>/',detailviews.GetEvent.as_view()),
+    path('event-where-pattern-like/<slug:pattern>/', detailviews.GetEventWhereTitleLikePattern.as_view()),
+    path('get-groups-attending-event/<int:event_id>/',detailviews.GetGroupsAttendingEvent.as_view()),
     path('members-that-attended-event/<int:event_id>/', detailviews.GetMembersThatAttendedEvent.as_view()),
 
     #add

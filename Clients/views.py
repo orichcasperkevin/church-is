@@ -12,6 +12,7 @@ from projects.models import *
 
 from .models import Client,ClientDetail
 
+SMS_QUOTA = 0.2
 DEFAULT_DATE = "2012-01-01"
 STARTER_PASSWORD = "changeMe"
 DEMO_MEMBERS = [['Daniel','Dambuki','M','M'],['Mercy','Masika','F','M'],['Dorothy','Nyambura','F','S'],['David','Masai','M','S'],['Paul','Mwai','M','M'],
@@ -211,11 +212,19 @@ def addCredit(request,client_id):
     if request.method == 'POST':
         add_credit_form = AddCreditForm(request.POST)
         if add_credit_form.is_valid():
+            #adding credit amount.
             added_amount = add_credit_form.cleaned_data['amount']
             client_detail  = ClientDetail.objects.get(client_id=client_id)
             initial_amount = client_detail.credit
-            final_amount = initial_amount + added_amount
-            client_detail.credit = final_amount
+            new_amount = initial_amount + added_amount
+
+            #updating sms quota.
+            sms_quota = added_amount * SMS_QUOTA
+            old_quota = client_detail.sms_quota
+            new_quota = old_quota + sms_quota
+
+            client_detail.credit = new_amount
+            client_detail.sms_quota = new_quota
             client_detail.save()
             return redirect('anvilAdmin')
 

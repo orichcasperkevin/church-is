@@ -21,6 +21,10 @@ class Event(models.Model):
     def end(self):
         return self.end_datetime.strftime("%Y-%m-%d %H:%M")
 
+    @property
+    def attendees(self):
+        return MemberThatAttendedEvent.objects.filter(event_id=self.id).count() or 0
+
 
 class GroupAttendingEvent(models.Model):
     '''

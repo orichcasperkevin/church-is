@@ -62,15 +62,15 @@ class RecordMemberThatAttendedEvent(APIView):
     post:
     record a member that attended an event
     '''
-    def post(self,request):
-        member = request.data.get("member_id")
+    def post(self,request):        
         event = request.data.get("event_id")
 
+        member = request.data.get("member_id")
         data={'member':member, 'event':event,}
-
         serializer = AddMemberThatAttendedEventSerializer(data=data)
+
         if serializer.is_valid():
-            created = serializer.save()
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

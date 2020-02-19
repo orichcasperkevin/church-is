@@ -108,12 +108,15 @@
               <p class="lead text-muted">your members all in one pool,easily searchable by any field, selectable for actions like sending communications and so much more.<br>
                 each member has a file that details their profile,groups they belong to,giving among others.
               </p>
-              <div class="mt-4 mb-4">
-                <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-                <button class="btn btn-outline-success ml-2"
+              <div class="mt-4 ">
+                <a class="btn btn-success ml-2"
+                        href="{% url 'try_demo' %}">
+                        try demo
+                </a>
+                <a class="btn btn-outline-success ml-2"
                         href="{% url 'get_anvil' %}">
-                        get anvil church
-                </button>
+                        get anvil
+                </a>
               </div>
             </div>
             <div class="col-lg-2 col-sm-12">
@@ -134,9 +137,15 @@
         <div class="col-lg-6 mx-auto ">
           <h2 class="font-weight-bold ">organise them into groups</h2>
           <h2 class="lead text-muted">group your members according to any crieteria of your liking. Then have the groups organised into folders </h2>
-          <div class="mt-4 mb-4">
-            <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-            <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
+          <div class="mt-4 ">
+            <a class="btn btn-success ml-2"
+                    href="{% url 'try_demo' %}">
+                    try demo
+            </a>
+            <a class="btn btn-outline-success ml-2"
+                    href="{% url 'get_anvil' %}">
+                    get anvil
+            </a>
           </div>
         </div>
         <div class="col-lg-4 col-sm-12">
@@ -160,8 +169,14 @@
                 send reminders to members concerning the events.
               </p>
               <div class="mt-4 mb-4">
-                <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-                <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
+                <a class="btn btn-success ml-2"
+                        href="{% url 'try_demo' %}">
+                        try demo
+                </a>
+                <a class="btn btn-outline-success ml-2"
+                        href="{% url 'get_anvil' %}">
+                        get anvil
+                </a>
               </div>
             </div>
             <div class="col-lg-2 col-sm-12">
@@ -185,8 +200,14 @@
             track church projects contributions and progress.track your expenses.
           </h2>
           <div class="mt-4 mb-4">
-            <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-            <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
+            <a class="btn btn-success ml-2"
+                    href="{% url 'try_demo' %}">
+                    try demo
+            </a>
+            <a class="btn btn-outline-success ml-2"
+                    href="{% url 'get_anvil' %}">
+                    get anvil
+            </a>
           </div>
         </div>
         <div class="col-lg-4 col-sm-12">
@@ -210,9 +231,15 @@
                 have members communicate and sharpen each other on the teachings of your ministry.
               </p>
               <div class="mt-4 mb-4">
-                <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-                <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
-              </div>
+                <a class="btn btn-success ml-2"
+                        href="{% url 'try_demo' %}">
+                        try demo
+                </a>
+                <a class="btn btn-outline-success ml-2"
+                        href="{% url 'get_anvil' %}">
+                        get anvil
+                </a>
+              </div>>
             </div>
             <div class="col-lg-2 col-sm-12">
               <img class="mr-0" style="width: 500px ;height: auto" src="{% static '/site/images/undraw_live_collaboration_2r4y.svg' %}">
@@ -227,19 +254,66 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 mx-auto text-center">
-          <div class="card text-center" style="width: 18rem;">
+          <div class="card">
+            <div class="card-header">
+              <h3>pricing</h3>
+            </div>
             <div class="card-body">
-              <h5 class="card-title">pricing</h5>
-              <p class="card-text">whatever the size of your church,one simple price plan</p>
-              <h3>ksh5,000/mon</h3>
-              &
-              <h3>ksh1 /sms</h3>
-              <p>all features included</p>
-              +
-              <p>continous updates and upgrades.</p>
-              <div class="mt-4 mb-4">
-                <button class="btn btn-success" data-toggle="modal" data-target="#tryDemoModal">try demo</button>
-                <button class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#getAnvilModal">get anvil church</button>
+              <h5 class="card-title">There is a plan for every size of church</h5>
+              <!-- table -->
+              <div>
+                <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">plan</th>
+                    <th scope="col">members</th>
+                    <th scope="col">price/month</th>
+                    <th scope="col">free sms/month</th>
+                  </tr>
+                </thead>
+                <tbody class="text-muted">
+                  <tr>
+                    <th scope="row">XSM</th>
+                    <td>0-249</td>
+                    <td>KES 1,500</td>
+                    <td>300</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">SM</th>
+                    <td>250-499</td>
+                    <td>KES 3,000</td>
+                    <td>600</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">MD</th>
+                    <td>500-749</td>
+                    <td>KES 4,500</td>
+                    <td>900</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">LG</th>
+                    <td>750-999</td>
+                    <td>KES 6,000</td>
+                    <td>1,200</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">XLG</th>
+                    <td>1000+</td>
+                    <td>KES 7,500</td>
+                    <td>1,500</td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+              <div class="mt-4 ">
+                <a class="btn btn-success ml-2"
+                        href="{% url 'try_demo' %}">
+                        try demo
+                </a>
+                <a class="btn btn-outline-success ml-2"
+                        href="{% url 'get_anvil' %}">
+                        get anvil
+                </a>
               </div>
             </div>
           </div>
@@ -253,7 +327,6 @@
       <div class="row">
         <div class="col-lg-8 mx-auto">
           <h2 class="font-weight-bold">Contact us</h2>
-          <p class="lead">email:<span class="text-muted"> orichcasper59@gmail.com</span></p>
           <p class="lead">text/whatsapp:<span class="text-muted"> 0778021240</span></p>
         </div>
       </div>
