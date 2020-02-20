@@ -8,5 +8,5 @@ class EventsList(generics.ListCreateAPIView):
     '''
         a list of events
     '''
-    queryset = Event.objects.all()[:50]
+    queryset = Event.objects.all().order_by('-start_datetime')[:50]
     serializer_class = EventSerializer

@@ -17,7 +17,7 @@ class IncomeTypeList(generics.ListCreateAPIView):
     '''
         a list of all income types
     '''
-    queryset = IncomeType.objects.all()
+    queryset = IncomeType.objects.all().order_by('-id')
     serializer_class = IncomeTypeSerializer
 
 
@@ -69,7 +69,7 @@ class ExpenditureTypeList(generics.ListCreateAPIView):
         get:
         a list of all expenditure types
     '''
-    queryset = ExpenditureType.objects.all()
+    queryset = ExpenditureType.objects.all().order_by('-id')
     serializer_class = ExpenditureTypeSerializer
 
 class ExpenditureTypeOfID(APIView):

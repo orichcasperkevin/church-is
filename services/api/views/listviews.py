@@ -4,7 +4,7 @@ from rest_framework import generics
 
 from services.api.serializers import *
 
-from services.models import ServiceType, ServiceItem, Service 
+from services.models import ServiceType, ServiceItem, Service
 
 today = date.today()
 day = today.day
@@ -30,5 +30,5 @@ class ServicesThisMonth(generics.ListCreateAPIView):
     '''
         a list of all services this month
     '''
-    queryset = ServiceItem.objects.filter(service__date__month=month, service__date__year=year)
+    queryset = ServiceItem.objects.all().order_by('-service__date')[:50]
     serializer_class = ServiceItemSerializer
