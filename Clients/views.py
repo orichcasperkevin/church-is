@@ -9,8 +9,9 @@ from .forms import *
 from member.models import *
 from groups.models import *
 from projects.models import *
-
 from .models import Client,ClientDetail
+
+from .website.content import WebContent
 
 SMS_QUOTA = 0.2
 DEFAULT_DATE = "2012-01-01"
@@ -107,9 +108,19 @@ def setupClientDatabase(first_name,last_name,phone_number,email,formated_name_of
         change_password_url = '/change-password/' + username + '/'+ formated_name_of_church + '/'
         return change_password_url
 
+'''
+    anvil website and clients' free website
+'''
 def index(request):
-    return render(request, 'index.html')
+    if (request.tenant.schema_name == 'public' or request.tenant.schema_name == 'Public'):
+        return render(request, 'index.html')
+    else:
+        website_content = WebContent(request.tenant.schema_name).content    
+        return render(request,'clientWebsite/index.html',{'website_content':website_content})
 
+'''
+    get anvil registration
+'''
 def getAnvil(request):
         if request.method == 'POST':
             get_anvil_form = GetAnvilForm(request.POST)

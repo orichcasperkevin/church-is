@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 from groups.models import ChurchGroup
 
 
@@ -8,6 +8,8 @@ class ServiceType(models.Model):
     name = models.CharField(max_length=150, help_text='Name of the church service')
     description = models.CharField(max_length=150)
     church_groups = models.ManyToManyField(ChurchGroup, through='ChurchGroupMembership')
+    start = models.TimeField(default=timezone.now)
+    end = models.TimeField(default=timezone.now)
 
     def __str__(self):
         return self.name

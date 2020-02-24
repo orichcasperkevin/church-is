@@ -90,3 +90,30 @@ class ClientDetail(models.Model):
         price_per_month = self.tier['price_per_month']
         price_per_day = (price_per_month / 30)
         return int(float(self.credit) / price_per_day)
+
+
+'''
+    the following is used as website content for thhe client church
+'''
+class ChurchLogo(models.Model):
+    client = models.OneToOneField(Client,on_delete=models.CASCADE)
+    logo = models.ImageField(upload_to='images/')
+
+class ChurchStatement(models.Model):
+    client = models.OneToOneField(Client,on_delete=models.CASCADE)
+    mission = models.TextField(max_length=150)
+    vission = models.TextField(max_length=150)
+
+class ChurchCoreValue(models.Model):
+    client = models.ForeignKey(Client,on_delete=models.CASCADE)
+    value = models.TextField(max_length=20)
+
+class ChurchPeriodicTheme(models.Model):
+    client = models.ForeignKey(Client,on_delete=models.CASCADE)
+    theme = models.TextField(max_length=150)
+    description = models.TextField(max_length=500)
+    start = models.DateField()
+    end = models.DateField()
+
+    class Meta:
+        ordering = ('-start',)

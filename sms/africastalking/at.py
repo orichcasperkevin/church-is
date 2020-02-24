@@ -30,6 +30,7 @@ class ChurchSysMessenger():
 
     def updateClientCredit(self):
         client_detail = ClientDetail.objects.get(client__schema_name=self.schema)
+        sms_quota = client_detail.sms_quota
 
         #while we still have sms quota left.
         if sms_quota > 0:
@@ -74,18 +75,21 @@ class ChurchSysMessenger():
             if message was sent, record the members who received it and on what status
         '''
         with schema_context(self.schema):
-            for data in sent_messages['SMSMessageData']['Recipients']:
+            for message in sent_messages['SMSMessageData']['Recipients']:
                 try:
-                    contact = MemberContact.objects.filter(phone__contains=data['number'][slice(4,13)])[0]
+                    contact = MemberContact.objects.filter(phone__contains=message['number'][slice(4,13)])[0]
                     member = contact.member
                     sms = Sms.objects.all()
                     sms = Sms.objects.latest('id')
 
                     credit_per_sms = CREDIT_PER_SMS
-                    if data['status'] != 'Succces':
+                    #if sms status of message is not Success or if sms quota has not been depleted
+                    if message['status'] != 'Succces' or ClientDetail.objects.get(client__schema_name=self.schema).sms_quota > 0:
                         credit_per_sms = 0.00
 
-                    received_sms = SmsReceipients.objects.create(sms=sms, receipient=member, cost=credit_per_sms, status=data['status'])
+                    received_sms = SmsReceipients.objects.create(sms=sms, receipient=member, cost=credit_per_sms, status=message['status'])
+
+                    #if the message was sent succesfuly...update the CLients Credit or sms Quota 
                     if received_sms.status == 'Success':
                         self.updateClientCredit()
 

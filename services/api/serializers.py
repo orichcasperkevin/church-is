@@ -6,13 +6,13 @@ from services.models import ServiceType, Service, ServiceItem
 class ServiceTypeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceType
-        fields = ('id','name','description','church_groups')
+        fields = ('id','name','description','church_groups','start','end')
         extra_kwargs = {'id': {'read_only': True}}
 
 class ServiceTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceType
-        fields = ('id','name','description','church_groups')
+        fields = ('id','name','description','church_groups','start','end')
         extra_kwargs = {'id': {'read_only': False}}
 
 class ServiceSerializer(serializers.ModelSerializer):

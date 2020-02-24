@@ -36,7 +36,7 @@ class addSMS(APIView):
         website = request.data.get("website")
         receipient_member_ids = request.data.get("receipient_member_ids")
 
-        schema = request.get_host().split('.')[0]
+        schema = request.tenant.schema_name
         message = formattedMessage(message,sending_member_id,schema,app)
 
         messenger = ChurchSysMessenger(schema)
