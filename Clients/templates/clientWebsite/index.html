@@ -61,22 +61,22 @@
       <!-- mission statement -->
       <article >
         {% if website_content.mission %}
-          mission statement:
+          <span class="text-primary">our mission:</span>
           <p class="lead ">{{website_content.mission}}</p>
         {% endif %}
         {% if not website_content.mission %}
-          mission statement:
+          <span class="text-primary">our mission:</span>
           <p class="lead ">we are working on it</p>
         {% endif %}
       </article>
       <!-- vission statement -->
       <article>
         {% if website_content.vission %}
-          vision statement:
+          <span class="text-primary">our vision:</span>
           <p class="lead ">{{website_content.vission}}</p>
         {% endif %}
         {% if not website_content.vission %}
-          vission statement:
+          <span class="text-primary">our vision:</span>
           <p class="lead ">we are working on it</p>
         {% endif %}
       </article>
@@ -149,17 +149,14 @@
         <div class="col-lg-8 mx-auto">
           <h2 class="font-weight-bold ">News stand</h2>
           {% for news in website_content.news %}
-          <div class="border border-light shadow p-3 mb-5 bg-white rounded">
-              <p class="lead text-primary">{{news.heading}}</p>
-              {% if news.church_group %}
-              <span class="badge badge-secondary">{{news.church_group}}</span>
-              {% endif %}
+          <div class="border border-light shadow p-2 mb-2 bg-white rounded">
+              <i class="text-primary font-weight-bold">{{news.author}}</i>
+              <p class="lead">{{news.heading}}</p>
               <article class="text-muted">
                   {{news.article}}
               </article>
               <p>
                 <p>{{news.date}}</p>
-                <i>{{news.author}}</i>
               </p>
           </div>
           {% endfor %}
@@ -178,10 +175,10 @@
           <h2 class="font-weight-bold ">Recent events</h2>
           {% if website_content.events %}
           {% for event in website_content.events %}
-          <div class="border border-light shadow p-3 mb-5 bg-white rounded">
+          <div class="border border-light shadow p-3 mb-2 bg-white rounded">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1 text-primary">{{event.title}}</h5>
-              <small class="text-muted">
+              <h5 class="mb-1">{{event.title}}</h5>
+              <small class="text-primary">
                   {{event.attendees}}
                   checked in
               </small>
@@ -204,27 +201,22 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 mx-auto text-center">
-        <h3>Services</h3>
-            <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">name</th>
-                <th scope="col">description</th>
-                <th scope="col">start</th>
-                <th>end</th>
-              </tr>
-            </thead>
-            <tbody>
+        <h2 class="font-weight-bold ">Services</h2>
+
               {% for service in website_content.service_types%}
-              <tr>
-                <td>{{service.name}}</td>
-                <td>{{service.description}}</td>
-                <td>{{service.start}}</td>
-                <td>{{service.end}}</td>
-              </tr>
+
+                <div class="mb-2 col-sm-6 col-md-12 col-lg-12">
+                <div class="card ">
+                  <div class="card-body">
+                    <h5 class="card-title">{{service.name}}</h5>
+                    <p class="card-text text-muted">{{service.description}}</p>
+                    {{service.start}} to {{service.end}}
+                    <p class="text-muted">every sunday</p>
+                  </div>
+                </div>
+              </div>
+
               {%endfor%}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
