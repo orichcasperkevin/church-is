@@ -18,12 +18,12 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
 class ChurchLogoSerializer(serializers.ModelSerializer):
     class Meta:
-        models = ChurchLogo
+        model = ChurchLogo
         fields = ('church','logo')
 
 class ChurchAboutSerializer(serializers.ModelSerializer):
     class Meta:
-        models = ChurchLogo
+        model = ChurchAbout
         fields = ('church','about')
 
 class ChurchStatementSerializer(serializers.ModelSerializer):

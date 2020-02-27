@@ -2,8 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from Clients.api.serializers import ChurchStatementSerializer,ChurchCoreValueSerializer
-                                    ChurchPeriodicThemeSerializer,ChurchAboutSerializer
+from Clients.api.serializers import (
+                                    ChurchStatementSerializer,ChurchCoreValueSerializer,
+                                    ChurchPeriodicThemeSerializer,ChurchAboutSerializer,
+                                    )
 from Clients.models import ChurchStatement,ChurchCoreValue,ChurchPeriodicTheme
 
 class AddChurchStatement(APIView):
@@ -26,7 +28,7 @@ class AddChurchStatement(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class AddAboutChurchAPIView):
+class AddAboutChurch(APIView):
     '''
         post:
         add church about.
@@ -76,7 +78,7 @@ class AddChurchPeriodicTheme(APIView):
         description = request.data.get("description")
         start = request.data.get("start")
         end = request.data.get("end")
-
+        
         data = {
                 'church': church_id, 'theme': theme, 'description':description,
                 'start':start, 'end':end

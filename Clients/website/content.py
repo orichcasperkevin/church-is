@@ -53,7 +53,7 @@ class WebContent():
 
     def get_church_logo(self):
         try:
-            self.content["logo_url"] = ChurchLogo.objects.get(client__schema_name=self.schema).logo
+            self.content["logo_url"] = ChurchLogo.objects.get(church__schema_name=self.schema).logo
         except ChurchLogo.DoesNotExist:
             pass
 
@@ -62,11 +62,11 @@ class WebContent():
             get church preliminary content
         '''
         core_values = []
-        for value in ChurchCoreValue.objects.filter(client__schema_name=self.schema):
+        for value in ChurchCoreValue.objects.filter(church__schema_name=self.schema):
             core_values.append(value.value)
         self.content["core_values"] = core_values
 
-        theme = ChurchPeriodicTheme.objects.filter(client__schema_name=self.schema)[:1]
+        theme = ChurchPeriodicTheme.objects.filter(church__schema_name=self.schema)[:1]
         if len(theme):
             self.content["theme"]["theme"] = theme[0].theme
             self.content["theme"]["description"] = theme[0].description
@@ -78,8 +78,8 @@ class WebContent():
             mission and vission statements
         '''
         try:
-            self.content["mission"] = ChurchStatement.objects.get(client__schema_name=self.schema).mission
-            self.content["vission"] = ChurchStatement.objects.get(client__schema_name=self.schema).mission
+            self.content["mission"] = ChurchStatement.objects.get(church__schema_name=self.schema).mission
+            self.content["vission"] = ChurchStatement.objects.get(church__schema_name=self.schema).mission
         except ChurchStatement.DoesNotExist:
             pass
 

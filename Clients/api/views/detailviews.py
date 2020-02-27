@@ -29,6 +29,12 @@ class GetChurchLogo(APIView):
         data = ChurchLogoSerializer(church_logo,many=True).data
         return Response(data)
 
+class GetChurchAbout(APIView):
+    def get(self,request,id):
+        church_about = ChurchAbout.objects.filter(church_id=id)
+        data = ChurchAboutSerializer(church_about,many=True).data
+        return Response(data)
+
 class GetChurchStatements(APIView):
     def get(self,request,id):
         statements = ChurchStatement.objects.filter(church_id=id)
@@ -43,6 +49,6 @@ class GetChurchCoreValues(APIView):
 
 class GetChurchPeriodicTheme(APIView):
     def get(self,request,id):
-        themes = ChurchLogo.objects.filter(church_id=id)[:10]
+        themes = ChurchPeriodicTheme.objects.filter(church_id=id)[:10]
         data = ChurchPeriodicThemeSerializer(themes,many=True).data
         return Response(data)
