@@ -6,8 +6,7 @@ from .views import listviews
 # TODO add delete views
 urlpatterns = [
     # listing
-    path('news-today/', listviews.NewsListToday.as_view()),
-    path('news-this-month/', listviews.NewsListThisMonth.as_view()),
+    path('recent-news/', listviews.NewsList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

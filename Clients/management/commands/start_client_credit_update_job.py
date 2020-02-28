@@ -18,6 +18,8 @@ class Command(BaseCommand):
             initial_credit = client_detail.credit
             price_per_month = client_detail.tier['price_per_month']
             final_credit = float(initial_credit) - (price_per_month / 30)
+            if final_credit <= 0:# dont allow final_credit to go below zero
+                final_credit = 0
             client_detail.credit = final_credit
             client_detail.save()
 

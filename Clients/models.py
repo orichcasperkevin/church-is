@@ -1,4 +1,8 @@
+from datetime import timedelta
 from datetime import datetime
+
+from decouple import config
+from django.utils import timezone
 from django.db import models
 from tenant_schemas.models import TenantMixin
 from tenant_schemas.utils import schema_context
@@ -39,8 +43,7 @@ class ClientDetail(models.Model):
     #amount of credit remaining
     credit = models.DecimalField(max_digits=15, decimal_places=2,default=0.00,null=True,blank=True)
     last_credited = models.DateTimeField(default=datetime.now(), blank=True)
-    #sms quota remaining
-    sms_quota = models.IntegerField(default=0,null=True,blank=True)
+    #tier info
 
     def __str__(self):
         return str(self.client)
@@ -74,16 +77,13 @@ class ClientDetail(models.Model):
 
     @property
     def tier(self):
-        if 0 <= self.number_of_members < 250:
-            return {"tier":"XSM","price_per_month":1500,"price_per_year":15000}
-        if 250 <= self.number_of_members < 500:
-            return {"tier":"SM","price_per_month":3000,"price_per_year":30000}
-        if 500 <= self.number_of_members < 750:
-            return {"tier":"MD","price_per_month":4500,"price_per_year":45000}
-        if 750 <= self.number_of_members < 100:
-            return {"tier":"LG","price_per_month":6000,"price_per_year":60000}
-        if 1000 <= self.number_of_members:
-            return {"tier":"XLG","price_per_month":7500,"price_per_year":75000}
+        if 0 <= self.number_of_members < 500:
+            return {"tier":"SM","price_per_month":999,"price_per_year":9999}
+
+        if 500 <= self.number_of_members:
+            return {"tier":"LG","price_per_month":1999,"price_per_year":19999}
+
+
 
     @property
     def apprx_number_of_days_left(self):
@@ -91,6 +91,20 @@ class ClientDetail(models.Model):
         price_per_day = (price_per_month / 30)
         return int(float(self.credit) / price_per_day)
 
+    @property
+    def sms_credentials(self):
+        return ChurchSMSCredentials.objects.get_or_create(church_id=self.client.id)[0]
+
+    @property
+    def domain_url(self):
+        return self.client.domain_url
+'''
+    client sms service
+'''
+class ChurchSMSCredentials(models.Model):
+    church = models.OneToOneField(Client,on_delete=models.CASCADE)
+    at_username =  models.CharField(max_length=50,default=config('DEMO_AFRICAS_TALKING_USERNAME'))
+    at_api_key = models.CharField(max_length=150,default=config('DEMO_AFRICAS_TALKING_API_KEY'))
 
 '''
     the following is used as website content for thhe client church
@@ -102,7 +116,7 @@ class ChurchLogo(models.Model):
 class ChurchAbout(models.Model):
     church = models.OneToOneField(Client,on_delete=models.CASCADE)
     about = models.TextField(max_length=500)
-    
+
 class ChurchStatement(models.Model):
     church = models.OneToOneField(Client,on_delete=models.CASCADE)
     mission = models.TextField(max_length=150)

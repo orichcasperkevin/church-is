@@ -12,6 +12,22 @@ def update_model_field(model_object,field,data):
     else:
         pass
 
+class UpdateAboutChurch(APIView):
+    '''
+        patch:
+        update about church.
+    '''
+    def patch(self, request):
+        church_id = request.data.get("church_id")
+        about = ChurchAbout.objects.get(church_id=church_id)
+    
+        try:
+            update_model_field(about,'about',request.data.get("about"))
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class UpdateChurchStatement(APIView):
     '''
         patch:

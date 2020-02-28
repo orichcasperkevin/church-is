@@ -122,3 +122,18 @@ class AddCreditForm(forms.Form):
 
         if not amount:
             raise forms.ValidationError('enter amount')
+
+class EditSMSCredentialsForm(forms.Form):
+    at_username = forms.CharField(max_length=100,
+                            widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at username'}))
+
+    at_api_key = forms.CharField(max_length=150,
+                                widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at api key'}))
+
+    def clean(self):
+        cleaned_data = super(EditSMSCredentialsForm, self).clean()
+        at_username = cleaned_data.get('at_username')
+        at_api_key = cleaned_data.get('at_api_key')
+
+        if not at_username and not at_api_key:
+            raise forms.ValidationError('all Fields are required')

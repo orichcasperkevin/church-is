@@ -10,17 +10,27 @@ from sms.africastalking.at import ChurchSysMessenger
 from sms.api.serializers import SmsSerializer
 
 
+class MesageFormatter():
+    '''
+        future proofing so that i can use the class to apply custom formats.
+    '''
+    def __init__(self,message,sender_id,schema_name,context):
+        self.context = context
+        self.message = message
+        church = Client.objects.get(schema_name=schema_name)
+        self.church_name = church.name
+        sender = Member.objects.get(member_id=sender_id)
+        self.sender_name = sender.member.first_name +" "+ sender.member.last_name
+
+    def formated_message(self):
+        return      self.church_name.upper()\
+                 +   "\n"+ self.context.lower()\
+                 +   "\n\n" + self.message + "\n\n"\
+                 +   self.sender_name
+
 def getSerializerData(queryset,serializer_class):
     serializer = serializer_class(queryset[0])
     return serializer.data
-
-def formattedMessage(message,sender_id,schema_name,context):
-    church = Client.objects.get(schema_name=schema_name)
-    church_name = church.name
-    sender = Member.objects.get(member_id=sender_id)
-    sender_name = sender.member.first_name +" "+ sender.member.last_name
-
-    return church_name.upper() +"\n"+ context.lower() +"\n\n" + message + "\n\n" + sender_name
 
 
 class addSMS(APIView):
@@ -37,9 +47,9 @@ class addSMS(APIView):
         receipient_member_ids = request.data.get("receipient_member_ids")
 
         schema = request.tenant.schema_name
-        message = formattedMessage(message,sending_member_id,schema,app)
+        message_formatter = MesageFormatter(message,sending_member_id,schema,app)
 
-        messenger = ChurchSysMessenger(schema)
+        messenger = ChurchSysMessenger(schema,message_formatter)
         receipients = messenger.receipients_phone_numbers(receipient_member_ids)
         messenger.send_message(receipients,message)
 

@@ -40,6 +40,8 @@ SHARED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.admin',
+    'djrichtextfield',
+    'bootstrap4',
 )
 TENANT_APPS = (
     'django.contrib.contenttypes',
@@ -50,7 +52,6 @@ TENANT_APPS = (
     'groups',
     'finance',
     'projects',
-    'dailyVerses',
     'sermons',
     'duties',
     'news',
@@ -59,7 +60,6 @@ TENANT_APPS = (
     'sms',
     'Resources',
     'church_social',
-    'bootstrap4',
 )
 TENANT_MODEL = "Clients.Client"
 
@@ -78,13 +78,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'widget_tweaks',
+    'djrichtextfield',
 
     'Clients',
     'member',
     'groups',
     'finance',
     'projects',
-    'dailyVerses',
     'sermons',
     'duties',
     'news',
@@ -200,4 +200,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+}
+
+DJRICHTEXTFIELD_CONFIG = {
+    'js': ['//tinymce.cachefly.net/4.1/tinymce.min.js'],
+    'init_template': 'djrichtextfield/init/tinymce.js',
+    'settings': {
+        'menubar': False,
+        'plugins': 'link image',
+        'toolbar': 'bold italic | link image | removeformat',
+        'width': 700
+    }
 }

@@ -43,58 +43,70 @@
 
   <header class=" text-muted">
     <div class="container">
-    <div class="card-columns">
-      {% for client in clients%}
-      <div class="card" style="width: 18rem;">
+        <h3 class="font-weight-bold">Live accounts</h3>
+        {% for client in clients%}
+      <div class="card mb-3">
+        <h5 class="card-header">
+          {{client}}
+          <span class="badge badge-success">{{client.number_of_members}} members</span>
+           <span class="badge badge-info">{{client.created_on}}</span>
+           <span class="badge badge-secondary">{{client.tier.tier}}</span>
+          <span class="badge badge-danger">LIVE</span>
+        </h5>
         <div class="card-body">
-          <h5 class="card-title">
-            {{client}}
-             <span class="badge badge-success">{{client.number_of_members}} members</span>
-              <span class="badge badge-secondary">{{client.tier.tier}}</span>
-              <span class="badge badge-info">{{client.sms_quota}} free sms left</span>
-             <span class="badge badge-danger">LIVE</span>
-           </h5>
-           <h6 class="card-subtitle mb-2"><span class="text-info"> {{client.client.domain_url}}</span></h6>
+          <h5 class="card-title">Special title treatment</h5>
+          <div class="border border-secondary rounded mb-3">
+              <h5 class="ml-2 mr-2">
+                africastalking
+              </h5>
+              <p class="ml-2">at username: <i class="font-weight-bold">{{client.sms_credentials.at_username}}</i></p>
+              <p class="ml-2">at api key: <i class="font-weight-bold">{{client.sms_credentials.at_api_key}}</i></p>
+          </div>
+          <h6 class="card-subtitle mb-2"><span class="text-info"> {{client.client.domain_url}}</span></h6>
           <h6 class="card-subtitle mb-2">{{client.first_name}} {{client.last_name}} <span class="text-info">{{client.phone_number}}</span></h6>
           <h6 class="card-subtitle mb-2">church code<span class="text-info"> {{client.church_code}}</span></h6>
 
           <p class="card-text">{{client.city_or_town}},{{client.road_or_street}} {{client.location_description}}</p>
           <p class="card-text">{{client.website}}</p>
 
-          <a  href="{% url 'add_credit' client.client.id %}"
-              disabled class="btn btn-outline-success card-link ">{{client.credit}}
-            <span class="text-black">
-                (apprx {{client.apprx_number_of_days_left}} days left)
-            </span>
-          </a>
-
+          <div class="col text-right">
+            <a  href="{% url 'add_credit' client.client.id %}"
+               disabled class="btn btn-outline-success card-link ">{{client.credit}}
+             <span class="text-black">
+                 (apprx {{client.apprx_number_of_days_left}} days left)
+             </span>
+            </a>
+            <a class="btn btn-success" href="{% url 'edit_SMS_credentials' client.client.id %}">
+              SMS credentials
+            </a>
+          </div>
         </div>
       </div>
-      {% endfor %}
+        {% endfor %}
 
-
-      {% for demo in demos%}
-      <div class="card border-danger" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">
+        <h3 class="font-weight-bold">Demo accounts</h3>
+        {% for demo in demos%}
+        <div class="card mb-3 border border-secondary">
+          <h5 class="card-header">
             {{demo}}
              <span class="badge badge-success">{{demo.created_on}}</span>
-             <span class="badge badge-info">{{demo.sms_quota}} free sms left</span>
              <span class="badge badge-secondary">demo</span>
-           </h5>
+          </h5>
+          <div class="card-body">
             <h6 class="card-subtitle mb-2"><span class="text-info"> {{demo.client.domain_url}}</span></h6>
-          <h6 class="card-subtitle mb-2">church code<span class="text-info">---{{demo.church_code}}</span></h6>
-          <h6 class="card-subtitle mb-2">members<span class="text-info">--{{demo.number_of_members}}</span></h6>
+            <h6 class="card-subtitle mb-2">church code<span class="text-info">---{{demo.church_code}}</span></h6>
+            <h6 class="card-subtitle mb-2">members<span class="text-info">--{{demo.number_of_members}}</span></h6>
 
-          <a  href="{% url 'add_credit' demo.client.id %}"
-              disabled class="btn btn-outline-success card-link "> {{demo.credit}}
-            <span class="text-black">
-              (apprx {{demo.apprx_number_of_days_left}} days left)
-            </span>
-          </a>
+            <a  href="{% url 'add_credit' demo.client.id %}"
+                disabled class="btn btn-outline-success card-link "> {{demo.credit}}
+              <span class="text-black">
+                (apprx {{demo.apprx_number_of_days_left}} days left)
+              </span>
+            </a>
+          </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
+    <div class="card-columns">
     </div>
   </header>
 

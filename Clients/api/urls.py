@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import detailviews,addviews
+from .views import detailviews,addviews,updateviews
 
 # TODO add delete views
 urlpatterns = [
@@ -18,6 +18,10 @@ urlpatterns = [
     path('add-church-about/',addviews.AddAboutChurch.as_view()),
     path('add-church-core-value/',addviews.AddChurchCoreValue.as_view()),
     path('add-theme/',addviews.AddChurchPeriodicTheme.as_view()),
+
+    #update
+    path('update-church-statements/',updateviews.UpdateChurchStatement.as_view()),
+    path('update-about-church/',updateviews.UpdateAboutChurch.as_view()),
 
 ]
 
