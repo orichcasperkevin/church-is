@@ -23,6 +23,13 @@ class GetClientDetail(APIView):
         data = ClientDetailSerializer(client_detail,many=True).data
         return Response(data)
 
+class GetChurchSMSCredentials(APIView):
+    def get(self,request,id):
+        sms_credentials = ChurchSMSCredentials.objects.filter(church_id=id)
+        data = ChurchSMSCredentialsSerializer(sms_credentials,many=True).data
+        return Response(data)
+
+
 class GetChurchLogo(APIView):
     def get(self,request,id):
         church_logo = ChurchLogo.objects.filter(church_id=id)

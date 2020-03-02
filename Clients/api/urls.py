@@ -8,6 +8,7 @@ urlpatterns = [
     # detailviews
     path('client/<int:id>/', detailviews.GetClient.as_view()),
     path('client-detail/<int:id>/', detailviews.GetClientDetail.as_view()),
+    path('church-sms-credentials/<int:id>/',detailviews.GetChurchSMSCredentials.as_view()),
     path('church-about/<int:id>/',detailviews.GetChurchAbout.as_view()),
     path('church-statements/<int:id>/',detailviews.GetChurchStatements.as_view()),
     path('church-core-values/<int:id>/',detailviews.GetChurchCoreValues.as_view()),

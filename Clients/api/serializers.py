@@ -16,6 +16,11 @@ class ClientDetailSerializer(serializers.ModelSerializer):
                     'number_of_members','number_of_sms','created_on','credit','last_credited',
                     'apprx_number_of_days_left','tier')
 
+class ChurchSMSCredentialsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChurchSMSCredentials
+        fields = ('at_username','at_api_key','at_mpesa_acc_no','at_mpesa_paybill')
+
 class ChurchLogoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChurchLogo
