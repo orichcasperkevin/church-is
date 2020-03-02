@@ -129,6 +129,11 @@ class EditSMSCredentialsForm(forms.Form):
 
     at_api_key = forms.CharField(max_length=150,
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at api key'}))
+    at_mpesa_acc_no = forms.CharField(max_length=50,
+                                    widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at mpesa acc no'}))
+    at_mpesa_paybill = forms.CharField(max_length=20,
+                                widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at mpesa paybill'}))
+
 
     def clean(self):
         cleaned_data = super(EditSMSCredentialsForm, self).clean()

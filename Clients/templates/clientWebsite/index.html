@@ -5,8 +5,7 @@
   {% load static %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="anvil church | the simplest, easiest, best in class, church management software for small, medium and large churches
-                                    anywhere in Kenya at cheap affordable prices">
+  <meta name="description" content="{{website_content.name_of_church}} website, powered by anvilchurch.com">
   <meta name="author" content="casper orich">
 
   <title>anvil church : simple,easy and affordable church management software for every size of church </title>
@@ -99,12 +98,12 @@
                   <h1> {{website_content.number_of_members}}</h1>
                   <p>members</p>
                 </div>
-                {% if website_content.core_values.length %}
+                {% if website_content.core_values %}
                 <p class="lead">
                   with our core values being:
                   <ul class="text-muted">
                     {% for value in website_content.core_values %}
-                    <li>value.value</li>
+                    <li>{{value}}</li>
                     {% endfor %}
                   </ul>
                 </p>
@@ -116,6 +115,7 @@
     </div>
   </section>
 <!-- THEME -->
+
   {% if website_content.theme.theme %}
   <section id="Theme" class="bg-light">
     <div class="container">
@@ -152,8 +152,7 @@
           <div class="border border-light shadow p-2 mb-2 bg-white rounded">
               <i class="text-primary font-weight-bold">{{news.author}}</i>
               <p class="lead">{{news.heading}}</p>
-              <article class="text-muted">
-                  {{news.article}}
+              <article id="article_{{news.id}}">
               </article>
               <p>
                 <p>{{news.date}}</p>
@@ -231,8 +230,18 @@
     <!-- /.container -->
   </footer>
 
+  <script type="text/javascript">
+  {% for content in website_content.news %}
+    //article div
+    var article_div = document.getElementById("article_" + '{{content.id}}')
+    //new elements
+    var el = document.createElement('div')
+    var domString = '{{content.article|safe}}'
+    el.innerHTML =  domString;
+    article_div.appendChild(el);
+  {% endfor %}
+  </script>
   <!-- Bootstrap core JavaScript -->
-
   <script src="{% static 'site/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'site/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 

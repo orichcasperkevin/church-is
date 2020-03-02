@@ -9,6 +9,10 @@ from Clients.models import Client
 from sms.africastalking.at import ChurchSysMessenger
 from sms.api.serializers import SmsSerializer
 
+def getSerializerData(queryset,serializer_class):
+    serializer = serializer_class(queryset[0])
+    return serializer.data
+
 
 class MesageFormatter():
     '''
@@ -18,19 +22,17 @@ class MesageFormatter():
         self.context = context
         self.message = message
         church = Client.objects.get(schema_name=schema_name)
+        self.church_domain = church.domain_url
         self.church_name = church.name
         sender = Member.objects.get(member_id=sender_id)
         self.sender_name = sender.member.first_name +" "+ sender.member.last_name
 
     def formated_message(self):
-        return      self.church_name.upper()\
-                 +   "\n"+ self.context.lower()\
-                 +   "\n\n" + self.message + "\n\n"\
-                 +   self.sender_name
-
-def getSerializerData(queryset,serializer_class):
-    serializer = serializer_class(queryset[0])
-    return serializer.data
+        return  self.message \
+                +   "\n " + self.church_domain
+                #  self.church_name.upper()\
+                 #+   "\n"+ self.context.lower()\
+                 #+   "\n" + self.message + "\n"\
 
 
 class addSMS(APIView):

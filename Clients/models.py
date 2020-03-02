@@ -105,6 +105,8 @@ class ChurchSMSCredentials(models.Model):
     church = models.OneToOneField(Client,on_delete=models.CASCADE)
     at_username =  models.CharField(max_length=50,default=config('DEMO_AFRICAS_TALKING_USERNAME'))
     at_api_key = models.CharField(max_length=150,default=config('DEMO_AFRICAS_TALKING_API_KEY'))
+    at_mpesa_acc_no = models.CharField(max_length=50,default="demo.api",null=True,blank=True)
+    at_mpesa_paybill = models.CharField(max_length=20,default="525900",null=True,blank=True)
 
 '''
     the following is used as website content for thhe client church

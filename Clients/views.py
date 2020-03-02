@@ -253,6 +253,9 @@ def edit_SMS_credentials(request,client_id):
             credentials  = ChurchSMSCredentials.objects.get_or_create(church_id=client_id)[0]
             credentials.at_username = edit_SMS_credentials_form.cleaned_data['at_username']
             credentials.at_api_key = edit_SMS_credentials_form.cleaned_data['at_api_key']
+
+            credentials.at_mpesa_acc_no = edit_SMS_credentials_form.cleaned_data['at_mpesa_acc_no']
+            credentials.at_mpesa_paybill = edit_SMS_credentials_form.cleaned_data['at_mpesa_paybill']
             credentials.save()
             return redirect('anvilAdmin')
     else:
