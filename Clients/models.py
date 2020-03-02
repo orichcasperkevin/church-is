@@ -42,7 +42,6 @@ class ClientDetail(models.Model):
     website = models.CharField(max_length=50,null=True,blank=True,default="demo")
     #amount of credit remaining
     credit = models.DecimalField(max_digits=15, decimal_places=2,default=0.00,null=True,blank=True)
-    last_credited = models.DateTimeField(default=datetime.now(), blank=True)
     #tier info
 
     def __str__(self):
@@ -73,7 +72,8 @@ class ClientDetail(models.Model):
     @property
     def number_of_sms(self):
         with schema_context(self.client.schema_name):
-            return SmsReceipients.objects.filter(sms__date__gt=self.last_credited,status="Success").count()
+            today = timezone.now()
+            return SmsReceipients.objects.filter(sms__date__month=today.month,status="Success").count()
 
     @property
     def tier(self):

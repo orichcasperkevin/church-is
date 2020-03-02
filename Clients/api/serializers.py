@@ -13,7 +13,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         model = ClientDetail
         fields = ('client','first_name','last_name','ID_number','phone_number','domain_url',
                     'city_or_town','location_description','website','church_code',
-                    'number_of_members','number_of_sms','created_on','credit','last_credited',
+                    'number_of_members','number_of_sms','created_on','credit',
                     'apprx_number_of_days_left','tier')
 
 class ChurchSMSCredentialsSerializer(serializers.ModelSerializer):
