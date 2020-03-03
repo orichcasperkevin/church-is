@@ -101,6 +101,7 @@ class ClientDetail(models.Model):
 '''
     client sms service
 '''
+
 class ChurchSMSCredentials(models.Model):
     church = models.OneToOneField(Client,on_delete=models.CASCADE)
     at_username =  models.CharField(max_length=50,default=config('DEMO_AFRICAS_TALKING_USERNAME'))

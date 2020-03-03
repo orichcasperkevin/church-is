@@ -7,16 +7,11 @@ class ServiceType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150, help_text='Name of the church service')
     description = models.CharField(max_length=150)
-    church_groups = models.ManyToManyField(ChurchGroup, through='ChurchGroupMembership')
     start = models.TimeField(default=timezone.now)
     end = models.TimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
-
-class ChurchGroupMembership(models.Model):
-    church_group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, related_name='church_group_memberships')
-    service = models.ForeignKey(ServiceType, on_delete=models.CASCADE, related_name='church_group_memberships')
 
 class Service(models.Model):
     id = models.AutoField(primary_key=True)
