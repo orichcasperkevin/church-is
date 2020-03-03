@@ -3,8 +3,8 @@ from tenant_schemas.utils import schema_context
 from Clients.models import *
 
 
-# from news.models import News
-# from news.api.serializers import NewsSerializer
+from news.models import News
+from news.api.serializers import NewsSerializer
 
 from events.models import Event
 from events.api.serializers import EventSerializer
@@ -34,7 +34,7 @@ class WebContent():
         self.get_church_detail()
         self.get_church_logo()
         self.get_church_content()
-        # self.get_news()
+        self.get_news()
         self.get_events()
         self.get_service_types()
 
@@ -84,11 +84,11 @@ class WebContent():
             pass
 
 
-    # def get_news(self):
-    #     with schema_context(self.schema):
-    #         news =  News.objects.all()[:10]
-    #         news = NewsSerializer(news,many=True).data
-    #         self.content["news"] = json.loads(json.dumps(news))
+    def get_news(self):
+        with schema_context(self.schema):
+            news =  News.objects.all()[:10]
+            news = NewsSerializer(news,many=True).data
+            self.content["news"] = json.loads(json.dumps(news))
 
     def get_events(self):
         with schema_context(self.schema):
