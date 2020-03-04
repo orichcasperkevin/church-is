@@ -4,13 +4,9 @@ from Clients.models import *
 
 
 from news.models import News
-from news.api.serializers import NewsSerializer
-
 from events.models import Event
-from events.api.serializers import EventSerializer
-
 from services.models import ServiceType,ServiceItem
-from services.api.serializers import ServiceTypeSerializer,ServiceItemSerializer
+
 
 
 class WebContent():
@@ -87,17 +83,14 @@ class WebContent():
     def get_news(self):
         with schema_context(self.schema):
             news =  News.objects.all()[:10]
-            news = NewsSerializer(news,many=True).data
-            self.content["news"] = json.loads(json.dumps(news))
+            self.content["news"] = news
 
     def get_events(self):
         with schema_context(self.schema):
             events = Event.objects.all().order_by('-start_datetime')[:25]
-            events = EventSerializer(events,many=True).data
-            self.content["events"] = json.loads(json.dumps(events))
+            self.content["events"] = events
 
     def get_service_types(self):
         with schema_context(self.schema):
             service_types = ServiceType.objects.all()
-            service_types = ServiceTypeSerializer(service_types,many=True).data
-            self.content["service_types"] =  json.loads(json.dumps(service_types))
+            self.content["service_types"] =  service_types

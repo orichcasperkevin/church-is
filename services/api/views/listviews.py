@@ -30,5 +30,5 @@ class ServicesThisMonth(generics.ListCreateAPIView):
     '''
         a list of all services this month
     '''
-    queryset = ServiceItem.objects.all().order_by('-service__date')[:50]
+    queryset = ServiceItem.objects.all().order_by('-service__date')[:20]
     serializer_class = ServiceItemSerializer

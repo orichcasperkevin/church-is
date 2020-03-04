@@ -5,7 +5,7 @@ from groups.models import ChurchGroup
 
 class ServiceType(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=150, help_text='Name of the church service')
+    name = models.CharField(max_length=150)
     description = models.CharField(max_length=150)
     start = models.TimeField(default=timezone.now)
     end = models.TimeField(default=timezone.now)

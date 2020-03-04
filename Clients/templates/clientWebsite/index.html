@@ -16,6 +16,8 @@
   <!-- Custom styles for this template -->
   <link href="{% static 'site/css/scrolling-nav.css' %}" rel="stylesheet">
 
+  <link href="{% static 'site/css/general.css' %}" rel="stylesheet">
+
 </head>
 
 <body id="page-top" class="mr-2 ml-2">
@@ -143,19 +145,21 @@
   <section id="news">
     <div class="container ">
       <div class="row">
-        <div class="col-lg-2">
+        <div class="col-lg-2 text-center">
           <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_resume_folder_2_arse.svg' %}">
         </div>
         <div class="col-lg-8 mx-auto">
-          <h2 class="font-weight-bold ">News stand</h2>
+          <h2 class="font-weight-bold text-center">News stand</h2>
           {% for news in website_content.news %}
           <div class="border border-light shadow p-2 mb-2 bg-white rounded">
               <i class="text-primary font-weight-bold">{{news.author}}</i>
-              <p class="lead">{{news.heading}}</p>
+              <p class="lead"><u>{{news.heading}}</u></p>
               <article id="article_{{news.id}}">
+                  {{news.article|safe}}
               </article>
               <p>
-                <p>{{news.date}}</p>
+                <hr>
+                <i>{{news.date|date:"D d M Y"}}</i>
               </p>
           </div>
           {% endfor %}
@@ -167,11 +171,11 @@
   <section id="events" class="bg-light">
     <div class="container">
       <div class="row">
-        <div class="col-lg-2">
+        <div class="col-lg-2 text-center">
           <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_schedule_pnbk.svg' %}">
         </div>
-        <div class="col-lg-8 mx-auto">
-          <h2 class="font-weight-bold ">Recent events</h2>
+        <div class="col-lg-8 mx-auto ">
+          <h2 class="font-weight-bold text-center">Recent events</h2>
           {% if website_content.events %}
           {% for event in website_content.events %}
           <div class="border border-light shadow p-3 mb-2 bg-white rounded">
@@ -183,8 +187,8 @@
               </small>
             </div>
             <span>
-              <p class="text-muted">start: {{event.start}}</p>
-              <p class="text-muted">end: {{event.end}}</p>
+              <p class="text-muted">start: {{event.start_datetime|date:"D d M, Y ,h:i A"}}</p>
+              <p class="text-muted">end: {{event.end_datetime|date:"D d M, Y ,h:i A"}}</p>
             </span>
             <p class="mb-1">{{event.description}}</p>
           </div>
@@ -232,13 +236,15 @@
 
   <script type="text/javascript">
   {% for content in website_content.news %}
-    //article div
-    var article_div = document.getElementById("article_" + '{{content.id}}')
-    //new elements
-    var el = document.createElement('div')
-    var domString = '{{content.article|safe}}'
-    el.innerHTML =  domString;
-    article_div.appendChild(el);
+     //article div
+     var article_div = document.getElementById("article_" + '{{content.id}}')
+     var images = article_div.getElementsByTagName("img")
+      for (var img in images){
+          var img_el = images[img]
+          if (img_el instanceof HTMLElement){
+              img_el.classList.add("image-fit");  // make image to fit box
+          }
+      }
   {% endfor %}
   </script>
   <!-- Bootstrap core JavaScript -->
