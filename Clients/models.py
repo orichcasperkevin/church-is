@@ -43,6 +43,7 @@ class ClientDetail(models.Model):
     #amount of credit remaining
     credit = models.DecimalField(max_digits=15, decimal_places=2,default=0.00,null=True,blank=True)
     #tier info
+    last_credited = models.DateField(auto_now_add=True,blank=True,null=True)
 
     def __str__(self):
         return str(self.client)
