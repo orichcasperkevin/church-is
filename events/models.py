@@ -15,11 +15,11 @@ class Event(models.Model):
 
     @property
     def start(self):
-        return self.start_datetime.strftime("%a %b %m, %Y %H:%M")
+        return self.start_datetime.strftime("%Y-%m-%d %H:%M")
 
     @property
     def end(self):
-        return self.end_datetime.strftime("%a %b %m, %Y %H:%M")
+        return self.end_datetime.strftime("%Y-%m-%d %H:%M")
 
     @property
     def attendees(self):

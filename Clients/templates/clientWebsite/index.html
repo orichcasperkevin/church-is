@@ -42,7 +42,7 @@
           </li>
           {% endif %}
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#news">news</a>
+            <a class="nav-link js-scroll-trigger" href="#news">news & announcements</a>
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="#events">events</a>
@@ -149,7 +149,7 @@
           <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_resume_folder_2_arse.svg' %}">
         </div>
         <div class="col-lg-8 mx-auto">
-          <h2 class="font-weight-bold text-center">News stand</h2>
+          <h2 class="font-weight-bold text-center">News & announcements </h2>
           {% for news in website_content.news %}
           <div class="border border-light shadow p-2 mb-2 bg-white rounded">
               <i class="text-primary font-weight-bold">{{news.author}}</i>
@@ -175,7 +175,7 @@
           <img class="mr-0 "style="width: 250px ;height: auto" src="{% static '/site/images/undraw_schedule_pnbk.svg' %}">
         </div>
         <div class="col-lg-8 mx-auto ">
-          <h2 class="font-weight-bold text-center">Recent events</h2>
+          <h2 class="font-weight-bold text-center">Recent & upcoming events</h2>
           {% if website_content.events %}
           {% for event in website_content.events %}
           <div class="border border-light shadow p-3 mb-2 bg-white rounded">
