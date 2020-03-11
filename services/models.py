@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from groups.models import ChurchGroup
 
 
 class ServiceType(models.Model):

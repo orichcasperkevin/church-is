@@ -62,7 +62,7 @@ class RecordMemberThatAttendedEvent(APIView):
     post:
     record a member that attended an event
     '''
-    def post(self,request):        
+    def post(self,request):
         event = request.data.get("event_id")
 
         member = request.data.get("member_id")

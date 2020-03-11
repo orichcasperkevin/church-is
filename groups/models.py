@@ -9,7 +9,7 @@ class GroupOfChurchGroups(models.Model):
     '''
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20)
-    description = models.CharField(max_length=30)
+    description = models.CharField(max_length=50)
 
     @property
     def number_of_groups(self):
@@ -35,13 +35,13 @@ class ChurchGroup(models.Model):
     id = models.AutoField(primary_key=True)
     group = models.ForeignKey(GroupOfChurchGroups, null = True, blank = True, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
-    description = models.TextField(blank=True)
+    description = models.TextField(max_length=50,blank=True)
     group_members = models.ManyToManyField(Member, through='ChurchGroupMembership', blank=True)
     anvil_space_only = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
-        
+
     @property
     def number_of_members(self):
         return self.group_members.all().count() or 0

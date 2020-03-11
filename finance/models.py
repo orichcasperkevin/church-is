@@ -52,7 +52,7 @@ class Offering(models.Model):
     date = models.DateField(help_text='The Date of the offering collection')
     anonymous = models.BooleanField(default=False)
     name_if_not_member = models.CharField(max_length=20, blank=True, null=True)
-    church_group = models.ManyToManyField(ChurchGroup, blank=True)
+    group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     # the service this offering was collected from
@@ -62,44 +62,78 @@ class Offering(models.Model):
 
     @property
     def total_this_month(self):
-        sum = Offering.objects.filter(member_id=self.member_id, date__month=month, date__year=year)\
-                        .aggregate(Sum('amount'))
-        return sum['amount__sum'] or 0
+        if self.member:
+            sum = Offering.objects.filter(member_id=self.member.id, date__month=month, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.group:
+            sum = Offering.objects.filter(group_id=self.group.id, date__month=month, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.service:
+            sum = Offering.objects.filter(service_id=self.service.id, date__month=month, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
 
     @property
     def total_this_year(self):
-        sum = Offering.objects.filter(member_id=self.member_id, date__year=year)\
-                                    .aggregate(Sum('amount'))
-        return sum['amount__sum'] or 0
-
-
-class GroupOffering(models.Model):
-    '''
-        offering made by a group
-    '''
-    offering = models.ForeignKey(Offering, on_delete=models.CASCADE)
-    church_group = models.ForeignKey(ChurchGroup, on_delete=models.CASCADE)
-
+        if self.member:
+            sum = Offering.objects.filter(member_id=self.member.id, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.group:
+            sum = Offering.objects.filter(group_id=self.group.id,date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.service:
+            sum = Offering.objects.filter(service_id=self.service.id,date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
 
 class Tithe(models.Model):
     '''
         tithe collected for a member
     '''
-    member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True,blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
+    group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='tithe_recorded_by')
 
     @property
     def total_this_month(self):
-        sum = Tithe.objects.filter(member_id=self.member_id, date__month=month, date__year=year).aggregate(Sum('amount'))
-        return sum['amount__sum'] or 0
+        if self.member:
+            print("member")
+            sum = Tithe.objects.filter(member_id=self.member.id, date__month=month, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.group:
+            print("group")
+            sum = Tithe.objects.filter(group_id=self.group.id, date__month=month, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.service:
+            print("service")
+            sum = Tithe.objects.filter(service_id=self.service.id, date__month=month, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
 
     @property
     def total_this_year(self):
-        sum = Tithe.objects.filter(member_id=self.member_id, date__year=year).aggregate(Sum('amount'))
-        return sum['amount__sum'] or 0
+        if self.member:
+            sum = Tithe.objects.filter(member_id=self.member.id, date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.group:
+            sum = Tithe.objects.filter(group_id=self.group.id,date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
+        if self.service:
+            sum = Tithe.objects.filter(service_id=self.service.id,date__year=year)\
+                            .aggregate(Sum('amount'))
+            return sum['amount__sum'] or 0
 
 
 class IncomeType(models.Model):

@@ -19,6 +19,7 @@ class ChurchSysMessenger():
         username = ''
         api_key = ''
 
+        # credentials
         if schema[slice(0,4)] == "demo":
             username = config('DEMO_AFRICAS_TALKING_USERNAME')
             api_key = config('DEMO_AFRICAS_TALKING_API_KEY')
@@ -26,9 +27,11 @@ class ChurchSysMessenger():
             credentials = ChurchSMSCredentials.objects.filter(church__schema_name=schema)[0]
             username = credentials.at_username
             api_key = credentials.at_api_key
+
         #initialize africastalking
         africastalking.initialize(username, api_key)
         self.sms_service = africastalking.SMS
+        self.balance_service = africastalking.Application
 
 
     def receipients_phone_numbers(self, receipient_member_ids):
@@ -68,11 +71,19 @@ class ChurchSysMessenger():
 
     def on_finish(self, error, response):
         '''
-            callback function called on completion of the thread on which send_message() is running
+                credentialscallback function called on completion of the thread on which send_message() is running
         '''
         if error is not None:
             raise error
         self.record_members_who_received_sms(response)
+
+
+    def get_sms_credit_balance(self):
+
+        '''
+            balance inquiry
+        '''
+        return self.balance_service.fetch_application_data()
 
     def send_message(self, receipients, message):
         '''

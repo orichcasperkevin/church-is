@@ -93,7 +93,7 @@ class TitheStats(APIView):
         for month in range(1,today.month + 1):
             total_this_month = Tithe.objects.filter(date__month=month).aggregate(Sum('amount'))['amount__sum']  or 0
             total_last_month = Tithe.objects.filter(date__month=month-1).aggregate(Sum('amount'))['amount__sum']  or 0
-            avg_per_member = Tithe.objects.filter(date__month=month).aggregate(Avg('amount'))['amount__avg']  or 0
+            avg_per_member = Tithe.objects.filter(member__isnull=False,date__month=month).aggregate(Avg('amount'))['amount__avg']  or 0
             percentage_increase = getPercentageIncrease(total_this_month,total_last_month)
 
             dict.append({"month":month,"total_this_month":total_this_month,"avg_per_member":avg_per_member,"percentage_increase":percentage_increase})

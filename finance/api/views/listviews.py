@@ -199,7 +199,7 @@ class OfferingThisMonth(APIView):
     '''
 
     def get(self, request):
-        offering = Offering.objects.filter(member__isnull=False).order_by('-timestamp')[:50]
+        offering = Offering.objects.all().order_by('-timestamp')[:50]
         data = OfferingSerializer(offering, many=True).data
         return Response(data)
 

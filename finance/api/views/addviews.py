@@ -13,6 +13,8 @@ from member.models import Member
 from services.models import Service,ServiceType
 
 def getSerializerData(queryset,serializer_class):
+    if len(queryset) == 0:
+        return None
     data = queryset[0]
     return serializer_class(data).data
 
@@ -52,27 +54,23 @@ class addTithe(APIView):
     def post(self, request):
 
         member_id = request.data.get("member_id")
-        queryset = Member.objects.filter(member_id=member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        member = serializer.data
+        member = Member.objects.filter(member_id=member_id).first()
+        if member is not None:
+            member = member.id
 
         recording_member_id = request.data.get("recording_member_id")
-        queryset = Member.objects.filter(member_id=recording_member_id)
-        data = []
-        for data in queryset:
-            data = data
-        serializer = MemberSerializer(data)
-        recording_member = serializer.data
+        recording_member = Member.objects.get(member_id=recording_member_id)
+        recording_member = recording_member.id
 
+        service = request.data.get("service")
+        group = request.data.get("group")
         amount = request.data.get("amount")
         narration = request.data.get("narration")
 
-        data = {'member': member, 'amount': amount, 'narration': narration, 'recorded_by': recording_member}
-        serializer = TitheSerializer(data=data)
+        data = {'member': member, 'amount': amount,'service':service,'group': group, 'narration': narration, 'recorded_by': recording_member}
+        serializer = AddTitheSerializer(data=data)
 
+        print(data)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -82,7 +80,7 @@ class addTithe(APIView):
 
 class addOffering(APIView):
     '''
-        add a tithe by a member.
+        add a offering by a member.
     '''
 
     def post(self, request):
@@ -146,14 +144,16 @@ class AddServiceOffering(APIView):
 
         service_type_id = request.data.get("service_type_id")
         date = request.data.get("date")
+        service = None
+        service = Service.objects.filter(type_id=service_type_id, date=date).first()
+        if service is not None:
+            service = service.id
 
-        queryset = Service.objects.filter(type_id=service_type_id, date=date)
-        service = getSerializerData(queryset,ServiceSerializer)
-
+        group = request.data.get("group")
         amount = request.data.get("amount")
         narration = request.data.get("narration")
 
-        data = {'service':service, 'date':date, 'amount': amount, 'narration': narration, 'recorded_by': recording_member}
+        data = {'service':service, 'date':date,'group':group, 'amount': amount, 'narration': narration, 'recorded_by': recording_member}
         serializer = AddServiceOfferingSerializer(data=data)
 
         if serializer.is_valid():

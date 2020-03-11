@@ -7,11 +7,10 @@ from member.models import Member
 class Event(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=20)
-    description = models.TextField(max_length=50)
+    description = models.TextField(max_length=150)
     location = models.CharField(max_length=20, blank=True, null=True)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
-    website = models.BooleanField(default=True)
 
     @property
     def start(self):

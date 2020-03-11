@@ -7,6 +7,7 @@ from .views import addviews,listviews
 urlpatterns = [
 
     path('sms-this-month/', listviews.SmsList.as_view()),
+    path('sms-credit-balance/',listviews.SMSCreditBalance.as_view()),
 
     #add
     path('add-sms/', addviews.addSMS.as_view()),
