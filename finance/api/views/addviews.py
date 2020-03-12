@@ -117,7 +117,7 @@ class addOffering(APIView):
         data = {'type':offering_type,'member': member, 'amount': amount, 'date': date, 'anonymous': anonymous,
                 'name_if_not_member': name_if_not_member,
                 'recorded_by': recording_member}
-
+        
         if (serializer_to_use == 0):
             serializer = AddMemberOfferingSerializer(data=data)
         if (serializer_to_use == 1):
@@ -149,11 +149,12 @@ class AddServiceOffering(APIView):
         if service is not None:
             service = service.id
 
+        type = request.data.get("offering_type")
         group = request.data.get("group")
         amount = request.data.get("amount")
         narration = request.data.get("narration")
 
-        data = {'service':service, 'date':date,'group':group, 'amount': amount, 'narration': narration, 'recorded_by': recording_member}
+        data = {'type':type, 'service':service, 'date':date,'group':group, 'amount': amount, 'narration': narration, 'recorded_by': recording_member}
         serializer = AddServiceOfferingSerializer(data=data)
 
         if serializer.is_valid():

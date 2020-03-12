@@ -261,3 +261,9 @@ def edit_SMS_credentials(request,client_id):
     else:
         edit_SMS_credentials_form = EditSMSCredentialsForm()
     return render (request , 'editCredentials.html', {'edit_SMS_credentials_form':edit_SMS_credentials_form,'client':client})
+
+@login_required
+def delete_account(request,client_id):
+    client = Client.objects.get(id=client_id)
+    client.delete()
+    return redirect('anvilAdmin')

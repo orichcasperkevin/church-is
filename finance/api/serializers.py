@@ -28,7 +28,6 @@ class OfferingTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OfferingType
         fields = ('id','name','description')
-        extra_kwargs = {'id': {'read_only': False}}
 
 class OfferingSerializer(serializers.ModelSerializer):
     member = MemberSerializer()
@@ -58,7 +57,7 @@ class AddMemberOfferingSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         offering_type_data = validated_data.pop('type')
         offering_type = {}
-        offering_type = OfferingType.objects.get(id=offering_type_data["id"])
+        offering_type = OfferingType.objects.filter(name=offering_type_data["name"]).first()
 
         member_data = validated_data.pop('member')
         member = {}
@@ -78,7 +77,7 @@ class addAnonymousOfferingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offering
-        fields = ('amount', 'date', 'group','anonymous', 'name_if_not_member',
+        fields = ('type','amount', 'date', 'group','anonymous', 'name_if_not_member',
                   'narration', 'recorded_by', 'total_this_month', 'total_this_year')
         depth = 2
 
@@ -98,7 +97,7 @@ class AddServiceOfferingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offering
-        fields = ('amount', 'date','service','group','narration', 'recorded_by',)
+        fields = ('type','amount', 'date','service','group','narration', 'recorded_by',)
 
     def create(self, validated_data):
 

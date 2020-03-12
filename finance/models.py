@@ -105,17 +105,14 @@ class Tithe(models.Model):
     @property
     def total_this_month(self):
         if self.member:
-            print("member")
             sum = Tithe.objects.filter(member_id=self.member.id, date__month=month, date__year=year)\
                             .aggregate(Sum('amount'))
             return sum['amount__sum'] or 0
         if self.group:
-            print("group")
             sum = Tithe.objects.filter(group_id=self.group.id, date__month=month, date__year=year)\
                             .aggregate(Sum('amount'))
             return sum['amount__sum'] or 0
         if self.service:
-            print("service")
             sum = Tithe.objects.filter(service_id=self.service.id, date__month=month, date__year=year)\
                             .aggregate(Sum('amount'))
             return sum['amount__sum'] or 0

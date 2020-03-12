@@ -158,6 +158,7 @@ DATABASES['default']['ENGINE'] = 'tenant_schemas.postgresql_backend'
 DATABASE_ROUTERS = (
     'tenant_schemas.routers.TenantSyncRouter',
 )
+AUTO_DROP_SCHEMA = True
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 

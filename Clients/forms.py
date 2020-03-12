@@ -1,4 +1,5 @@
 from django import forms
+from tenant_schemas.utils import schema_exists
 
 class TryDemoForm(forms.Form):
     first_name = forms.CharField(max_length=30,
@@ -73,6 +74,9 @@ class GetAnvilForm(forms.Form):
             road_or_street = cleaned_data.get('road_or_street')
             location_description = cleaned_data.get('location_description')
 
+            schema_name = ('').join(name_of_church.split(' '))
+            schema_name = schema_name.replace('.','')
+
             website = cleaned_data.get('website')
 
             if not first_name and not last_name \
@@ -89,6 +93,9 @@ class GetAnvilForm(forms.Form):
 
             if first_name and len(last_name.split()) > 1:
                 raise forms.ValidationError('first name must be one word')
+
+            if schema_exists(schema_name):
+                raise forms.ValidationError("A church with this name already exists in the database")
 
 class ChangePasswordForm(forms.Form):
     username = forms.CharField(max_length=30,

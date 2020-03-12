@@ -25,8 +25,8 @@ def get_project_general_stats_as_csv(request,date):
     writer.writerow(["name","start","stop","stop","description","required"])
     for project in Project.objects.filter(start__year=date["year"]):
         name = project.name
-        start = project.start
-        stop = project.stop
+        start = project.start.strftime(" %a %d %b, %Y")
+        stop = project.stop.strftime(" %a %d %b, %Y")
         description = project.description
         required = project.required_amount
 
@@ -54,7 +54,7 @@ def get_project_contribution_stats_as_csv(request,project_id):
     for contribution in Contribution.objects.filter(project_id=project.id,member__member__isnull=False):
         member = contribution.member.member.first_name + " " + contribution.member.member.last_name
         amount = contribution.amount
-        date = contribution.recorded_at
+        date = contribution.recorded_at.strftime(" %a %d %b, %Y")
 
         writer.writerow([member,amount,date])
     total = Contribution.objects.filter(project_id=project.id,member__member__isnull=False).aggregate(Sum('amount'))['amount__sum'] or 0
@@ -72,7 +72,7 @@ def get_project_contribution_stats_as_csv(request,project_id):
         names = contribution.names
         amount = contribution.amount
         phone = contribution.phone
-        date = contribution.recorded_at
+        date = contribution.recorded_at.strftime(" %a %d %b, %Y")
 
         writer.writerow([names,amount,phone,date])
     total = Contribution.objects.filter(project_id=project.id,member__member__isnull=True).aggregate(Sum('amount'))['amount__sum'] or 0

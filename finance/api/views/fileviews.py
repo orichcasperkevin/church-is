@@ -25,9 +25,16 @@ def get_tithes_csv(request,date):
     date = date_format(date)
     writer.writerow(["names", "amount", "tithe_date", "narration"])
     for tithe in Tithe.objects.filter(date__month=date["month"],date__year=date["year"]):
-        names = tithe.member.member.first_name + " " + tithe.member.member.last_name
+        names = "anonymous"
+        if tithe.member:
+            names = tithe.member.member.first_name + " " + tithe.member.member.last_name
+        if tithe.group:
+            names = tithe.group.name
+        if tithe.service:
+            names = tithe.service.type.name + "(" + str(tithe.service.date.strftime(" %a %d %b, %Y")) + ")"
+
         amount = tithe.amount
-        tithe_date = tithe.date
+        tithe_date = tithe.date.strftime(" %a %d %b, %Y")
         narration = tithe.narration
 
         writer.writerow([names, amount, tithe_date, narration])
@@ -54,7 +61,7 @@ def get_member_offering_csv(request,date):
         for offering in Offering.objects.filter(type_id=type.id,member__isnull=False,date__month=date["month"],date__year=date["year"]):
             offering_type = str(type)
             name = offering.member.member.first_name + " " + offering.member.member.last_name
-            offering_date = offering.date
+            offering_date = offering.date.strftime(" %a %d %b, %Y")
             amount = offering.amount
             narration = offering.narration
 
@@ -84,7 +91,7 @@ def get_service_offering_csv(request,date):
         for offering in Offering.objects.filter(service__type_id=type.id,service__isnull=False,date__month=date["month"],date__year=date["year"]):
             service_type = str(type)
             amount = offering.amount
-            offering_date = offering.date
+            offering_date = offering.date.strftime(" %a %d %b, %Y")
             narration = offering.narration
 
             writer.writerow([service_type,amount,offering_date,narration])
@@ -113,7 +120,7 @@ def get_income_csv(request,date):
         for income in Income.objects.filter(type_id=type.id,date__month=date["month"],date__year=date["year"]):
             income_type = str(type)
             amount = income.amount
-            income_date = income.date
+            income_date = income.date.strftime(" %a %d %b, %Y")
             narration = income.narration
 
             writer.writerow([income_type,amount,income_date,narration])
@@ -142,7 +149,7 @@ def get_expenditure_csv(request,date):
         for expenditure in Expenditure.objects.filter(type_id=type.id,date__month=date["month"],date__year=date["year"]):
             expenditure_type = str(type)
             amount = expenditure.amount
-            income_date = expenditure.date
+            income_date = expenditure.date.strftime(" %a %d %b, %Y")
             narration = expenditure.narration
 
             writer.writerow([expenditure_type,amount,income_date,narration])

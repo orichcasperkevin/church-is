@@ -32,7 +32,8 @@ urlpatterns = [
     path('edit-sms-credentials/<int:client_id>/',site_views.edit_SMS_credentials,name='edit_SMS_credentials'),
     path('try-demo/',site_views.get_demo,name='try_demo'),
     path('change-password/<slug:username>/<slug:church_name>/',site_views.change_password, name='change_password'),
-    path('password-fail', site_views.password_fail),
+    path('password-fail/', site_views.password_fail),
+    path('delete_account/<int:client_id>/', site_views.delete_account,name="delete_account"),
 
     #django rich RichTextField
     path('djrichtextfield/', include('djrichtextfield.urls')),

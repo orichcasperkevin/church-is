@@ -103,6 +103,9 @@
                 (apprx {{demo.apprx_number_of_days_left}} days left)
               </span>
             </a>
+            <a  href="{% url 'delete_account' demo.client.id%}"
+                class="btn btn-danger card-link "> delete
+            </a>
           </div>
         </div>
         {% endfor %}
