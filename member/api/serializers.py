@@ -23,7 +23,7 @@ class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        fields = ('id', 'member', 'gender','middle_name')
+        fields = ('id', 'member', 'gender','middle_name','phone_number')
         extra_kwargs = {'id': {'read_only': False}}
 
 

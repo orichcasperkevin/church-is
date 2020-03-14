@@ -21,6 +21,15 @@ class Member(models.Model):
     def __str__(self):
         return str(self.member.first_name + " " + self.member.last_name )
 
+    @property
+    def phone_number(self):
+        contact =  MemberContact.objects.filter(member_id=self.id).first()
+        if contact:
+            return contact.phone
+        else:
+            return ''
+
+
 
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
