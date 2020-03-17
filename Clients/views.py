@@ -13,7 +13,7 @@ from .forms import *
 from member.models import *
 from groups.models import *
 from projects.models import *
-from .models import Client,ClientDetail,ChurchSMSCredentials
+from .models import Client,ClientDetail,ChurchSMSCredentials,ChurchSiteVisit
 
 from .website.content import WebContent
 
@@ -113,13 +113,14 @@ def set_up_client_database(first_name,last_name,phone_number,email,formated_name
         return change_password_url
 
 '''
-    anvil website and clients' free website
+    anvil website and clients' website
 '''
 def index(request):
     if (request.tenant.schema_name == 'public' or request.tenant.schema_name == 'Public'):
         return render(request, 'index.html')
     else:
         website_content = WebContent(request.tenant.schema_name).content
+        ChurchSiteVisit.objects.create(church=Client.objects.get(schema_name=request.tenant.schema_name))
         return render(request,'clientWebsite/index.html',{'website_content':website_content})
 
 '''

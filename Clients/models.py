@@ -74,7 +74,7 @@ class ClientDetail(models.Model):
     def number_of_sms(self):
         with schema_context(self.client.schema_name):
             today = timezone.now()
-            return SmsReceipients.objects.filter(sms__date__month=today.month,status="Success").count()
+            return SmsReceipients.objects.filter(sms__date__month=today.year,sms__date__year=today.year,status="Success").count()
 
     @property
     def tier(self):
@@ -99,6 +99,15 @@ class ClientDetail(models.Model):
     @property
     def domain_url(self):
         return self.client.domain_url
+
+    @property
+    def site_visitors(self):
+        today = timezone.now()
+        data = {
+                    "this_month":ChurchSiteVisit.objects.filter(timestamp__month=today.month,timestamp__year=today.year).count(),
+                    "last_month":ChurchSiteVisit.objects.filter(timestamp__month=today.month - 1,timestamp__year=today.year).count()
+                }
+        return data
 '''
     client sms service
 '''
@@ -139,3 +148,8 @@ class ChurchPeriodicTheme(models.Model):
 
     class Meta:
         ordering = ('-start',)
+
+class ChurchSiteVisit(models.Model):
+    church = models.ForeignKey(Client,on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    visitorID = models.CharField(max_length=50,blank=True,null=True)

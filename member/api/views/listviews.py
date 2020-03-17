@@ -39,11 +39,9 @@ class MemberFilteredByGender(APIView):
     '''
 
     def get(self, request, gender):
-        if (gender == "M"):
+        if (gender == "M" or gender == "F"):
             members = Member.objects.filter(gender=gender)
-        if (gender == "F"):
-            members = Member.objects.filter(gender=gender)
-        if (gender == "null"):
+        else:
             members = Member.objects.all()
 
         data = MemberSerializer(members, many=True).data
@@ -56,12 +54,15 @@ class MemberFilteredByAge(APIView):
         returns a list of members filtered by age
     '''
 
-    def get(self, request, min_age, max_age):
+    def get(self, request, min_age, max_age,gender):
         current = now().date()
         min_date = date(current.year - min_age, current.month, current.day)
         max_date = date(current.year - max_age, current.month, current.day)
         members = MemberAge.objects.filter(d_o_b__gte=max_date,
                                            d_o_b__lte=min_date)
+
+        if (gender == "M" or gender == "F"):
+            members = members.filter(member__gender=gender)
 
         data = MemberAgeSerializer(members, many=True).data
         return Response(data)

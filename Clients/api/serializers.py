@@ -14,7 +14,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         fields = ('client','first_name','last_name','ID_number','phone_number','domain_url',
                     'city_or_town','location_description','website','church_code',
                     'number_of_members','number_of_sms','created_on','credit',
-                    'apprx_number_of_days_left','tier')
+                    'apprx_number_of_days_left','tier','site_visitors')
 
 class ChurchSMSCredentialsSerializer(serializers.ModelSerializer):
     class Meta:

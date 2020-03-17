@@ -10,7 +10,7 @@ urlpatterns = [
     path('role-list/', listviews.RoleList.as_view()),
     path('filter-by-first_name/<slug:pattern>/', listviews.MemberWhereFirstNameLikePattern.as_view()),
     path('filter-by-gender/<slug:gender>/', listviews.MemberFilteredByGender.as_view()),
-    path('filter-by-age/<int:min_age>/<int:max_age>/', listviews.MemberFilteredByAge.as_view()),
+    path('filter-by-age/<int:min_age>/<int:max_age>/<slug:gender>/', listviews.MemberFilteredByAge.as_view()),
 
     # detail for a user
     path('member/<int:id>/', detailviews.GetMemberWithId.as_view()),
