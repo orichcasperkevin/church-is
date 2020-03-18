@@ -28,6 +28,8 @@ class addMember(APIView):
         last_name = request.data.get("last_name")
         middle_name = request.data.get("middle_name")
         username = first_name.lower() + last_name.lower()
+        username = username.replace("'", "")
+        username = username.replace(".", "")
         email = request.data.get("email")
         gender = request.data.get("gender")
 

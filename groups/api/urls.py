@@ -16,6 +16,7 @@ urlpatterns = [
     path('church-group-where-name-like/<slug:pattern>/',detailviews.GetGroupWhereNameLikePattern.as_view()),
     path('church-groups-for-a-member/<int:id>/', detailviews.GetChurchGroupsAMemberBelongsTo.as_view()),
     path('church-group-members/<int:id>/', detailviews.GetMembersOfChurchGroupWithId.as_view()),
+    path('check-if-member/<int:member_id>/is-in-group/<int:group_id>/', detailviews.CheckIfMemberIsInGroup.as_view()),
 
 
     # urls to add views

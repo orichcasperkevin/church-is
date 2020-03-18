@@ -57,6 +57,17 @@ class GetMembersOfChurchGroupWithId(APIView):
         data = ChurchGroupMembershipSerializer(church_group_membership, many=True).data
         return Response(data)
 
+class CheckIfMemberIsInGroup(APIView):
+    '''
+        get:
+        check if member exists in group
+    '''
+    def get(self,request,member_id,group_id):
+        if ChurchGroupMembership.objects.filter(member__member_id=member_id,church_group_id=group_id).first():#if member exists in group
+            return Response(True)
+        else:
+            return Response(False)
+
 
 class GetChurchGroupsAMemberBelongsTo(APIView):
     '''

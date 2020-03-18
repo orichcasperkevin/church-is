@@ -49,7 +49,7 @@ class AddMemberToGroup(APIView):
     def post(self, request):
         group_id = request.data.get("group_id")
         member_id = request.data.get("member_id")
-        role_id = request.data.get("role_id")
+        role_id = request.data.get("role_id")        
 
         queryset = ChurchGroup.objects.filter(id=group_id)
         group = []
@@ -58,7 +58,7 @@ class AddMemberToGroup(APIView):
         serializer = ChurchGroupSerializer(group)
         church_group = serializer.data
 
-        queryset = Member.objects.filter(id=member_id)
+        queryset = Member.objects.filter(member_id=member_id)
         member = []
         for member in queryset:
             member = member
@@ -74,7 +74,6 @@ class AddMemberToGroup(APIView):
                 role = role
             serializer = RoleSerializer(role)
             role = serializer.data
-            print(role)
         else:
             queryset = Role.objects.filter(id=role_id)
             role = []
@@ -82,7 +81,6 @@ class AddMemberToGroup(APIView):
                 role = role
             serializer = RoleSerializer(role)
             role = serializer.data
-            print(role)
 
 
         data = {'church_group':church_group,'member':member,'role':role}

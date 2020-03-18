@@ -1,15 +1,12 @@
-from rest_framework.views import APIView
 from datetime import date
-
+from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from member.api.serializers import (MemberSerializer, MemberContactSerializer,
-    MemberResidenceSerializer, RoleMemberShipSerializer,MemberMaritalStatusSerializer,
-    FamilyMembershipSerializer, )
-
-from member.models import (Member, MemberContact, MemberAge,
-    MemberResidence, RoleMembership,MemberMaritalStatus, FamilyMembership,)
+from django.contrib.auth.models import User
+from member.api.serializers import *
+from member.models import *
 
 from member.resources.importCSV import CSVLoader
 loader = CSVLoader()
@@ -24,6 +21,13 @@ class GetMemberWithId(APIView):
         member = Member.objects.filter(member__id=id)
         data = MemberSerializer(member, many=True).data
         return Response(data)
+
+    def delete(self, request, id):
+        member = Member.objects.get(member__id=id)
+        member.delete()
+        user = User.objects.get(id=id)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class GetMemberWithUsername(APIView):
