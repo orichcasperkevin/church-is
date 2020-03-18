@@ -18,7 +18,6 @@ class CSVLoader():
 
     def set_base_url(self,base_url):
         self.BASE_URL = base_url.split(':')[0] + "/"
-        print(self.BASE_URL)
 
     def _check_names(self,file_name):
         '''
@@ -408,6 +407,8 @@ class CSVLoader():
                         first_name = names[0]
                         last_name = names[1]
                         username = first_name.lower() + last_name.lower()
+                        username = username.replace("'", "")
+                        username = username.replace(".", "")
                         user_id = self._create_user(first_name,last_name, username, email)
                         member_id = self._create_member(user_id,gender)
 
@@ -416,6 +417,8 @@ class CSVLoader():
                         middle_name = names[1]
                         last_name = names[2]
                         username = first_name.lower() + last_name.lower()
+                        username = username.replace("'", "")
+                        username = username.replace(".", "")
                         user_id = self._create_user(first_name,last_name, username, email)
                         member_id = self._create_member(user_id,gender,middle_name)
 
