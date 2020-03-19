@@ -91,7 +91,7 @@ class CheckCSV(APIView):
     def post(self, request):
             loader.set_base_url(request.get_host())
             file_name = request.data.get('file_name')
-            column_config = request.data.get('column_config')
+            column_config = request.data.get('column_config')            
             try:
                 loader.configure_CSV(file_name,column_config)
                 loader.check_CSV(file_name)

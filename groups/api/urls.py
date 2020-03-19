@@ -22,6 +22,7 @@ urlpatterns = [
     # urls to add views
     path('add-group/', addviews.AddGroup.as_view()),
     path('add-member-to-group/', addviews.AddMemberToGroup.as_view()),
+    path('bulk-add-member-to-group/', addviews.BulkAddMembersToGroup.as_view()),
 
     #stats
     path("group-general-stats/", statviews.MemberCountStats.as_view()),

@@ -89,13 +89,13 @@ class CSVLoader():
                         if (len(data) != 10 and len(data) != 0):
                             CSVLoader.errors.append("incorrect date format at line " + str(line_count + 1) + " use format YYYY-MM-DD")
                         if (len(data) == 10):
-                            date = data.split("-")
-                            year = date[0]
-                            month = date[1]
-                            day = date[2]
                             try:
+                                date = data.split("-")
+                                year = date[0]
+                                month = date[1]
+                                day = date[2]
                                 datetime.datetime(int(year),int(month),int(day))
-                            except ValueError:
+                            except:
                                 CSVLoader.errors.append("incorrect date format at line " + str(line_count + 1) + " use format YYYY-MM-DD")
                     line_count += 1
             if (len(CSVLoader.errors) > 0):
@@ -160,7 +160,7 @@ class CSVLoader():
                 else:
                     for data in status.split(" "):
                         #ignore all white spaces
-                        if (data != "M" and data != "s" and data != "D" and data != "W" and len(data) != 0):
+                        if (data != "M" and data != "S" and data != "D" and data != "W" and len(data) != 0):
                             CSVLoader.errors.append("expected M,S,D or W at line " + str(line_count + 1))
                     line_count += 1
             if (len(CSVLoader.errors) > 0):
@@ -230,7 +230,7 @@ class CSVLoader():
             member = Member.objects.create(member=user,gender=gender)
             return member.id
 
-        if (len(var_tuple) == 3):
+        if (len(var_tuple) > 2):
             middle_name = var_tuple[2]
 
             user = User.objects.get(id = user_id)
@@ -280,7 +280,7 @@ class CSVLoader():
         '''
         initial_dir = os.getcwd()
         os.chdir(self.BASE_URL+"Resources")
-        print(self.BASE_URL)
+
         data = []
         with open(file_name) as csv_file:
             os.chdir(initial_dir)
@@ -338,7 +338,6 @@ class CSVLoader():
         '''
             check if CSV meets the required standards
         '''
-
         if (not self._check_names(file_name)):
             return False
 
@@ -412,7 +411,7 @@ class CSVLoader():
                         user_id = self._create_user(first_name,last_name, username, email)
                         member_id = self._create_member(user_id,gender)
 
-                    if ( len(names) == 3 ):
+                    if ( len(names) > 2 ):
                         first_name = names[0]
                         middle_name = names[1]
                         last_name = names[2]

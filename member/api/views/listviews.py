@@ -27,7 +27,7 @@ class MemberWhereFirstNameLikePattern(APIView):
     '''
 
     def get(self, request, pattern):
-        result = Member.objects.filter(member__first_name__icontains=pattern)
+        result = Member.objects.filter(member__first_name__icontains=pattern)[:20]
         data = MemberSerializer(result, many=True).data
         return Response(data)
 

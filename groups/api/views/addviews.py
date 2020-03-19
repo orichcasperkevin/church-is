@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from groups.api.serializers import GroupOfChurchGroupSerializer, ChurchGroupSerializer, AddMemberToChurchGroupSerializer
-from groups.models import GroupOfChurchGroups, ChurchGroup
+from groups.models import GroupOfChurchGroups, ChurchGroup, ChurchGroupMembership
 from member.api.serializers import RoleSerializer, MemberSerializer
 from member.models import Member, Role
 
@@ -49,7 +49,7 @@ class AddMemberToGroup(APIView):
     def post(self, request):
         group_id = request.data.get("group_id")
         member_id = request.data.get("member_id")
-        role_id = request.data.get("role_id")        
+        role_id = request.data.get("role_id")
 
         queryset = ChurchGroup.objects.filter(id=group_id)
         group = []
@@ -91,3 +91,29 @@ class AddMemberToGroup(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BulkAddMembersToGroup(APIView):
+    '''
+        post:
+        add a member to a group
+    '''
+
+    def post(self, request):
+        group_id = request.data.get("group_id")
+        member_ids = request.data.get("member_ids")
+        role_id = request.data.get("role_id")
+
+        for id in member_ids:
+            if ChurchGroupMembership.objects.filter(member__member_id=id,church_group_id=group_id).first():#if member
+                pass
+            else:
+                try:
+                    member  = Member.objects.get(member_id=id)
+                    group = ChurchGroup.objects.get(id=group_id)
+                    role = Role.objects.get_or_create(role="member")[0]
+                    ChurchGroupMembership.objects.create(church_group=group,member = member,role=role)
+                except:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(status=status.HTTP_201_CREATED)
