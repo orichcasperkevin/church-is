@@ -23,9 +23,6 @@ class MesageFormatter():
         self.message = message
         church = Client.objects.get(schema_name=schema_name)
         self.church_domain = church.domain_url
-        self.church_name = church.name
-        sender = Member.objects.get(member_id=sender_id)
-        self.sender_name = sender.member.first_name +" "+ sender.member.last_name
 
     def formated_message(self):
         return  self.message \
@@ -42,7 +39,7 @@ class addSMS(APIView):
 
     def post(self, request):
 
-        sending_member_id = request.data.get("sending_member_id")
+        sending_member_id = request.data.get("sending_member_id")        
         app = request.data.get("app")
         message = request.data.get("message")
         website = request.data.get("website")

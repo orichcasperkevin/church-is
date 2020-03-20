@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -15,6 +16,11 @@ class GetChurchGroupWithId(APIView):
         church_group = ChurchGroup.objects.filter(id=id)
         data = ChurchGroupSerializer(church_group, many=True).data
         return Response(data)
+
+    def delete(self, request, id):
+        group = ChurchGroup.objects.get(id=id)
+        group.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class GetGroupWhereNameLikePattern(APIView):
     '''

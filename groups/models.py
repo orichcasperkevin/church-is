@@ -72,3 +72,6 @@ class ChurchGroupMembership(models.Model):
     date_joined = models.DateField(auto_now_add=True)
 
     objects = ChurchGroupMembershipModelManager()
+
+    class Meta:
+        ordering = ('-id',)

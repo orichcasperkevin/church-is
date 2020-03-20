@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, detailviews, addviews, statviews
+from .views import listviews, detailviews, addviews, statviews,deleteviews
 
 # TODO add delete views
 urlpatterns = [
@@ -23,6 +23,9 @@ urlpatterns = [
     path('add-group/', addviews.AddGroup.as_view()),
     path('add-member-to-group/', addviews.AddMemberToGroup.as_view()),
     path('bulk-add-member-to-group/', addviews.BulkAddMembersToGroup.as_view()),
+
+    #deleteself.
+    path('remove-members-from-group/',deleteviews.RemoveMembersFromGroup.as_view()),
 
     #stats
     path("group-general-stats/", statviews.MemberCountStats.as_view()),

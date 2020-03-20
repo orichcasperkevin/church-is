@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import listviews, addviews, detailviews, updateviews ,statviews
+from .views import listviews, addviews, detailviews, updateviews ,deleteviews,statviews
 
 # TODO add delete views
 urlpatterns = [
@@ -39,10 +39,14 @@ urlpatterns = [
     path('update-member-residence/',updateviews.UpdateMemberResidence.as_view()),
     path('update-member-contact/',updateviews.UpdateMemberContact.as_view()),
 
+    #BulkDeleteMember
+    path('bulk-delete-members/',deleteviews.BulkDeleteMembers.as_view()),
+
     #statistics
     path('new-member-count/', statviews.NewMembersCount.as_view()),
     path('age-distribution/', statviews.AgeDistribution.as_view()),
     path('marital-status-distribution/', statviews.MaritalStatusDistribution.as_view()),
+
 
 
 ]
