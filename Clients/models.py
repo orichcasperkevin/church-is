@@ -74,7 +74,7 @@ class ClientDetail(models.Model):
     def number_of_sms(self):
         with schema_context(self.client.schema_name):
             today = timezone.now()
-            return SmsReceipients.objects.filter(sms__date__month=today.year,sms__date__year=today.year,status="Success").count()
+            return SmsReceipients.objects.filter(sms__date__month=today.month,sms__date__year=today.year,status="Success").count()
 
     @property
     def tier(self):
