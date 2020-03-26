@@ -3,13 +3,24 @@ from decouple import config
 
 from member.models import MemberContact
 from sms.models import SmsReceipients, Sms
-from Clients.models import ClientDetail, ChurchSMSCredentials
+from Clients.models import Client,ClientDetail, ChurchSMSCredentials
 from tenant_schemas.utils import schema_context
 
-CREDIT_PER_SMS = 1.00
+
 '''
     this class adapts africastalking api to the sms app.
 '''
+class ChurchSysMesageFormatter():
+    '''
+        future proofing so that i can use the class to apply custom formats.
+        Overide this class' formated_message for custon formats
+    '''
+    def __init__(self,message,schema_name):
+        self.message = message
+        self.church = Client.objects.get(schema_name=schema_name)
+
+    def formated_message(self):
+        return  self.message
 
 
 class ChurchSysMessenger():
@@ -42,7 +53,7 @@ class ChurchSysMessenger():
             phone_numbers = []
             for data in receipient_member_ids:
                 try:
-                    contact = MemberContact.objects.get(member__member_id = data)
+                    contact = MemberContact.objects.filter(member__member_id = data)[0]
                     member_phone_number = contact.phone
                     if not member_phone_number:
                         continue

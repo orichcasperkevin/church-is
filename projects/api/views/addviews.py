@@ -44,8 +44,6 @@ class AddPendingConfirmation(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class AddContribution(APIView):
     '''
         post:

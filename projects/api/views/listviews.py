@@ -58,7 +58,7 @@ class ContributionsForAProject(APIView):
     '''
 
     def get(self, request, id):
-        contribution = Contribution.objects.filter(project_id=id).order_by('-recorded_at')[:50]
+        contribution = Contribution.objects.filter(project_id=id).order_by('-recorded_at')[:100]
         data = ContributionSerializer(contribution, many=True).data
         return Response(data)
 

@@ -11,6 +11,7 @@ urlpatterns = [
 
     #add
     path('add-sms/', addviews.addSMS.as_view()),
+    path('add-custom-sms/', addviews.addCustomSMS.as_view()),
 
 ]
 

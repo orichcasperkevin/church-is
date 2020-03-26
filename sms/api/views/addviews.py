@@ -4,9 +4,10 @@ from rest_framework.views import APIView
 
 from member.api.serializers import MemberSerializer
 from member.models import Member
-from Clients.models import Client
+from finance.models import Tithe,Offering
+from projects.models import Pledge,Contribution
 
-from sms.africastalking.at import ChurchSysMessenger
+from sms.africastalking.at import ChurchSysMessenger,ChurchSysMesageFormatter
 from sms.api.serializers import SmsSerializer
 
 def getSerializerData(queryset,serializer_class):
@@ -14,23 +15,59 @@ def getSerializerData(queryset,serializer_class):
     return serializer.data
 
 
-class MesageFormatter():
+class MesageFormatter(ChurchSysMesageFormatter):
     '''
-        future proofing so that i can use the class to apply custom formats.
+        how this message is formated
     '''
-    def __init__(self,message,sender_id,schema_name,context):
-        self.context = context
-        self.message = message
-        church = Client.objects.get(schema_name=schema_name)
-        self.church_domain = church.domain_url
+    def formated_message(self):
+        return  self.message + "\n" + self.church.domain_url
+
+class CustomMesageFormatter(ChurchSysMesageFormatter):
+    '''
+        for sending custom messages after recording member finances
+    '''
+    def __init__(self,message,schema_name,member_id,context):
+        super().__init__(message,schema_name)#initialize message and schema_name
+        self.member = Member.objects.get(member_id=member_id)
+        self.first_name = self.member.member.first_name
+        self.this_amount = ''
+        self.recent_giving = ''
+
+        if context == "Tithe":
+            tithe = Tithe.objects.filter(member=self.member).latest('id')
+            self.this_amount = str(tithe.amount)
+            self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
+            "total this year is : " + str(tithe.total_this_month)
+
+        if context == "Offering":
+            offering = Offering.objects.filter(member=self.member).latest('id')
+            self.this_amount = str(offering.amount)
+            self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
+            "total this year is : " + str(offering.total_this_month)
+
+        if context == "Pledge":
+            pledge = Pledge.objects.filter(member=self.member).latest('id')
+            self.this_amount =  str(pledge.amount) + " towards project " + pledge.project.name
+            self.recent_giving = "amount so far is " + str(pledge.amount_so_far) + ", "+\
+            "remaining amount is "+ str(pledge.remaining_amount) + " (" + str(pledge.percentage_funded) +")"
+
+        if context == "Contribution":
+            contribution = Contribution.objects.filter(member=self.member).latest('id')
+            self.this_amount =  str(contribution.amount) + " towards project " + contribution.project.name
+
+        self.replace_with_member_data()
+
+
+    def replace_with_member_data(self):
+        '''
+            replace data in '[]' with appropriate member data
+        '''
+        self.message = self.message.replace("[name]",self.first_name)
+        self.message = self.message.replace("[amount]",self.this_amount)
+        self.message = self.message.replace("[stats]",self.recent_giving)
 
     def formated_message(self):
-        return  self.message \
-                +   "\n " + self.church_domain
-                #  self.church_name.upper()\
-                 #+   "\n"+ self.context.lower()\
-                 #+   "\n" + self.message + "\n"\
-
+        return  self.message +   "\n\n" + self.church.domain_url
 
 class addSMS(APIView):
     '''
@@ -39,14 +76,14 @@ class addSMS(APIView):
 
     def post(self, request):
 
-        sending_member_id = request.data.get("sending_member_id")        
+        sending_member_id = request.data.get("sending_member_id")
         app = request.data.get("app")
         message = request.data.get("message")
         website = request.data.get("website")
         receipient_member_ids = request.data.get("receipient_member_ids")
 
         schema = request.tenant.schema_name
-        message_formatter = MesageFormatter(message,sending_member_id,schema,app)
+        message_formatter = MesageFormatter(message,schema)
 
         messenger = ChurchSysMessenger(schema,message_formatter)
         receipients = messenger.receipients_phone_numbers(receipient_member_ids)
@@ -62,3 +99,40 @@ class addSMS(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class addCustomSMS(APIView):
+    '''
+        custom sms for every member it is sent to
+    '''
+
+    def post(self, request):
+
+        sending_member_id = request.data.get("sending_member_id")
+        app = request.data.get("app")
+        message = request.data.get("message")
+        website = request.data.get("website")
+        context = request.data.get("context")
+        receipient_member_ids = request.data.get("receipient_member_ids")
+
+        schema = request.tenant.schema_name
+        try:
+            for id in receipient_member_ids:
+
+                message_formatter = CustomMesageFormatter(message,schema,id,context)
+
+                messenger = ChurchSysMessenger(schema,message_formatter)
+                receipient = messenger.receipients_phone_numbers([id])
+                messenger.send_message(receipient,message)
+
+                queryset = Member.objects.filter(member_id=sending_member_id)
+                sending_member = getSerializerData(queryset,MemberSerializer)
+
+                data = {'sending_member': sending_member, 'app': app, 'message': message, 'website': website}
+                serializer = SmsSerializer(data=data)
+                if serializer.is_valid():
+                    created = serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except:# Exception as e:
+            #raise
+            return Response(status=status.HTTP_400_BAD_REQUEST)

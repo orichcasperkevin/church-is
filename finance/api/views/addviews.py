@@ -18,6 +18,7 @@ def getSerializerData(queryset,serializer_class):
     data = queryset[0]
     return serializer_class(data).data
 
+
 class addPendingConfirmation(APIView):
     '''
         add a pending confirmation
@@ -70,7 +71,6 @@ class addTithe(APIView):
         data = {'member': member, 'amount': amount,'service':service,'group': group, 'narration': narration, 'recorded_by': recording_member}
         serializer = AddTitheSerializer(data=data)
 
-        print(data)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -117,7 +117,7 @@ class addOffering(APIView):
         data = {'type':offering_type,'member': member, 'amount': amount, 'date': date, 'anonymous': anonymous,
                 'name_if_not_member': name_if_not_member,
                 'recorded_by': recording_member}
-        
+
         if (serializer_to_use == 0):
             serializer = AddMemberOfferingSerializer(data=data)
         if (serializer_to_use == 1):
