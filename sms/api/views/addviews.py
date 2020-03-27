@@ -85,7 +85,8 @@ class addSMS(APIView):
         schema = request.tenant.schema_name
         message_formatter = MesageFormatter(message,schema)
 
-        messenger = ChurchSysMessenger(schema,message_formatter)
+        messenger = ChurchSysMessenger(schema)
+        messenger.set_message_formatter(message_formatter)
         receipients = messenger.receipients_phone_numbers(receipient_member_ids)
         messenger.send_message(receipients,message)
 
@@ -107,7 +108,6 @@ class addCustomSMS(APIView):
     '''
 
     def post(self, request):
-
         sending_member_id = request.data.get("sending_member_id")
         app = request.data.get("app")
         message = request.data.get("message")
@@ -116,23 +116,25 @@ class addCustomSMS(APIView):
         receipient_member_ids = request.data.get("receipient_member_ids")
 
         schema = request.tenant.schema_name
+        messenger = ChurchSysMessenger(schema)
         try:
             for id in receipient_member_ids:
-
+                #create a message formater.
                 message_formatter = CustomMesageFormatter(message,schema,id,context)
 
-                messenger = ChurchSysMessenger(schema,message_formatter)
+                messenger.set_message_formatter(message_formatter)
                 receipient = messenger.receipients_phone_numbers([id])
                 messenger.send_message(receipient,message)
 
                 queryset = Member.objects.filter(member_id=sending_member_id)
                 sending_member = getSerializerData(queryset,MemberSerializer)
 
-                data = {'sending_member': sending_member, 'app': app, 'message': message, 'website': website}
+                data = {'sending_member': sending_member, 'app': app, 'message': message_formatter.formated_message(), 'website': website}
                 serializer = SmsSerializer(data=data)
                 if serializer.is_valid():
                     created = serializer.save()
+
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except:# Exception as e:
+        except:#Exception as e:
             #raise
             return Response(status=status.HTTP_400_BAD_REQUEST)

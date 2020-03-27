@@ -7,6 +7,7 @@ from sms.models import SmsReceipients
 from sms.api.serializers import SmsReceipientSerializer
 
 from sms.africastalking.at import ChurchSysMessenger
+from .addviews import CustomMesageFormatter
 
 today = date.today()
 day = today.day
@@ -20,10 +21,19 @@ class SmsList(generics.ListCreateAPIView):
     queryset = SmsReceipients.objects.filter(sms__date__year=year,sms__date__month=month).order_by('-sms__date')[:100]
     serializer_class = SmsReceipientSerializer
 
+class ExtractCustomMessage(APIView):
+    def get(self,request):
+        message = request.data.get("message")
+        receipient_id = request.data.get("receipient_id")
+        context = request.data.get("context")
+        schema = request.tenant.schema_name
+        message_formatter = CustomMesageFormatter(message,schema,receipient_id,context)
+        return Response(message_formatter.formated_message())
+
 class SMSCreditBalance(APIView):
     def get(self,request):
         schema = request.tenant.schema_name
-        messenger = ChurchSysMessenger(schema,None)
+        messenger = ChurchSysMessenger(schema)
         data = messenger.get_sms_credit_balance()
 
         return Response(data)

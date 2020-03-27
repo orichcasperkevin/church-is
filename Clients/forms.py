@@ -140,6 +140,9 @@ class EditSMSCredentialsForm(forms.Form):
                                     widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at mpesa acc no'}))
     at_mpesa_paybill = forms.CharField(max_length=20,
                                 widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at mpesa paybill'}))
+    at_sender_id = forms.CharField(max_length=20,
+                                widget = forms.TextInput(attrs={'class':'form-control', 'placeholder':'at sender_id'}))
+
 
 
     def clean(self):

@@ -31,7 +31,7 @@ class SmsReceipientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SmsReceipients
-        fields = ('sms', 'receipient','cost','status')
+        fields = ('id','sms', 'receipient','cost','status')
 
 
 class SmsReceipientGroupsSerializer(serializers.ModelSerializer):

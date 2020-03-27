@@ -24,9 +24,10 @@ class ChurchSysMesageFormatter():
 
 
 class ChurchSysMessenger():
-    def __init__(self, schema, message_formatter):
+    def __init__(self, schema):
         self.schema = schema #what schema to use
-        self.message_formatter = message_formatter
+        self.message_formatter = ChurchSysMesageFormatter('blank',self.schema)
+        self.sender_id = None
         username = ''
         api_key = ''
 
@@ -38,12 +39,16 @@ class ChurchSysMessenger():
             credentials = ChurchSMSCredentials.objects.filter(church__schema_name=schema)[0]
             username = credentials.at_username
             api_key = credentials.at_api_key
+            if not credentials.at_sender_id == 'AFRICASTKNG':
+                self.sender_id = credentials.at_sender_id
 
         #initialize africastalking
         africastalking.initialize(username, api_key)
         self.sms_service = africastalking.SMS
         self.balance_service = africastalking.Application
 
+    def set_message_formatter(self,message_formatter):
+        self.message_formatter = message_formatter
 
     def receipients_phone_numbers(self, receipient_member_ids):
         '''
@@ -62,7 +67,7 @@ class ChurchSysMessenger():
                     if member_phone_number[:3] == '254':
                         member_phone_number = member_phone_number.replace('254','+254',1)
                     phone_numbers.append(member_phone_number)
-                except MemberContact.DoesNotExist:
+                except:
                     pass #TODO add a mechanism to generate this as a send sms error
             return phone_numbers
 
@@ -100,5 +105,6 @@ class ChurchSysMessenger():
         '''
             send message
         '''
+        sender_id = self.sender_id
         message = self.message_formatter.formated_message()
-        self.sms_service.send(message, receipients, callback=self.on_finish)
+        self.sms_service.send(message, receipients, sender_id, callback=self.on_finish)
