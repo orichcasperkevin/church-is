@@ -116,7 +116,9 @@ def set_up_client_database(first_name,last_name,phone_number,email,formated_name
     anvil website and clients' website
 '''
 def index(request):
-    if (request.tenant.schema_name == 'public' or request.tenant.schema_name == 'Public'):
+    if (request.tenant.schema_name == 'public'
+        or request.tenant.schema_name == 'Public'
+        or request.tenant.schema_name == 'methodistpublic'):
         return render(request, 'index.html')
     else:
         website_content = WebContent(request.tenant.schema_name).content

@@ -42,7 +42,6 @@ SHARED_APPS = (
     'django.contrib.admin',
     'djrichtextfield',
     'bootstrap4',
-    'reset_migrations',
 )
 TENANT_APPS = (
     'django.contrib.contenttypes',
@@ -79,8 +78,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'widget_tweaks',
-    'djrichtextfield',
-    'reset_migrations',
+    'djrichtextfield',    
 
     'Clients',
     'member',
