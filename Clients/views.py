@@ -122,7 +122,7 @@ def index(request):
 
     if request.tenant.schema_name == 'methodistpublic':
         return render(request, 'methodistindex.html')
-        
+
     else:
         website_content = WebContent(request.tenant.schema_name).content
         ChurchSiteVisit.objects.create(church=Client.objects.get(schema_name=request.tenant.schema_name))
@@ -132,6 +132,7 @@ def index(request):
     get anvil registration
 '''
 def get_anvil(request):
+    with schema_context('public'):
         if request.method == 'POST':
             get_anvil_form = GetAnvilForm(request.POST)
             #try using the get anvil form
@@ -148,12 +149,12 @@ def get_anvil(request):
                 city_or_town = get_anvil_form.cleaned_data['city_or_town']
                 road_or_street = get_anvil_form.cleaned_data['road_or_street']
                 location_description = get_anvil_form.cleaned_data['location_description']
-
                 website = get_anvil_form.cleaned_data['website']
 
                 formated_name_of_church = ('').join(name_of_church.split(' '))
                 formated_name_of_church = formated_name_of_church.replace('.','')
                 domain_url = formated_name_of_church + "." + request.get_host().split(':')[0]
+
                 tenant = Client(domain_url=domain_url, schema_name=formated_name_of_church,
                              name = name_of_church,paid_until=DEFAULT_DATE, on_trial=False)
                 tenant.save()
@@ -168,6 +169,7 @@ def get_anvil(request):
         return render(request, 'getAnvil.html', {'get_anvil_form':get_anvil_form})
 
 def get_demo(request):
+    with schema_context('public')
         if request.method == 'POST':
             demo_form = TryDemoForm(request.POST)
             #try using the get anvil form
