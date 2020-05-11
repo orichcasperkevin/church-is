@@ -117,9 +117,12 @@ def set_up_client_database(first_name,last_name,phone_number,email,formated_name
 '''
 def index(request):
     if (request.tenant.schema_name == 'public'
-        or request.tenant.schema_name == 'Public'
-        or request.tenant.schema_name == 'methodistpublic'):
+        or request.tenant.schema_name == 'Public'):
         return render(request, 'index.html')
+
+    if request.tenant.schema_name == 'methodistpublic':
+        return render(request, 'methodistindex.html')
+        
     else:
         website_content = WebContent(request.tenant.schema_name).content
         ChurchSiteVisit.objects.create(church=Client.objects.get(schema_name=request.tenant.schema_name))
