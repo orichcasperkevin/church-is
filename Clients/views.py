@@ -169,7 +169,7 @@ def get_anvil(request):
         return render(request, 'getAnvil.html', {'get_anvil_form':get_anvil_form})
 
 def get_demo(request):
-    with schema_context('public')
+    with schema_context('public'):
         if request.method == 'POST':
             demo_form = TryDemoForm(request.POST)
             #try using the get anvil form
