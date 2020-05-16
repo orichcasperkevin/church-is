@@ -2,9 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
-class Member(models.Model):
-    ##fundamental design flaw at the beginning of the project...should've  used OneToOneField
-    member = models.ForeignKey(User, on_delete=models.CASCADE)
+class Member(models.Model):    
+    member = models.OneToOneField(User, on_delete=models.CASCADE)
     middle_name = models.CharField(max_length=15, blank=True,  default=" ")
     GENDER = (
         ('M', 'Male'),
@@ -29,8 +28,6 @@ class Member(models.Model):
         else:
             return ''
 
-
-
 class MemberContact(models.Model):
     id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
@@ -39,7 +36,6 @@ class MemberContact(models.Model):
 
     def __str__(self):
         return str(self.member)
-
 
 class MemberAge(models.Model):
     id = models.AutoField(primary_key=True)
@@ -59,35 +55,40 @@ class MemberMaritalStatus(models.Model):
     member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=2, null=True, choices=STATUS)
 
-
 class MemberResidence(models.Model):
     id = models.AutoField(primary_key=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE, null=True)
-    town = models.CharField(max_length=15, null=True)
-    road = models.CharField(max_length=15, null=True)
-    street = models.CharField(max_length=15, null=True)
-    village_estate = models.CharField(max_length=15, null=True)
-    description = models.CharField(max_length=30, null=True)
+    town = models.CharField(max_length=15, null=True, blank=True)
+    road = models.CharField(max_length=15, null=True,blank=True)
+    street = models.CharField(max_length=15, null=True,blank=True)
+    village_estate = models.CharField(max_length=15, null=True,blank=True)
+    description = models.CharField(max_length=30, null=True,blank=True)
 
     def __str__(self):
         return str(self.member)
-
 
 class Role(models.Model):
     '''
         roles that the members can have in the church
     '''
+    PERMISSION_LEVELS = (
+        (0, 'can view and edit everything'),
+        (1, 'can view and edit finances'),
+        (2, 'can view finances'),
+        (3, 'can view finances stats'),
+        (4, 'can view members'),
+        (5, 'member'),
+    )
     id = models.AutoField(primary_key=True)
-    member_admin = models.BooleanField(default=False)
-    site_admin = models.BooleanField(default=False)
-    group_admin = models.BooleanField(default=False)
-    event_admin = models.BooleanField(default=False)
-    projects_admin = models.BooleanField(default=False)
-    finance_admin = models.BooleanField(default=False)
-    role = models.CharField(max_length=20, default="member")
-    description = models.TextField(max_length=30,blank=True,null=True)
+    permission_level = models.SmallIntegerField(default = 5,choices=PERMISSION_LEVELS)
+    is_group_role = models.BooleanField(default=False)#is this role associated to church groups
+    role = models.CharField(max_length=20, default="member",unique=True)
+    description = models.TextField(max_length=50,blank=True,null=True)
 
-class RoleMembership(models.Model):
+    class Meta:
+        ordering = ('-id',)
+
+class MemberRole(models.Model):
     '''
         a membership roster for used for adding members to a role
     '''

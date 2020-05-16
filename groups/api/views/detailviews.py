@@ -59,7 +59,7 @@ class GetMembersOfChurchGroupWithId(APIView):
         get the members of a particular church group
     '''
     def get(self, request, id):
-        church_group_membership = ChurchGroupMembership.objects.filter(church_group_id=id).order_by('-date_joined')
+        church_group_membership = ChurchGroupMembership.objects.filter(church_group_id=id)
         data = ChurchGroupMembershipSerializer(church_group_membership, many=True).data
         return Response(data)
 

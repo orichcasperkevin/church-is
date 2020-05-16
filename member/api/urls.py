@@ -8,6 +8,7 @@ urlpatterns = [
     # listing
     path('member-list/', listviews.MemberList.as_view()),
     path('role-list/', listviews.RoleList.as_view()),
+    path('members-with-admin-roles/',listviews.GetMembersWithAdminRoles.as_view()),
     path('filter-by-first_name/<slug:pattern>/', listviews.MemberWhereFirstNameLikePattern.as_view()),
     path('filter-by-gender/<slug:gender>/', listviews.MemberFilteredByGender.as_view()),
     path('filter-by-age/<int:min_age>/<int:max_age>/<slug:gender>/', listviews.MemberFilteredByAge.as_view()),

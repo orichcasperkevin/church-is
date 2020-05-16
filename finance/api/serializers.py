@@ -30,64 +30,22 @@ class OfferingTypeSerializer(serializers.ModelSerializer):
         fields = ('id','name','description')
 
 class OfferingSerializer(serializers.ModelSerializer):
-    member = MemberSerializer()
-    recorded_by = MemberSerializer()
+    user_id = serializers.IntegerField(source='member.member.id',default=None)
+    member_full_name = serializers.CharField(source='member.member.get_full_name',default=None)
+    member_gender = serializers.CharField(source='member.gender',default=None)
+
+    service_type_name = serializers.CharField(source='service.type.name',default=None)
+    service_date = serializers.DateField(source='service.date',default=None)
+
+    group_id = serializers.IntegerField(source='group.id',default=None)
+    group_name = serializers.CharField(source='group.name',default=None)
 
     class Meta:
         model = Offering
         fields = ('type','amount', 'date', 'anonymous', 'name_if_not_member','group', 'member',
-                  'service','narration','recorded_by', 'total_this_month', 'total_this_year')
-        depth = 2
-        extra_kwargs = {'id': {'read_only': True}}
-
-
-
-class AddMemberOfferingSerializer(serializers.ModelSerializer):
-    type = OfferingTypeSerializer()
-    member = MemberSerializer()
-    recorded_by = MemberSerializer()
-
-    class Meta:
-        model = Offering
-        fields = ('type','amount', 'date', 'anonymous', 'name_if_not_member', 'member',
-                  'narration','recorded_by', 'total_this_month', 'total_this_year')
-        depth = 2
-        extra_kwargs = {'id': {'read_only': True}}
-
-    def create(self, validated_data):
-        offering_type_data = validated_data.pop('type')
-        offering_type = {}
-        offering_type = OfferingType.objects.filter(name=offering_type_data["name"]).first()
-
-        member_data = validated_data.pop('member')
-        member = {}
-        member = Member.objects.get(member_id=member_data["member"]["id"])
-
-        recording_member_data = validated_data.pop('recorded_by')
-        recording_member = {}
-        recording_member = Member.objects.get(member_id=recording_member_data["member"]["id"])
-
-        offering = Offering.objects.create(type=offering_type, member=member, recorded_by=recording_member, **validated_data)
-        return offering
-
-
-
-class addAnonymousOfferingSerializer(serializers.ModelSerializer):
-    recorded_by = MemberSerializer()
-
-    class Meta:
-        model = Offering
-        fields = ('type','amount', 'date', 'group','anonymous', 'name_if_not_member',
-                  'narration', 'recorded_by', 'total_this_month', 'total_this_year')
-        depth = 2
-
-    def create(self, validated_data):
-        recording_member_data = validated_data.pop('recorded_by')
-        recording_member = {}
-        recording_member = Member.objects.get(member_id=recording_member_data["member"]["id"])
-
-        offering = Offering.objects.create(recorded_by=recording_member, **validated_data)
-        return offering
+                  'service','narration','recorded_by', 'total_this_month', 'total_this_year',
+                  'user_id','member_full_name','member_gender','service_type_name',
+                  'service_date','group_id','group_name')
 
 class AddServiceOfferingSerializer(serializers.ModelSerializer):
     '''
@@ -110,25 +68,28 @@ class AddServiceOfferingSerializer(serializers.ModelSerializer):
 
 
 class TitheSerializer(serializers.ModelSerializer):
-    member = MemberSerializer()
+    user_id = serializers.IntegerField(source='member.member.id',default=None)
+    member_full_name = serializers.CharField(source='member.member.get_full_name',default=None)
+    member_gender = serializers.CharField(source='member.gender',default=None)
 
+    service_type_name = serializers.CharField(source='service.type.name',default=None)
+    service_date = serializers.DateField(source='service.date',default=None)
+
+    group_id = serializers.IntegerField(source='group.id',default=None)
+    group_name = serializers.CharField(source='group.name',default=None)
     class Meta:
         model = Tithe
-        fields = ('member', 'amount', 'date','service','group', 'narration', 'recorded_by', 'total_this_month', 'total_this_year')
-        depth = 2
-        extra_kwargs = {'id': {'read_only': True}}
+        fields = ('member', 'amount', 'date','service','group', 'narration',
+                  'recorded_by', 'total_this_month', 'total_this_year',
+                  'user_id','member_full_name','member_gender','service_type_name',
+                  'service_date','group_id','group_name')
 
-class AddTitheSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tithe
-        fields = ('member', 'amount', 'date','service','group', 'narration', 'recorded_by', 'total_this_month', 'total_this_year')
 
 class IncomeTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncomeType
         fields = ('id', 'type_name', 'description', 'total_this_month', 'total_this_year')
         extra_kwargs = {'id': {'read_only': True}}
-
 
 class IncomeSerializer(serializers.ModelSerializer):
     recorded_by = MemberSerializer()

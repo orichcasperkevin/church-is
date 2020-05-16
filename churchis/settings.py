@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import os
+from datetime import timedelta
 
 import dj_database_url
 from decouple import config, Csv
@@ -78,7 +79,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'widget_tweaks',
-    'djrichtextfield',    
+    'djrichtextfield',
 
     'Clients',
     'member',
@@ -201,6 +202,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5)
 }
 
 DJRICHTEXTFIELD_CONFIG = {

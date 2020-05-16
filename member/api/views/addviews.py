@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from member.api.serializers import *
-from member.models import (Member, Role,)
+from member.models import Member, Role
 from sms.africastalking.at import ChurchSysMessenger
 
 from member.resources.importCSV import CSVLoader
@@ -48,11 +48,7 @@ class addMember(APIView):
             user_id = user.id
 
         queryset = User.objects.filter(id=user_id)
-        member = []
-        for member in queryset:
-            member = member
-        serializer = UserSerializer(member)
-        member = serializer.data
+        member = getSerializerData(queryset,UserSerializer)
 
         data = {'member': member, 'gender': gender,'middle_name':middle_name}
         serializer = CreateMemberSerializer(data=data)
@@ -91,7 +87,7 @@ class CheckCSV(APIView):
     def post(self, request):
             loader.set_base_url(request.get_host())
             file_name = request.data.get('file_name')
-            column_config = request.data.get('column_config')            
+            column_config = request.data.get('column_config')
             try:
                 loader.configure_CSV(file_name,column_config)
                 loader.check_CSV(file_name)
@@ -128,8 +124,7 @@ class AddMemberContact(APIView):
 
     def post(self, request):
 
-        member_id = request.data.get("member_id")
-        queryset = Member.objects.filter(member_id=member_id)
+        queryset = Member.objects.filter(member_id=request.data.get("member_id"))
         member = getSerializerData(queryset,MemberSerializer)
 
         postal = request.data.get("postal_address")
@@ -142,14 +137,15 @@ class AddMemberContact(APIView):
         serializer = MemberContactSerializer(data=data)
         if serializer.is_valid():
             created = serializer.save()
-
-            member = Member.objects.get(member_id=member_id)
-            user = User.objects.get(id=member.member.id)
-            user.email = email
+            #create email
+            if email != None and email != '':
+                member = Member.objects.get(member_id=member_id)
+                user = User.objects.get(id=member.member.id)
+                user.email = email
+                user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class AddMemberD_O_B(APIView):
     '''
@@ -161,6 +157,7 @@ class AddMemberD_O_B(APIView):
 
         d_o_b = request.data.get("d_o_b")
         member_id = request.data.get("member_id")
+
         queryset = Member.objects.filter(member_id=member_id)
         member = getSerializerData(queryset,MemberSerializer)
 
@@ -172,7 +169,6 @@ class AddMemberD_O_B(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class AddMemberResidence(APIView):
     '''
@@ -195,27 +191,25 @@ class AddMemberResidence(APIView):
         data = {'member': member, 'town': town, 'road': road, 'street': street,
                 'village_estate': village_estate, 'description': description}
 
-        serializer = MemberResidenceSerializer(data=data)
+        serializer = MemberResidenceSerializer(data=data,partial=True)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class AddMemberMaritalStatus(APIView):
     '''
         post:
         add member marital status
     '''
-
     def post(self, request):
 
         marital_status = request.data.get("status")
         member_id = request.data.get("member_id")
         queryset = Member.objects.filter(member_id=member_id)
         member = getSerializerData(queryset,MemberSerializer)
-
 
         data = {'member': member, 'status': marital_status}
 
@@ -226,56 +220,18 @@ class AddMemberMaritalStatus(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class AddRoleMemberShip(APIView):
     '''
         post:
         add member role
     '''
-
     def post(self, request):
-        schema = request.get_host().split('.')[0]
-        messenger = ChurchSysMessenger(schema)
-        member_id = request.data.get("member_id")
 
-        queryset = Member.objects.filter(member_id=member_id)
-        marital_status = request.data.get("status")
-
-        role_id = request.data.get("role_id")
-        queryset = Role.objects.filter(id=role_id)
-        role = getSerializerData(queryset,RoleSerializer)
-
-        data = {'member': member, 'role': role}
-
-        serializer = RoleMemberShipSerializer(data=data)
+        serializer = MemberRoleSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             created = serializer.save()
-
-            role = Role.objects.get(id=role_id)
-            member = Member.objects.get(member_id=member_id)
-            user = User.objects.get(id=member.member.id)
-            member_id = []
-            starter_password = STARTER_PASSWORD
-            message = 'You have been made admin of the Church MS, use ' + starter_password + ' as your starting password and '+  user.username + ' as your username'
-
-            if (role.site_admin
-                or role.member_admin
-                or role.group_admin
-                or role.event_admin
-                or role.projects_admin
-                or role.finance_admin):
-                if (not user.check_password(user.password)):
-                    member_id.append(member.member.id)
-                    receipient = messenger.receipients_phone_numbers(member_id)
-                    user.set_password(starter_password)
-                    if (len(receipient)):
-                        messenger.send_message(receipient, message)
-                    user.save()
-
-                else:
-                    pass
-            else:
-                pass
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

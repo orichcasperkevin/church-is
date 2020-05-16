@@ -29,7 +29,6 @@ class GetMemberWithId(APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class GetMemberWithUsername(APIView):
     '''
         get:
@@ -42,7 +41,6 @@ class GetMemberWithUsername(APIView):
         data = MemberSerializer(member, many=True).data
         return Response(data)
 
-
 class GetContactForMemberWithId(APIView):
     '''
         get:
@@ -54,7 +52,6 @@ class GetContactForMemberWithId(APIView):
 
         data = MemberContactSerializer(contact, many=True).data
         return Response(data)
-
 
 class GetAgeForMemberWithId(APIView):
     '''
@@ -79,8 +76,6 @@ class GetAgeForMemberWithId(APIView):
             data = [None]
             return Response(data)
 
-
-
 class GetResidenceForMemberWithId(APIView):
     '''
         get:
@@ -92,7 +87,6 @@ class GetResidenceForMemberWithId(APIView):
 
         data = MemberResidenceSerializer(residence, many=True).data
         return Response(data)
-
 
 class GetMaritalStatusForMemberWithId(APIView):
     '''
@@ -106,7 +100,6 @@ class GetMaritalStatusForMemberWithId(APIView):
         data = MemberMaritalStatusSerializer(residence, many=True).data
         return Response(data)
 
-
 class GetFamilyForMemberWithId(APIView):
     '''
         get:
@@ -118,7 +111,6 @@ class GetFamilyForMemberWithId(APIView):
 
         data = FamilyMembershipSerializer(family_membership, many=True).data
         return Response(data)
-
 
 class GetRolesForMemberWithId(APIView):
     '''

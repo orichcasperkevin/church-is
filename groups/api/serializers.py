@@ -8,63 +8,22 @@ class GroupOfChurchGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupOfChurchGroups
         fields = ('id', 'name', 'description', 'number_of_groups')
-        depth = 2
         extra_kwargs = {'id': {'read_only': True}}
+
 
 class ChurchGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChurchGroup
-        fields = ('id', 'name', 'description', 'number_of_members',)
-        depth = 2
+        fields = ('id', 'group', 'name', 'description','number_of_members')
         extra_kwargs = {'id': {'read_only': True}}
 
-class AddChurchGroupSerializer(serializers.ModelSerializer):
-    group = GroupOfChurchGroupSerializer()
-    class Meta:
-        model = ChurchGroup
-        fields = ('id', 'group', 'name', 'description')
-        extra_kwargs = {'id': {'read_only': True}}
-
-    def create(self, validated_data):
-        group = {}
-        group_data = validated_data.pop('group')
-        group = GroupOfChurchGroups.objects.get(**group_data)
-
-        group = ChurchGroup.objects.create(group=group, **validated_data)
-        return group
 
 class ChurchGroupMembershipSerializer(serializers.ModelSerializer):
-    member = MemberSerializer()
+    user_id = serializers.IntegerField(source='member.member.id')
+    member_full_name = serializers.CharField(source='member.member.get_full_name')
+    member_gender = serializers.CharField(source='member.gender')
+    role_name = serializers.CharField(source='role.role')
     class Meta:
         model = ChurchGroupMembership
-        fields = ('id', 'church_group', 'member', 'role', 'date_joined')
-        depth = 1
-        extra_kwargs = {'id': {'read_only': False}}
-
-
-class AddMemberToChurchGroupSerializer(serializers.ModelSerializer):
-    member = MemberSerializer()
-    church_group = ChurchGroupSerializer()
-    role = RoleSerializer()
-
-    class Meta:
-        model = ChurchGroupMembership
-        depth = 1
-        fields = ('church_group', 'member', 'role')
-
-    def create(self, validated_data):
-        church_group = {}
-        church_group_data = validated_data.pop('church_group')
-        church_group = ChurchGroup.objects.get(**church_group_data)
-
-        role = {}
-        role_data = validated_data.pop('role')
-        role = Role.objects.get(**role_data)
-
-        member = {}
-        member_data = validated_data.pop('member')
-        member = Member.objects.get(id=member_data['id'])
-
-        church_group_membership = ChurchGroupMembership.objects.create(church_group=church_group, member=member,
-                                                                       role=role, **validated_data)
-        return church_group_membership
+        fields = ('id', 'church_group', 'member', 'role', 'date_joined',
+                  'user_id','member_full_name','member_gender','role_name')

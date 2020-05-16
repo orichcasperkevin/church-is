@@ -53,22 +53,11 @@ class addTithe(APIView):
     '''
 
     def post(self, request):
+        data = request.data
+        if data['member']:
+            data['member'] = Member.objects.get(member_id=data['member']).id or None
+        data['recorded_by'] = Member.objects.get(member_id=data['recorded_by']).id
 
-        member_id = request.data.get("member_id")
-        member = Member.objects.filter(member_id=member_id).first()
-        if member is not None:
-            member = member.id
-
-        recording_member_id = request.data.get("recording_member_id")
-        recording_member = Member.objects.get(member_id=recording_member_id)
-        recording_member = recording_member.id
-
-        service = request.data.get("service")
-        group = request.data.get("group")
-        amount = request.data.get("amount")
-        narration = request.data.get("narration")
-
-        data = {'member': member, 'amount': amount,'service':service,'group': group, 'narration': narration, 'recorded_by': recording_member}
         serializer = AddTitheSerializer(data=data)
 
         if serializer.is_valid():
@@ -82,47 +71,13 @@ class addOffering(APIView):
     '''
         add a offering by a member.
     '''
-
     def post(self, request):
-        serializer_to_use = 0
-        '''offering type'''
-        offering_type = None
-        offering_type_id = request.data.get("offering_type")
-        if not offering_type:
-            queryset = OfferingType.objects.get_or_create(name="general offering",description="general offering")
-            offering_type = getSerializerData(queryset,OfferingTypeSerializer)
-        else:
-            queryset = OfferingType.objects.filter(id=offering_type_id)
-            offering_type = getSerializerData(queryset,OfferingTypeSerializer)
+        data = request.data
+        if data['member']:
+            data['member'] = Member.objects.get(member_id=data['member']).id
+        data['recorded_by'] = Member.objects.get(member_id=data['recorded_by']).id
 
-        '''member'''
-        member_id = request.data.get("member_id")
-        if (member_id != None):
-            queryset = Member.objects.filter(member_id=member_id)
-            member = getSerializerData(queryset,MemberSerializer)
-        else:
-            member = None
-            serializer_to_use = 1
-
-        recording_member_id = request.data.get("recording_member_id")
-        queryset = Member.objects.filter(member_id=recording_member_id)
-        recording_member = getSerializerData(queryset,MemberSerializer)
-
-        name_if_not_member = request.data.get("name_if_not_member")
-        date = request.data.get("date")
-        anonymous = request.data.get("anonymous")
-        amount = request.data.get("amount")
-        narration = request.data.get("narration")
-
-        data = {'type':offering_type,'member': member, 'amount': amount, 'date': date, 'anonymous': anonymous,
-                'name_if_not_member': name_if_not_member,
-                'recorded_by': recording_member}
-
-        if (serializer_to_use == 0):
-            serializer = AddMemberOfferingSerializer(data=data)
-        if (serializer_to_use == 1):
-            serializer = addAnonymousOfferingSerializer(data=data)
-
+        serializer = OfferingSerializer(data=data,partial=True)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

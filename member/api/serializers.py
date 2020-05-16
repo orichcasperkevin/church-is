@@ -2,9 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from rest_framework import serializers
 
-from member.models import (Member, MemberContact, MemberAge, MemberResidence,
-                           Role, RoleMembership, MemberMaritalStatus, Family, FamilyMembership, CSV)
-
+from member.models import *
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,7 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 class MemberSerializer(serializers.ModelSerializer):
     member = UserSerializer()
-
     class Meta:
         model = Member
         fields = ('id', 'member', 'gender','middle_name','phone_number')
@@ -139,34 +136,18 @@ class FamilyMembershipSerializer(serializers.ModelSerializer):
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = (
-        'id', 'role', 'description', 'member_admin', 'site_admin', 'group_admin', 'projects_admin', 'event_admin',
-        'finance_admin')
+        fields = ('id', 'role','permission_level','is_group_role', 'description')
         extra_kwargs = {'id': {'read_only': True}}
 
 
-class RoleMemberShipSerializer(serializers.ModelSerializer):
-    member = MemberSerializer()
-    role = RoleSerializer()
-
+class MemberRoleSerializer(serializers.ModelSerializer):
+    member_full_name = serializers.CharField(source='member.member.get_full_name')
+    role_name = serializers.CharField(source='role.role')
+    role_description = serializers.CharField(source='role.description')
     class Meta:
-        model = RoleMembership
-        fields = ('id', 'member', 'role')
-        depth = 1
-        extra_kwargs = {'id': {'read_only': True}}
-
-    def create(self, validated_data):
-        member_data = validated_data.pop('member')
-        member = {}
-        member = Member.objects.get(member_id=member_data["member"]["id"])
-
-        role = {}
-        role_data = validated_data.pop('role')
-        role = Role.objects.get(**role_data)
-
-        role_membership = RoleMembership.objects.create(member=member, role=role, **validated_data)
-
-        return role_membership
+        model = MemberRole
+        fields = ('id', 'member', 'role',
+                  'role_name','role_description','member_full_name')
 
 class CSVFileSerializer(serializers.ModelSerializer):
     class Meta:

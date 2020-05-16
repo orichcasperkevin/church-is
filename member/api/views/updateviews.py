@@ -14,7 +14,6 @@ def updateModelField(model_object,field,data):
     else:
         pass
 
-
 class UpdateMemberData(APIView):
     '''
         patch:
@@ -55,7 +54,7 @@ class UpdateMemberContact(APIView):
         member  = Member.objects.get(member__id=member_id)
         try:
             user = User.objects.get(id=member_id)
-            member_contact = MemberContact.objects.get_or_create(member=member)[0]            
+            member_contact = MemberContact.objects.get_or_create(member=member)[0]
 
             updateModelField(user,'email',request.data.get("email"))
             updateModelField(member_contact,'phone',request.data.get("phone"))
