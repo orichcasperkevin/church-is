@@ -5,6 +5,12 @@ from .views import listviews, addviews, detailviews, updateviews ,deleteviews,st
 
 # TODO add delete views
 urlpatterns = [
+    #auth
+    path('reset-password/', addviews.ResetPassword.as_view()),
+    path('change-credentials/',addviews.ChangeUsernameAndPasswordView.as_view()),
+    path('check-if-username-is-taken/',addviews.CheckIfUsernameIsTakenView.as_view()),
+    path('get-permision-level/<int:id>/',detailviews.GetPermissionLevel.as_view()),
+
     # listing
     path('member-list/', listviews.MemberList.as_view()),
     path('role-list/', listviews.RoleList.as_view()),

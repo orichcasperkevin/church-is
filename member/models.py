@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
-class Member(models.Model):    
+class Member(models.Model):
     member = models.OneToOneField(User, on_delete=models.CASCADE)
     middle_name = models.CharField(max_length=15, blank=True,  default=" ")
     GENDER = (
@@ -94,6 +94,8 @@ class MemberRole(models.Model):
     '''
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ('-id',)
 
 class Family(models.Model):
     '''
@@ -134,6 +136,7 @@ class MemberNote(models.Model):
     member = models.ForeignKey(Member,on_delete=models.CASCADE, related_name='mote_for')
     note_by = models.ForeignKey(Member,on_delete=models.CASCADE, related_name='note_by')
     note = models.CharField(max_length=160)
+
 
 class CSV(models.Model):
     '''

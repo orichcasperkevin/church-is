@@ -1,7 +1,9 @@
 import random
 import os
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
@@ -17,6 +19,50 @@ STARTER_PASSWORD = "changeMe"
 def getSerializerData(queryset,serializer_class):
     data = queryset[0]
     return serializer_class(data).data
+
+class ResetPassword(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self,request):        
+        user = User.objects.get(id=request.data.get('user_id'))
+        user.set_password(STARTER_PASSWORD)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CheckIfUsernameIsTakenView(APIView):
+    def post(self,request):
+        username = request.data.get('username')
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            #user with this username does not exist
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'error':'user with that username exists'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+class ChangeUsernameAndPasswordView(APIView):
+    def post(self,request):
+        old_username = request.data.get('old_username')
+        old_password = request.data.get('old_password')
+
+        user = authenticate(username=old_username, password=old_password)
+
+        if user is not None:
+            # A backend authenticated the credentials
+            new_password = request.data.get('new_password')
+            if new_password is not None:#user has set a new password
+                user.set_password(new_password)
+                user.save()
+
+            new_username = request.data.get('new_username')
+            if new_username is not None:#user has set a new username.
+                user.username = new_username
+                user.save()
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'error':'Authentication failed'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class addMember(APIView):
     '''
@@ -196,7 +242,6 @@ class AddMemberResidence(APIView):
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AddMemberMaritalStatus(APIView):
@@ -226,12 +271,16 @@ class AddRoleMemberShip(APIView):
         add member role
     '''
     def post(self, request):
-
-        serializer = MemberRoleSerializer(data=request.data)
-        print(serializer)
+        data = request.data
+        data['member'] = Member.objects.get(member_id=data['member']).id
+        serializer = MemberRoleSerializer(data=data,partial=True)
         if serializer.is_valid():
             created = serializer.save()
+            role = Role.objects.get(id=serializer.data['role'])
+            if role.permission_level < 5:
+                user = User.objects.get(id=serializer.data['user_id'])
+                user.set_password(STARTER_PASSWORD)
+                user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

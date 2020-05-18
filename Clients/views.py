@@ -107,8 +107,8 @@ def set_up_client_database(first_name,last_name,phone_number,email,formated_name
 
         member = Member.objects.create(member_id = user_id)
         MemberContact.objects.create(member=member, phone = phone_number)
-        Role.objects.create(role='member')
-        Role.objects.create(role='group admin',group_admin=True)
+        Role.objects.create(role='member',is_group_role=True)
+        Role.objects.create(role='group admin',is_group_role=True)
         change_password_url = '/change-password/' + username + '/'+ formated_name_of_church + '/'
         return change_password_url
 

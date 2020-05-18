@@ -141,13 +141,14 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class MemberRoleSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(source='member.member.id')
     member_full_name = serializers.CharField(source='member.member.get_full_name')
     role_name = serializers.CharField(source='role.role')
     role_description = serializers.CharField(source='role.description')
     class Meta:
         model = MemberRole
         fields = ('id', 'member', 'role',
-                  'role_name','role_description','member_full_name')
+                  'user_id','role_name','role_description','member_full_name')
 
 class CSVFileSerializer(serializers.ModelSerializer):
     class Meta:

@@ -37,11 +37,13 @@ class AddMemberToGroup(APIView):
     '''
 
     def post(self, request):
-
-        serializer = ChurchGroupMembershipSerializer(data=request.data,partial=True)
+        data = request.data        
+        data['member'] = Member.objects.get(member_id=data['member']).id
+        if data['role'] == None:
+            data['role'] = Role.objects.get_or_create(role='member')[0].id
+        serializer = ChurchGroupMembershipSerializer(data=data,partial=True)
         if serializer.is_valid():
             created = serializer.save()
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

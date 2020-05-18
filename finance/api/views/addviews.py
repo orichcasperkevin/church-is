@@ -55,10 +55,10 @@ class addTithe(APIView):
     def post(self, request):
         data = request.data
         if data['member']:
-            data['member'] = Member.objects.get(member_id=data['member']).id or None
+            data['member'] = Member.objects.get(member_id=data['member']).id
         data['recorded_by'] = Member.objects.get(member_id=data['recorded_by']).id
 
-        serializer = AddTitheSerializer(data=data)
+        serializer = TitheSerializer(data=data,partial=True)        
 
         if serializer.is_valid():
             created = serializer.save()

@@ -22,8 +22,10 @@ class ChurchGroupMembershipSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='member.member.id')
     member_full_name = serializers.CharField(source='member.member.get_full_name')
     member_gender = serializers.CharField(source='member.gender')
+
+    church_group_name = serializers.CharField(source='church_group.name')
     role_name = serializers.CharField(source='role.role')
     class Meta:
         model = ChurchGroupMembership
         fields = ('id', 'church_group', 'member', 'role', 'date_joined',
-                  'user_id','member_full_name','member_gender','role_name')
+                  'user_id','member_full_name','member_gender','role_name','church_group_name')

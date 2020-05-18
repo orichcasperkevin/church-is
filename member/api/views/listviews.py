@@ -111,10 +111,15 @@ class RoleList(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self,request):
-        role = Role.objects.get(id=request.data.get('id'))
+        role = Role.objects.get(id=request.data.get('role_id'))
         serializer = RoleSerializer(instance=role,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request):
+        role = Role.objects.get(id=request.data.get('role_id'))
+        role.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

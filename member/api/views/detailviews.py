@@ -1,5 +1,5 @@
 from datetime import date
-
+from django.db.models import Min
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -28,6 +28,15 @@ class GetMemberWithId(APIView):
         user = User.objects.get(id=id)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class GetPermissionLevel(APIView):
+    def get(self, request, id):
+        member = Member.objects.get(member__id=id)
+        access_level = MemberRole.objects.filter(member=member)\
+                                         .aggregate(
+                                            level = Min('role__permission_level')
+                                          )
+        return Response(access_level)
 
 class GetMemberWithUsername(APIView):
     '''
