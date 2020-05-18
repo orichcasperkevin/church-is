@@ -103,7 +103,7 @@ class RoleList(APIView):
         return Response(data)
 
     def post(self,request):
-        serializer = RoleSerializer(data=request.data)
+        serializer = RoleSerializer(data=request.data,partial=True)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
