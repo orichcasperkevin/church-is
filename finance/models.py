@@ -39,6 +39,9 @@ class PendingConfirmation(models.Model):
             self.delete()
             return Tithe.objects.filter(id=tithe.id)
 
+class ModeOfPayment(models.Model):
+    name = models.CharField(max_length=50)
+
 class OfferingType(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=160,blank=True,null=True)
@@ -48,17 +51,19 @@ class OfferingType(models.Model):
 
 class Offering(models.Model):
     type = models.ForeignKey(OfferingType, on_delete=models.CASCADE, null=True, blank=True)
+    mode_of_payment = models.ForeignKey(ModeOfPayment,on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    date = models.DateField(help_text='The Date of the offering collection')
+    date = models.DateField()
     anonymous = models.BooleanField(default=False)
     name_if_not_member = models.CharField(max_length=20, blank=True, null=True)
     group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
     # the service this offering was collected from
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='offering_recorded_by')
+
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     @property
     def total_this_month(self):
@@ -95,12 +100,15 @@ class Tithe(models.Model):
         tithe collected for a member
     '''
     member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True,blank=True)
+    mode_of_payment = models.ForeignKey(ModeOfPayment,on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
     group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField()
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='tithe_recorded_by')
+
+    timestamp = models.DateTimeField(auto_now_add=True,null=True)
 
     @property
     def total_this_month(self):
@@ -132,7 +140,6 @@ class Tithe(models.Model):
                             .aggregate(Sum('amount'))
             return sum['amount__sum'] or 0
 
-
 class IncomeType(models.Model):
     id = models.AutoField(primary_key=True)
     type_name = models.CharField(max_length=100)
@@ -151,9 +158,9 @@ class IncomeType(models.Model):
         sum = Income.objects.filter(type_id=self.id, date__year=year).aggregate(Sum('amount'))
         return sum['amount__sum'] or 0
 
-
 class Income(models.Model):
     type = models.ForeignKey(IncomeType, on_delete=models.CASCADE)
+    mode_of_payment = models.ForeignKey(ModeOfPayment,on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(auto_now_add=True)
     narration = models.TextField(blank=True)
@@ -191,6 +198,7 @@ class ExpenditureType(models.Model):
 
 class Expenditure(models.Model):
     type = models.ForeignKey(ExpenditureType, on_delete=models.CASCADE)
+    mode_of_payment = models.ForeignKey(ModeOfPayment,on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(auto_now_add=True)
     narration = models.TextField(blank=True)

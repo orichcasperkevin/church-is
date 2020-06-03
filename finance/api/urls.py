@@ -7,6 +7,7 @@ from .views import listviews, addviews, updateviews, statviews, fileviews
 urlpatterns = [
     # listing
     path('pending-confirmations/', listviews.PendingConfirmations.as_view()),
+    path('modes-of-payment/',listviews.ModesOfPayment.as_view()),
     path('income-type-list/', listviews.IncomeTypeList.as_view()),
     path('income-type/<int:id>/', listviews.IncomeTypeOfID.as_view()),
     path('income-of-type/<int:id>/', listviews.IncomeOfType.as_view()),
@@ -34,7 +35,6 @@ urlpatterns = [
     path('add-income/', addviews.addIncome.as_view()),
     path('add-expenditure/', addviews.addExpenditure.as_view()),
     path('add-pending-confirmation/', addviews.addPendingConfirmation.as_view()),
-
 
     #update.
     path('confirm-payment/<int:pending_confirmation_id>/', updateviews.ConfirmPayment.as_view()),

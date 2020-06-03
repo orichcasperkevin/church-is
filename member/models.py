@@ -80,13 +80,6 @@ class Role(models.Model):
         (5, 'member'),
     )
     id = models.AutoField(primary_key=True)
-    member_admin = models.BooleanField(default=True)
-    site_admin = models.BooleanField(default=True)
-    group_admin = models.BooleanField(default=True)
-    event_admin = models.BooleanField(default=True)
-    projects_admin = models.BooleanField(default=True)
-    finance_admin = models.BooleanField(default=True)
-
     permission_level = models.SmallIntegerField(default = 5,choices=PERMISSION_LEVELS)
     is_group_role = models.BooleanField(default=False)#is this role associated to church groups
     role = models.CharField(max_length=20, default="member",unique=True)

@@ -24,6 +24,11 @@ class PendingConfirmationSerializer(serializers.ModelSerializer):
         pending_confirmation = PendingConfirmation.objects.create(confirming_for=member,**validated_data)
         return pending_confirmation
 
+class ModeOfPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModeOfPayment
+        fields = ('id','name')
+
 class OfferingTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = OfferingType

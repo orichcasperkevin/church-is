@@ -9,8 +9,18 @@ class PendingConfirmations(generics.ListCreateAPIView):
     queryset = PendingConfirmation.objects.all()
     serializer_class = PendingConfirmationSerializer
 
+class ModesOfPayment(generics.ListCreateAPIView):
+    '''
+        a list of all modes of payment
+    '''
+    queryset = ModeOfPayment.objects.all()
+    serializer_class = ModeOfPaymentSerializer
+
 class OfferingType(generics.ListCreateAPIView) :
-    queryset = OfferingType.objects.all()
+    '''
+        a list of all offering types.
+    '''
+    queryset = OfferingType.objects.all().order_by('-id')
     serializer_class = OfferingTypeSerializer
 
 class IncomeTypeList(generics.ListCreateAPIView):
