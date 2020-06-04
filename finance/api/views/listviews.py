@@ -20,7 +20,7 @@ class OfferingType(generics.ListCreateAPIView) :
     '''
         a list of all offering types.
     '''
-    queryset = OfferingType.objects.all().order_by('-id')
+    queryset = OfferingType.objects.all().order_by('id')
     serializer_class = OfferingTypeSerializer
 
 class IncomeTypeList(generics.ListCreateAPIView):
@@ -219,16 +219,16 @@ class OfferingStats(APIView):
         statistics for offerings this month.
     '''
 
-    def get(self, request):
+    def get(self, request, type_id):
         total_in_offerings_this_month = 0.00
         total_in_offerings_this_year = 0.00
 
         stat_dict = {"total_in_offerings_this_month": None, "total_in_offerings_this_year": None}
 
-        for data in Offering.objects.filter(date__month=month):
+        for data in Offering.objects.filter(type_id=type_id,date__month=month,date__year=year):
             total_in_offerings_this_month = total_in_offerings_this_month + float(data.amount)
 
-        for data in Offering.objects.filter(date__year=year):
+        for data in Offering.objects.filter(type_id=type_id,date__year=year):
             total_in_offerings_this_year = total_in_offerings_this_year + float(data.amount)
 
         stat_dict["total_in_offerings_this_month"] = total_in_offerings_this_month

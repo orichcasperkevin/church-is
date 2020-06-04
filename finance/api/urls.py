@@ -21,7 +21,7 @@ urlpatterns = [
     path('offering-types/', listviews.OfferingType.as_view()),
     path('offerings-by-members-this-month/', listviews.OfferingThisMonth.as_view()),
     path('offering-stats-for-member/<int:id>/', listviews.OfferingStatsForMember.as_view()),
-    path('offering-stats/', listviews.OfferingStats.as_view()),
+    path('offering-stats/<int:type_id>/', listviews.OfferingStats.as_view()),
     path('offerings-by-member/<int:id>/', listviews.OfferingByMember.as_view()),
 
     path('expenditure-type-list/', listviews.ExpenditureTypeList.as_view()),
