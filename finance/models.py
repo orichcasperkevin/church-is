@@ -176,7 +176,6 @@ class Income(models.Model):
         sum = Income.objects.filter(date__year=year).aggregate(Sum('amount'))
         return sum['amount__sum'] or 0
 
-
 class ExpenditureType(models.Model):
     id = models.AutoField(primary_key=True)
     type_name = models.CharField(max_length=100)
@@ -195,7 +194,6 @@ class ExpenditureType(models.Model):
         sum = Expenditure.objects.filter(type_id=self.id,date__year=year).aggregate(Sum('amount'))
         return sum['amount__sum'] or 0
 
-
 class Expenditure(models.Model):
     type = models.ForeignKey(ExpenditureType, on_delete=models.CASCADE)
     mode_of_payment = models.ForeignKey(ModeOfPayment,on_delete=models.CASCADE, null=True, blank=True)
@@ -204,3 +202,9 @@ class Expenditure(models.Model):
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL,
                                     related_name='expenditure_recorded_by')
+
+class CSV(models.Model):
+    '''
+        csv for importing finace data
+    '''
+    csv = models.FileField(upload_to='Resources/',null=True)

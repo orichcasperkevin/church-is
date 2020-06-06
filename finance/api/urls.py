@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import listviews, addviews, updateviews, statviews, fileviews
@@ -32,6 +32,7 @@ urlpatterns = [
     #add
     path('upload-csv/', addviews.UploadCSV.as_view()),
     path('check-csv/', addviews.CheckCSV.as_view()),
+    re_path(r'^preview-csv/(?P<file_name>.*)/$', addviews.PreviewCSV.as_view()),
     path('import-data-from-csv/', addviews.ImportDataFromCsv.as_view()),
     path('add-tithe-for-member/', addviews.addTithe.as_view()),
     path('add-offering/', addviews.addOffering.as_view()),

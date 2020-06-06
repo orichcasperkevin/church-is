@@ -192,6 +192,17 @@ class UploadCSV(APIView):
       else:
           return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class PreviewCSV(APIView):
+    '''
+        get:
+        get csv data for preview in the UI
+    '''
+
+    def get(self, request, file_name):
+        csv_loader.set_base_url(request.get_host())
+        data = csv_loader.preview_CSV(file_name)
+        return Response(data)
+
 class CheckCSV(APIView):
     '''
         post:
@@ -204,7 +215,7 @@ class CheckCSV(APIView):
             column_config = request.data.get('column_config')
             try:
                 csv_loader.configure_CSV(file_name,column_config)
-                csv_loader.check_CSV(file_name)
+                csv_loader.check_CSV(file_name)                
                 if (csv_loader.errors):
                     errors = csv_loader.errors
                     #get only the first 5 errors

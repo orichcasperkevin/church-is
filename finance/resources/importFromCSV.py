@@ -6,15 +6,18 @@ import datetime
 from django.contrib.auth.models import User
 from member.models import *
 
+from finance.models import ModeOfPayment,OfferingType,Offering,Tithe
+
 class CSVLoader():
-    errors = []
-    gender_column = None
-    marital_status_column = None
-    email_column = None
-    phone_number_column = None
-    names_column = None
-    date_of_birth_column = None
-    BASE_URL = ''
+    def __init__(self):
+        self.errors = []
+        self.amount_column = None
+        self.payment_method_column = None
+        self.offering_type_column = None
+        self.phone_number_column = None
+        self.names_column = None
+        self.date_column = None
+        self.BASE_URL = ''
 
     def _check_names(self,file_name):
         '''
@@ -27,7 +30,7 @@ class CSVLoader():
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
             line_count = 0
-            CSVLoader.errors = []
+            self.errors = []
             for row in csv_reader:
                 if line_count == 0:
                     line_count += 1
@@ -35,14 +38,15 @@ class CSVLoader():
                     names =  row[self.names_column].strip()
                     names =  names.split(" ")
                     if (len(names) == 1):
-                        CSVLoader.errors.append("only one name given  at line " + str(line_count + 1))
+                        self.errors.append("only one name given  at line " + str(line_count + 1))
                     line_count += 1
-            if (len(CSVLoader.errors) > 0):
+
+            if (len(self.errors) > 0):
                 return False
             else:
                 return True
 
-    def _check_d_o_b(self,file_name):
+    def _check_date(self,file_name):
         '''
             check that the date input given is of correct format
         '''
@@ -52,27 +56,34 @@ class CSVLoader():
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
             line_count = 0
-            CSVLoader.errors = []
+            self.errors = []
             for row in csv_reader:
-                d_o_b = row[self.date_of_birth_column]
+                date = row[self.date_column]
                 if line_count == 0:
                     line_count += 1
                 else:
-                    for data in d_o_b.split(" "):
-                        #ignore all white spaces
-                        if (len(data) != 10 and len(data) != 0):
-                            CSVLoader.errors.append("incorrect date format at line " + str(line_count + 1) + " use format YYYY-MM-DD")
-                        if (len(data) == 10):
-                            try:
-                                date = data.split("-")
-                                year = date[0]
-                                month = date[1]
-                                day = date[2]
-                                datetime.datetime(int(year),int(month),int(day))
-                            except:
-                                CSVLoader.errors.append("incorrect date format at line " + str(line_count + 1) + " use format YYYY-MM-DD")
+                    date = date.strip()
+                    #ignore all white spaces
+                    if (len(date) != 10 and len(date) != 0):
+                        self.errors.append("incorrect date format at line "\
+                                                + str(line_count + 1) \
+                                                + " use format DD/MM/YYYY")
+                    #if it is corrects length
+                    if (len(date) == 10):
+                        date = date.split("/")
+                        year = date[2]
+                        month = date[1]
+                        day = date[0]
+                        try:
+                            datetime.datetime(int(year),int(month),int(day))
+                        except:
+                            self.errors.append("incorrect date format at line "\
+                                                    + str(line_count + 1)\
+                                                    + " use format DD/MM/YYYY")
+                    #increment line count
                     line_count += 1
-            if (len(CSVLoader.errors) > 0):
+
+            if (len(self.errors) > 0):
                 return False
             else:
                 return True
@@ -87,34 +98,139 @@ class CSVLoader():
             os.chdir(initial_dir)
             csv_reader = csv.reader(csv_file,delimiter=',')
             line_count = 0
-            CSVLoader.errors = []
+            self.errors = []
             for row in csv_reader:
                 phone_number = row[self.phone_number_column]
                 if line_count == 0:
                     line_count += 1
                 else:
-                    for data in phone_number.split(" "):
-                        #ignore all white spaces
-                        if (len(data) != 10 and len(data) != 13 and len(data) != 0):
-                            CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format 0712345678")
-                        if (len(data) == 10):
-                            if(data[0] != "0"):
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format 0712345678")
-                            try:
-                                int(int(data[1:10]))
-                            except ValueError:
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format 0712345678")
-
-                        if (len(data) == 13):
-                            if(data[0] != "+"):
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format +254712345678")
-                            try:
-                                int(int(data[1:10]))
-                            except ValueError:
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format +254712345678")
-
+                    phone_number = phone_number.strip()
+                    #ignore all white spaces
+                    if (    len(phone_number) != 10
+                        and len(phone_number) != 9#when the leading zero was left out
+                        and len(phone_number) != 0):
+                        self.errors.append("incorrect phone number format at line "\
+                                                + str(line_count + 1) \
+                                                + " use format 0712345678")
+                    if (len(phone_number) == 10):
+                        if(phone_number[0] != "0"):
+                            self.errors.append("incorrect phone number format at line "\
+                                                    + str(line_count + 1)\
+                                                    + " use format 0712345678")
+                        # check that they are all numbers
+                        try:
+                            int(int(phone_number[1:10]))
+                        except ValueError:
+                            self.errors.append("incorrect phone number format at line "\
+                                                    + str(line_count + 1)\
+                                                    + " use format 0712345678")
+                    if (len(phone_number) == 9):
+                        try:
+                            int(int(phone_number[0:8]))
+                        except ValueError:
+                            self.errors.append("incorrect phone number format at line "\
+                                                    + str(line_count + 1) \
+                                                    + " use format 712345678")
                     line_count += 1
-            if (len(CSVLoader.errors) > 0):
+
+            if (len(self.errors) > 0):
+                return False
+            else:
+                return True
+
+    def _check_amount(self,file_name):
+        '''
+            check that the amount given are correct
+        '''
+        initial_dir = os.getcwd()
+        os.chdir(self.BASE_URL + "Resources")
+        with open(file_name) as csv_file:
+            os.chdir(initial_dir)
+            csv_reader = csv.reader(csv_file,delimiter=',')
+            line_count = 0
+            self.errors = []
+            for row in csv_reader:
+                amount = row[self.amount_column]
+                if line_count == 0:
+                    line_count += 1
+                else:
+                    amount = amount.strip()
+                    try:
+                        int(int(amount))
+                    except ValueError:
+                        self.errors.append("incorrect amount format at line "\
+                                                + str(line_count + 1)\
+                                                + " use integer format for amounts")
+                    line_count += 1
+
+            if (len(self.errors) > 0):
+                return False
+            else:
+                return True
+
+    def _check_payment_method(self,file_name):
+        '''
+            check that the payment methods given are correct
+        '''
+        initial_dir = os.getcwd()
+        os.chdir(self.BASE_URL + "Resources")
+        with open(file_name) as csv_file:
+            os.chdir(initial_dir)
+            csv_reader = csv.reader(csv_file,delimiter=',')
+            line_count = 0
+            self.errors = []
+            for row in csv_reader:
+                payment_method = row[self.payment_method_column]
+                if line_count == 0:
+                    line_count += 1
+                else:
+                    payment_method = payment_method.strip()
+                    # if a mode of payment with this name does not exist
+                    if not ModeOfPayment.objects.filter(name__icontains = payment_method).exists():
+                        self.errors.append("payment method does not exist, line"\
+                                                + str(line_count + 1)\
+                                                + " You may need to add this payment method")
+                    print('payment method exists')
+                    line_count += 1
+
+            if (len(self.errors) > 0):
+                return False
+            else:
+                return True
+
+    def _check_offering_type(self,file_name):
+        '''
+            check that the payment methods given are correct
+        '''
+        initial_dir = os.getcwd()
+        os.chdir(self.BASE_URL + "Resources")
+        with open(file_name) as csv_file:
+            os.chdir(initial_dir)
+            csv_reader = csv.reader(csv_file,delimiter=',')
+            line_count = 0
+            self.errors = []
+            for row in csv_reader:
+                offering_type = row[self.offering_type_column]
+                if line_count == 0:
+                    line_count += 1
+                else:
+                    offering_type = offering_type.strip()
+                    print(offering_type)
+                    # if type is not tithe then check if offering type exists
+                    if  (   offering_type != 'Tithe'
+                        and offering_type != 'tithe'
+                        and offering_type != 'tithes'
+                        and offering_type != 'Tithes'):
+                        print("inside")
+                        # if an offering type with this name does not exist
+                        if not OfferingType.objects.filter(name__icontains = offering_type)\
+                                                   .exists():
+                            self.errors.append("envelope Type does not exist, line"\
+                                                    + str(line_count + 1)\
+                                                    + " You may need to add envelope type")
+                    line_count += 1
+
+            if (len(self.errors) > 0):
                 return False
             else:
                 return True
@@ -203,12 +319,12 @@ class CSVLoader():
         '''
             configure the csv file columns according to specifications by the config_tuple
         '''
-        self.gender_column = None
-        self.marital_status_column = None
-        self.email_column = None
+        self.amount_column = None
+        self.payment_method_column = None
+        self.offering_type_column = None
         self.phone_number_column = None
         self.names_column = None
-        self.date_of_birth_column = None
+        self.date_column = None
 
         initial_dir = os.getcwd()
         os.chdir(self.BASE_URL+"Resources")
@@ -222,17 +338,17 @@ class CSVLoader():
                         for i in range(0,len(row)):
                             if row[i].strip() == key.strip():
                                 if config_tuple[key] == 'gender':
-                                    self.gender_column = i
-                                if config_tuple[key] == 'marital status':
-                                    self.marital_status_column = i
-                                if config_tuple[key] == 'email':
-                                    self.email_column = i
+                                    self.amount_column = i
+                                if config_tuple[key] == 'payment method':
+                                    self.payment_method_column = i
+                                if config_tuple[key] == 'type':
+                                    self.offering_type_column = i
                                 if config_tuple[key] == 'phone number':
                                     self.phone_number_column = i
                                 if config_tuple[key] == 'names':
                                     self.names_column = i
-                                if config_tuple[key] == 'date of birth':
-                                    self.date_of_birth_column = i
+                                if config_tuple[key] == 'date':
+                                    self.date_column = i
                 else:
                     break
                 line_count += 1
@@ -244,13 +360,20 @@ class CSVLoader():
         if (not self._check_names(file_name)):
             return False
 
-        if (self.date_of_birth_column != None):
-            if (not self._check_d_o_b(file_name)):
-                return False
+        if (not self._check_date(file_name)):
+            return False
+
+        if (not self._check_offering_type(file_name)):
+            return False
 
         if (self.phone_number_column != None):
             if (not self._check_phone_number(file_name)):
                 return False
+
+        if (self.payment_method_column != None):
+            if (not self._check_payment_method(file_name)):
+                return False
+
         #if everything is okay then return True
         return True
 
@@ -278,8 +401,8 @@ class CSVLoader():
                         gender = row[self.gender_column]
 
                     d_o_b = None
-                    if (self.date_of_birth_column != None):
-                        d_o_b = row[self.date_of_birth_column]
+                    if (self.date_column != None):
+                        d_o_b = row[self.date_column]
 
                     phone_number = None
                     if (self.phone_number_column != None):
@@ -312,7 +435,7 @@ class CSVLoader():
                         user_id = self._create_user(first_name,last_name, username, email)
                         member_id = self._create_member(user_id,gender,middle_name)
 
-                    if (self.date_of_birth_column != None):
+                    if (self.date_column != None):
                         self._set_date_of_birth(member_id, d_o_b)
 
                     if (self.phone_number_column != None):

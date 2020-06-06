@@ -146,3 +146,8 @@ class ExpenditureSerializer(serializers.ModelSerializer):
 
         expenditure = Expenditure.objects.create(recorded_by=member, type=expenditure_type, **validated_data)
         return expenditure
+
+class CSVFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CSV
+        fields = "__all__"

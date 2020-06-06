@@ -28,11 +28,11 @@ urlpatterns = [
     path('marital-status-for-member/<int:id>/', detailviews.GetMaritalStatusForMemberWithId.as_view()),
     path('family-for-member/<int:id>/', detailviews.GetFamilyForMemberWithId.as_view()),
     path('roles-for-member/<int:id>/', detailviews.GetRolesForMemberWithId.as_view()),
-    re_path(r'^preview-csv/(?P<file_name>.*)/$', detailviews.PreviewCSV.as_view()),
 
     # adding
     path('add-member/', addviews.addMember.as_view()),
     path('upload-csv/', addviews.UploadCSV.as_view()),
+    re_path(r'^preview-csv/(?P<file_name>.*)/$', detailviews.PreviewCSV.as_view()),
     path('check-csv/', addviews.CheckCSV.as_view()),
     path('import-data-from-csv/', addviews.ImportDataFromCsv.as_view()),
     path('add-member-contact/', addviews.AddMemberContact.as_view()),
