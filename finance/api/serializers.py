@@ -47,7 +47,7 @@ class OfferingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offering
-        fields = ('type','amount', 'date', 'anonymous', 'name_if_not_member','group', 'member',
+        fields = ('type','amount','mode_of_payment', 'date', 'anonymous', 'name_if_not_member','group', 'member',
                   'service','narration','recorded_by', 'total_this_month', 'total_this_year',
                   'user_id','member_full_name','member_gender','service_type_name',
                   'service_date','group_id','group_name')
@@ -84,7 +84,7 @@ class TitheSerializer(serializers.ModelSerializer):
     group_name = serializers.CharField(source='group.name',default=None)
     class Meta:
         model = Tithe
-        fields = ('member', 'amount', 'date','service','group', 'narration',
+        fields = ('member', 'amount','mode_of_payment', 'date','service','group', 'narration',
                   'recorded_by', 'total_this_month', 'total_this_year',
                   'user_id','member_full_name','member_gender','service_type_name',
                   'service_date','group_id','group_name')

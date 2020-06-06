@@ -12,7 +12,7 @@ from member.models import Member, Role
 from sms.africastalking.at import ChurchSysMessenger
 
 from member.resources.importCSV import CSVLoader
-loader = CSVLoader()
+csv_loader = CSVLoader()
 
 STARTER_PASSWORD = "changeMe"
 
@@ -23,7 +23,7 @@ def getSerializerData(queryset,serializer_class):
 class ResetPassword(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self,request):        
+    def post(self,request):
         user = User.objects.get(id=request.data.get('user_id'))
         user.set_password(STARTER_PASSWORD)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -62,7 +62,6 @@ class ChangeUsernameAndPasswordView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'error':'Authentication failed'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class addMember(APIView):
     '''
@@ -114,7 +113,7 @@ class UploadCSV(APIView):
 
     def post(self, request, *args, **kwargs):
 
-      loader.set_base_url(request.get_host())
+      csv_loader.set_base_url(request.get_host())
       file_serializer = CSVFileSerializer(data=request.data)
 
       if file_serializer.is_valid():
@@ -131,14 +130,14 @@ class CheckCSV(APIView):
     '''
 
     def post(self, request):
-            loader.set_base_url(request.get_host())
+            csv_loader.set_base_url(request.get_host())
             file_name = request.data.get('file_name')
             column_config = request.data.get('column_config')
             try:
-                loader.configure_CSV(file_name,column_config)
-                loader.check_CSV(file_name)
-                if (loader.errors):
-                    errors = loader.errors
+                csv_loader.configure_CSV(file_name,column_config)
+                csv_loader.check_CSV(file_name)
+                if (csv_loader.errors):
+                    errors = csv_loader.errors
                     #get only the first 5 errors
                     return Response(errors[:5])
             except:
@@ -153,10 +152,10 @@ class ImportDataFromCsv(APIView):
     '''
 
     def post(self, request):
-            loader.set_base_url(request.get_host())
-            loader.load(request.data.get("file_name"))
+            csv_loader.set_base_url(request.get_host())
+            csv_loader.load(request.data.get("file_name"))
             try:
-                loader.load(request.data.get("file_name"))
+                csv_loader.load(request.data.get("file_name"))
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:

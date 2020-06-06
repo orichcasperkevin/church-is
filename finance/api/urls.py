@@ -29,6 +29,10 @@ urlpatterns = [
     path('expenditures-of-type/<int:id>/', listviews.ExpenditureOfType.as_view()),
     path('expenditure-stats/', listviews.ExpenditureStats.as_view()),
 
+    #add
+    path('upload-csv/', addviews.UploadCSV.as_view()),
+    path('check-csv/', addviews.CheckCSV.as_view()),
+    path('import-data-from-csv/', addviews.ImportDataFromCsv.as_view()),
     path('add-tithe-for-member/', addviews.addTithe.as_view()),
     path('add-offering/', addviews.addOffering.as_view()),
     path('add-service-offering/', addviews.AddServiceOffering.as_view()),

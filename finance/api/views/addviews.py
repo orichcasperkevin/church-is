@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import FileUploadParser
 
 #import serializers
 from finance.api.serializers import *
@@ -11,13 +12,15 @@ from finance.models import *
 from groups.models import ChurchGroup
 from member.models import Member
 from services.models import Service,ServiceType
+#import from CSV
+from finance.resources.importFromCSV import CSVLoader
+csv_loader = CSVLoader()
 
 def getSerializerData(queryset,serializer_class):
     if len(queryset) == 0:
         return None
     data = queryset[0]
     return serializer_class(data).data
-
 
 class addPendingConfirmation(APIView):
     '''
@@ -58,14 +61,13 @@ class addTithe(APIView):
             data['member'] = Member.objects.get(member_id=data['member']).id
         data['recorded_by'] = Member.objects.get(member_id=data['recorded_by']).id
 
-        serializer = TitheSerializer(data=data,partial=True)        
+        serializer = TitheSerializer(data=data,partial=True)
 
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class addOffering(APIView):
     '''
@@ -83,7 +85,6 @@ class addOffering(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class AddServiceOffering(APIView):
     '''
@@ -145,7 +146,6 @@ class addIncome(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class addExpenditure(APIView):
     '''
         add an expenditure of amount <amount> and type <id> with description
@@ -172,3 +172,60 @@ class addExpenditure(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UploadCSV(APIView):
+    '''
+        post:
+        upload a csv file, check if the file is of valid type and format
+    '''
+    parser_class = (FileUploadParser,)
+
+    def post(self, request, *args, **kwargs):
+
+      csv_loader.set_base_url(request.get_host())
+      file_serializer = CSVFileSerializer(data=request.data)
+
+      if file_serializer.is_valid():
+          file_serializer.save()
+
+          return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+      else:
+          return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CheckCSV(APIView):
+    '''
+        post:
+        check that the csv file sent has no
+    '''
+
+    def post(self, request):
+            csv_loader.set_base_url(request.get_host())
+            file_name = request.data.get('file_name')
+            column_config = request.data.get('column_config')
+            try:
+                csv_loader.configure_CSV(file_name,column_config)
+                csv_loader.check_CSV(file_name)
+                if (csv_loader.errors):
+                    errors = csv_loader.errors
+                    #get only the first 5 errors
+                    return Response(errors[:5])
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_201_CREATED)
+
+class ImportDataFromCsv(APIView):
+    '''
+        post:
+        import data from a csv file given the name
+    '''
+
+    def post(self, request):
+            csv_loader.set_base_url(request.get_host())
+            csv_loader.load(request.data.get("file_name"))
+            try:
+                csv_loader.load(request.data.get("file_name"))
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_201_CREATED)
