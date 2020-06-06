@@ -221,7 +221,6 @@ class CSVLoader():
                         and offering_type != 'tithe'
                         and offering_type != 'tithes'
                         and offering_type != 'Tithes'):
-                        print("inside")
                         # if an offering type with this name does not exist
                         if not OfferingType.objects.filter(name__icontains = offering_type)\
                                                    .exists():
@@ -242,53 +241,113 @@ class CSVLoader():
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            user = User(first_name=first_name, username=username, last_name=last_name, email=email)
+            user = User(first_name=first_name, username=username,
+                        last_name=last_name, email=email)
             user.save()
             user.set_unusable_password()
             user_id = user.id
         else:
             username = username + str(random.choice(range(100)))
-            user = User(first_name=first_name, username=username, last_name=last_name, email=email)
+            user = User(first_name=first_name, username=username,
+                        last_name=last_name, email=email)
             user.save()
             user.set_unusable_password()
-            user_id = user.id
-        return user_id
+        return user
 
     def _create_member(self,*var_tuple):
         '''
             create a member from a created user
         '''
         user_id = var_tuple[0]
-        gender = var_tuple[1]
         #ignore all spaces before or after the gender input
-        for data in gender.split(" "):
-            if (data == "M" or data == "F"):
-                gender = data
-                break
         if (len(var_tuple) == 2):
             user = User.objects.get(id = user_id)
-            member = Member.objects.create(member=user,gender=gender)
-            return member.id
+            member = Member.objects.create(member=user)
+            return member
 
         if (len(var_tuple) > 2):
             middle_name = var_tuple[2]
 
             user = User.objects.get(id = user_id)
-            member = Member.objects.create(member=user,gender=gender,middle_name=middle_name)
-            return member.id
+            member = Member.objects.create(member=user,middle_name=middle_name)
+            return member
 
-    def _create_contact(self,member_id,phone_number):
+    def _create_contact(self,member,phone_number):
         '''
             create contact for a member
         '''
         # ignore all spaces, commas or full stops that may be placed
-        for data in phone_number.split(" "):
-            if (len(data)==10 or len(data)==13):
-                phone_number = data
-        member = Member.objects.get(id=member_id)
+        phone_number =  phone_number.strip()
+        if len(data)==10 or len(data) == 13 :
+            phone_number = str(phone_number)
+
+        if len(data) == 0:
+            phone_number = '0'+ str(phone_number)
+
         contact = MemberContact.objects.create(member=member, phone=phone_number)
         return contact
 
+    def _member_from_phone_number(self,phone_number):
+        if len(phone_number) == 10:
+            if MemberContact.objects.filter(phone__contains=phone_number[1:10])\
+                                    .exists():
+                contact =  MemberContact.objects.filter(phone__contains=phone_number[1:10])[0]
+                return contact.member
+            else:
+                return None
+
+        if len(phone_number) == 9:
+            if MemberContact.objects.filter(phone__contains=phone_number[1:9])\
+                                    .exists():
+                contact =  MemberContact.objects.filter(phone__contains=phone_number[1:9])[0]
+                return contact.member
+            else:
+                return None
+
+    def _member_from_names(self,names):
+        if ( len(names) == 2 ):
+            first_name = names[0]
+            last_name = names[1]
+            username = first_name.lower() + last_name.lower()
+            username = username.replace("'", "")
+            username = username.replace(".", "")
+            user = self._create_user(first_name,last_name, username, email)
+            member = self._create_member(user,gender)
+            return member
+
+        if ( len(names) > 2 ):
+            first_name = names[0]
+            middle_name = names[1]
+            last_name = names[2]
+            username = first_name.lower() + last_name.lower()
+            username = username.replace("'", "")
+            username = username.replace(".", "")
+            user = self._create_user(first_name,last_name, username, email)
+            member = self._create_member(user,gender,middle_name)
+            return member
+
+    def _add_tithe_or_offering(amount,payment_method,type,date,member,
+                              name_if_not_member,phone_if_not_memmber):
+        if  (   type == 'Tithe'
+            and type == 'tithe'
+            and type == 'tithes'
+            and type == 'Tithes'):
+            Tithe.objects.create(
+                mode_of_payment = payment_method,
+                amount = amount,
+                name_if_not_member = name_if_not_member,
+                phone_if_not_memmber = phone_if_not_memmber,
+                date = date
+            )
+        else:
+            Offering.objects.create(
+                type = type,
+                mode_of_payment = payment_method,
+                amount = amount,
+                name_if_not_member = name_if_not_member,
+                phone_if_not_memmber = phone_if_not_memmber,
+                date = date
+            )
     #public methods
     def set_base_url(self,base_url):
         self.BASE_URL = base_url.split(':')[0] + "/"
@@ -393,53 +452,50 @@ class CSVLoader():
                 if line_count == 0:
                     line_count += 1
                 else:
-                    names =  row[self.names_column].strip()
-                    names =  names.split(" ")
-
-                    gender = None
-                    if (self.gender_column != None):
-                        gender = row[self.gender_column]
-
-                    d_o_b = None
-                    if (self.date_column != None):
-                        d_o_b = row[self.date_column]
-
+                    #get amount
+                    amount = None
+                    if (self.amount_column != None):
+                        amount = row[self.gender_column]
+                    # get payment_method
+                    payment_method = None
+                    if (self.payment_method_column != None):
+                        payment_method = row[self.payment_method_column]
+                    # get offering types
+                    offering_type = None
+                    if (self.offering_type_column != None):
+                        offering_type = row[self.offering_type_column]
+                    # get phone_number
                     phone_number = None
                     if (self.phone_number_column != None):
                         phone_number = row[self.phone_number_column]
-
-                    email = ''
-                    if (self.email_column != None):
-                        email = row[self.email_column]
-
-                    marital_status = None
-                    if (self.marital_status_column != None):
-                        marital_status = row[self.marital_status_column]
-
-                    if ( len(names) == 2 ):
-                        first_name = names[0]
-                        last_name = names[1]
-                        username = first_name.lower() + last_name.lower()
-                        username = username.replace("'", "")
-                        username = username.replace(".", "")
-                        user_id = self._create_user(first_name,last_name, username, email)
-                        member_id = self._create_member(user_id,gender)
-
-                    if ( len(names) > 2 ):
-                        first_name = names[0]
-                        middle_name = names[1]
-                        last_name = names[2]
-                        username = first_name.lower() + last_name.lower()
-                        username = username.replace("'", "")
-                        username = username.replace(".", "")
-                        user_id = self._create_user(first_name,last_name, username, email)
-                        member_id = self._create_member(user_id,gender,middle_name)
-
+                    # get date
+                    date = None
                     if (self.date_column != None):
-                        self._set_date_of_birth(member_id, d_o_b)
+                        date = row[self.date_column]
+                    # get names
+                    names =  row[self.names_column].strip()
+                    names =  names.split(" ")
 
-                    if (self.phone_number_column != None):
-                        self._create_contact(member_id,phone_number)
+                    #try getting user by their phone number.
+                    member = None
+                    if phone_number:
+                        member = self._member_from_phone_number(phone_number)
+                        if member:
+                            #add tithe or offering
+                            return
 
-                    if (self.marital_status_column != None):
-                        self._create_marital_status(member_id,marital_status)
+                    if names:
+                        member = self._member_from_names(names)
+                        if member and self.phone_number_column:
+                            #add tithe or offering
+                            #add contact for member if it exists
+                            self._create_contact(member,phone_number)
+                            return
+
+                        else:
+                            pass
+                            #add tithe or offering
+
+                    if not names:
+                        pass
+                        # add tithe or offering

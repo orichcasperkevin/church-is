@@ -54,8 +54,9 @@ class Offering(models.Model):
     mode_of_payment = models.ForeignKey(ModeOfPayment,on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField()
-    anonymous = models.BooleanField(default=False)
+    #by who or what
     name_if_not_member = models.CharField(max_length=20, blank=True, null=True)
+    phone_if_not_memmber = models.CharField(max_length=20,blank=True,null=True)
     group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True)
     # the service this offering was collected from
@@ -99,11 +100,15 @@ class Tithe(models.Model):
     '''
         tithe collected for a member
     '''
-    member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True,blank=True)
     mode_of_payment = models.ForeignKey(ModeOfPayment,on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
+    #by who or what
+    name_if_not_member = models.CharField(max_length=20, blank=True, null=True)
+    phone_if_not_memmber = models.CharField(max_length=20,blank=True,null=True)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
     group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True,blank=True)
+    #when
     date = models.DateField()
     narration = models.TextField(blank=True)
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='tithe_recorded_by')
