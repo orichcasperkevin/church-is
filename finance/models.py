@@ -56,7 +56,7 @@ class Offering(models.Model):
     date = models.DateField()
     #by who or what
     name_if_not_member = models.CharField(max_length=20, blank=True, null=True)
-    phone_if_not_memmber = models.CharField(max_length=20,blank=True,null=True)
+    phone_if_not_member = models.CharField(max_length=20,blank=True,null=True)
     group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, blank=True, null=True)
     # the service this offering was collected from
@@ -104,7 +104,7 @@ class Tithe(models.Model):
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     #by who or what
     name_if_not_member = models.CharField(max_length=20, blank=True, null=True)
-    phone_if_not_memmber = models.CharField(max_length=20,blank=True,null=True)
+    phone_if_not_member = models.CharField(max_length=20,blank=True,null=True)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
     group = models.ForeignKey(ChurchGroup,on_delete=models.CASCADE, blank=True, null=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE,null=True,blank=True)

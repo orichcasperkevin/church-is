@@ -215,7 +215,7 @@ class CheckCSV(APIView):
             column_config = request.data.get('column_config')
             try:
                 csv_loader.configure_CSV(file_name,column_config)
-                csv_loader.check_CSV(file_name)                
+                csv_loader.check_CSV(file_name)
                 if (csv_loader.errors):
                     errors = csv_loader.errors
                     #get only the first 5 errors
@@ -232,10 +232,13 @@ class ImportDataFromCsv(APIView):
     '''
 
     def post(self, request):
+            file_name = request.data.get('file_name')
+            column_config = request.data.get('column_config')
+
             csv_loader.set_base_url(request.get_host())
-            csv_loader.load(request.data.get("file_name"))
+            csv_loader.configure_CSV(file_name,column_config)            
             try:
-                csv_loader.load(request.data.get("file_name"))
+                csv_loader.load(file_name)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:

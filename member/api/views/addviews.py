@@ -152,8 +152,10 @@ class ImportDataFromCsv(APIView):
     '''
 
     def post(self, request):
+            file_name = request.data.get('file_name')
             csv_loader.set_base_url(request.get_host())
-            csv_loader.load(request.data.get("file_name"))
+            csv_loader.configure_CSV(file_name,column_config)
+            csv_loader.load(file_name)
             try:
                 csv_loader.load(request.data.get("file_name"))
             except:

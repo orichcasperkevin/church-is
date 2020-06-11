@@ -35,6 +35,8 @@ class OfferingTypeSerializer(serializers.ModelSerializer):
         fields = ('id','name','description')
 
 class OfferingSerializer(serializers.ModelSerializer):
+    mode_of_payment_name = serializers.CharField(source='mode_of_payment.name',default=None)
+
     user_id = serializers.IntegerField(source='member.member.id',default=None)
     member_full_name = serializers.CharField(source='member.member.get_full_name',default=None)
     member_gender = serializers.CharField(source='member.gender',default=None)
@@ -47,7 +49,9 @@ class OfferingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offering
-        fields = ('type','amount','mode_of_payment', 'date', 'anonymous', 'name_if_not_member','group', 'member',
+        fields = ('type','amount','mode_of_payment','mode_of_payment_name', 'date',
+                  'name_if_not_member','phone_if_not_member',
+                  'group', 'member',
                   'service','narration','recorded_by', 'total_this_month', 'total_this_year',
                   'user_id','member_full_name','member_gender','service_type_name',
                   'service_date','group_id','group_name')
@@ -73,6 +77,8 @@ class AddServiceOfferingSerializer(serializers.ModelSerializer):
 
 
 class TitheSerializer(serializers.ModelSerializer):
+    mode_of_payment_name = serializers.CharField(source='mode_of_payment.name',default=None)
+
     user_id = serializers.IntegerField(source='member.member.id',default=None)
     member_full_name = serializers.CharField(source='member.member.get_full_name',default=None)
     member_gender = serializers.CharField(source='member.gender',default=None)
@@ -84,7 +90,9 @@ class TitheSerializer(serializers.ModelSerializer):
     group_name = serializers.CharField(source='group.name',default=None)
     class Meta:
         model = Tithe
-        fields = ('member', 'amount','mode_of_payment', 'date','service','group', 'narration',
+        fields = ('member', 'amount','mode_of_payment','mode_of_payment_name',
+                  'name_if_not_member','phone_if_not_member'
+                  'date','service','group', 'narration',
                   'recorded_by', 'total_this_month', 'total_this_year',
                   'user_id','member_full_name','member_gender','service_type_name',
                   'service_date','group_id','group_name')

@@ -31,29 +31,34 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
         self.member = Member.objects.get(member_id=member_id)
         self.first_name = self.member.member.first_name
         self.this_amount = ''
+        self.this_date = ''
         self.recent_giving = ''
 
         if context == "Tithe":
             tithe = Tithe.objects.filter(member=self.member).latest('id')
             self.this_amount = str(tithe.amount)
+            self.this_date = str(tithe.date)
             self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
             "total this year is : " + str(tithe.total_this_month)
 
         if context == "Offering":
             offering = Offering.objects.filter(member=self.member).latest('id')
             self.this_amount = str(offering.amount)
+            self.this_date = str(offering.date)
             self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
             "total this year is : " + str(offering.total_this_month)
 
         if context == "Pledge":
             pledge = Pledge.objects.filter(member=self.member).latest('id')
             self.this_amount =  str(pledge.amount) + " towards project " + pledge.project.name
+            self.this_date = str(pledge.date)
             self.recent_giving = "amount so far is " + str(pledge.amount_so_far) + ", "+\
             "remaining amount is "+ str(pledge.remaining_amount) + " (" + str(pledge.percentage_funded) +")"
 
         if context == "Contribution":
             contribution = Contribution.objects.filter(member=self.member).latest('id')
             self.this_amount =  str(contribution.amount) + " towards project " + contribution.project.name
+            self.this_date = str(contribution.recorded_at)
 
         self.replace_with_member_data()
 
@@ -63,8 +68,8 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
             replace data in '[]' with appropriate member data
         '''
         self.message = self.message.replace("[name]",self.first_name)
-        self.message = self.message.replace("[amount]",self.this_amount)
-        self.message = self.message.replace("[stats]",self.recent_giving)
+        self.message = self.message.replace("[amount]",self.this_amount)    
+        self.message = self.message.replace("[date]",self.this_date)
 
     def formated_message(self):
         return  self.message +   "\n\n" + self.church.domain_url

@@ -19,6 +19,34 @@ class CSVLoader():
         self.date_column = None
         self.BASE_URL = ''
 
+    def _check_size_of_file(self,file_name):
+        '''
+            check that the file has a decent amount of rows.
+        '''
+
+        initial_dir = os.getcwd()
+        os.chdir(self.BASE_URL+"Resources")
+        with open(file_name) as csv_file:
+            os.chdir(initial_dir)
+            csv_reader = csv.reader(csv_file,delimiter=',')
+            line_count = 0
+            self.errors = []
+            for row in csv_reader:
+                if line_count == 0:
+                    line_count += 1
+                else:
+                    line_count += 1
+
+            if line_count > 250:
+                self.errors.append("File has too many rows ("\
+                                    + str(line_count + 1)\
+                                    + ") expected 250 or less")
+
+            if (len(self.errors) > 0):
+                return False
+            else:
+                return True
+
     def _check_names(self,file_name):
         '''
             check that the names are valid
@@ -38,7 +66,9 @@ class CSVLoader():
                     names =  row[self.names_column].strip()
                     names =  names.split(" ")
                     if (len(names) == 1):
-                        self.errors.append("only one name given  at line " + str(line_count + 1))
+                        self.errors.append("only one name given  at line "\
+                                            + str(line_count + 1)\
+                                            + " expected two or more")
                     line_count += 1
 
             if (len(self.errors) > 0):
@@ -190,7 +220,6 @@ class CSVLoader():
                         self.errors.append("payment method does not exist, line"\
                                                 + str(line_count + 1)\
                                                 + " You may need to add this payment method")
-                    print('payment method exists')
                     line_count += 1
 
             if (len(self.errors) > 0):
@@ -215,7 +244,6 @@ class CSVLoader():
                     line_count += 1
                 else:
                     offering_type = offering_type.strip()
-                    print(offering_type)
                     # if type is not tithe then check if offering type exists
                     if  (   offering_type != 'Tithe'
                         and offering_type != 'tithe'
@@ -234,7 +262,7 @@ class CSVLoader():
             else:
                 return True
 
-    def _create_user(self, first_name, last_name, username, email):
+    def _create_user(self, first_name, last_name, username):
         '''
             create a user from data from CSV
         '''
@@ -242,14 +270,14 @@ class CSVLoader():
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             user = User(first_name=first_name, username=username,
-                        last_name=last_name, email=email)
+                        last_name=last_name)
             user.save()
             user.set_unusable_password()
             user_id = user.id
         else:
             username = username + str(random.choice(range(100)))
             user = User(first_name=first_name, username=username,
-                        last_name=last_name, email=email)
+                        last_name=last_name)
             user.save()
             user.set_unusable_password()
         return user
@@ -258,15 +286,14 @@ class CSVLoader():
         '''
             create a member from a created user
         '''
-        user_id = var_tuple[0]
+        user = var_tuple[0]
         #ignore all spaces before or after the gender input
-        if (len(var_tuple) == 2):
-            user = User.objects.get(id = user_id)
+        if (len(var_tuple) == 1):
             member = Member.objects.create(member=user)
             return member
 
-        if (len(var_tuple) > 2):
-            middle_name = var_tuple[2]
+        if (len(var_tuple) > 1):
+            middle_name = var_tuple[1]
 
             user = User.objects.get(id = user_id)
             member = Member.objects.create(member=user,middle_name=middle_name)
@@ -278,10 +305,10 @@ class CSVLoader():
         '''
         # ignore all spaces, commas or full stops that may be placed
         phone_number =  phone_number.strip()
-        if len(data)==10 or len(data) == 13 :
+        if len(phone_number)==10 or len(phone_number) == 13 :
             phone_number = str(phone_number)
 
-        if len(data) == 0:
+        if len(phone_number) == 9:
             phone_number = '0'+ str(phone_number)
 
         contact = MemberContact.objects.create(member=member, phone=phone_number)
@@ -311,8 +338,8 @@ class CSVLoader():
             username = first_name.lower() + last_name.lower()
             username = username.replace("'", "")
             username = username.replace(".", "")
-            user = self._create_user(first_name,last_name, username, email)
-            member = self._create_member(user,gender)
+            user = self._create_user(first_name,last_name, username)
+            member = self._create_member(user)
             return member
 
         if ( len(names) > 2 ):
@@ -322,32 +349,41 @@ class CSVLoader():
             username = first_name.lower() + last_name.lower()
             username = username.replace("'", "")
             username = username.replace(".", "")
-            user = self._create_user(first_name,last_name, username, email)
-            member = self._create_member(user,gender,middle_name)
+            user = self._create_user(first_name,last_name, username)
+            member = self._create_member(user,middle_name)
             return member
 
-    def _add_tithe_or_offering(amount,payment_method,type,date,member,
-                              name_if_not_member,phone_if_not_memmber):
+    def _add_tithe_or_offering(self,amount,payment_method,type,date,member,
+                              name_if_not_member,phone_if_not_member):
         if  (   type == 'Tithe'
-            and type == 'tithe'
-            and type == 'tithes'
-            and type == 'Tithes'):
-            Tithe.objects.create(
-                mode_of_payment = payment_method,
-                amount = amount,
-                name_if_not_member = name_if_not_member,
-                phone_if_not_memmber = phone_if_not_memmber,
-                date = date
-            )
+            or type == 'tithe'
+            or type == 'tithes'
+            or type == 'Tithes'):
+            try:
+                Tithe.objects.create(
+                    mode_of_payment = ModeOfPayment.objects.filter(name__icontains=payment_method)[0],
+                    amount = amount,
+                    member = member,
+                    name_if_not_member = name_if_not_member,
+                    phone_if_not_member = phone_if_not_member,
+                    date = date
+                )
+            except:
+                pass
         else:
-            Offering.objects.create(
-                type = type,
-                mode_of_payment = payment_method,
-                amount = amount,
-                name_if_not_member = name_if_not_member,
-                phone_if_not_memmber = phone_if_not_memmber,
-                date = date
-            )
+            try:
+                Offering.objects.create(
+                    type = OfferingType.objects.filter(name__icontains=type)[0],
+                    mode_of_payment = ModeOfPayment.objects.filter(name__icontains=payment_method)[0],
+                    amount = amount,
+                    member = member,
+                    name_if_not_member = name_if_not_member,
+                    phone_if_not_member = phone_if_not_member,
+                    date = date
+                )
+            except:
+                pass
+
     #public methods
     def set_base_url(self,base_url):
         self.BASE_URL = base_url.split(':')[0] + "/"
@@ -396,7 +432,7 @@ class CSVLoader():
                     for key in config_tuple:
                         for i in range(0,len(row)):
                             if row[i].strip() == key.strip():
-                                if config_tuple[key] == 'gender':
+                                if config_tuple[key] == 'amount':
                                     self.amount_column = i
                                 if config_tuple[key] == 'payment method':
                                     self.payment_method_column = i
@@ -416,6 +452,9 @@ class CSVLoader():
         '''
             check if CSV meets the required standards
         '''
+        if (not self._check_size_of_file(file_name)):
+            return False
+
         if (not self._check_names(file_name)):
             return False
 
@@ -455,15 +494,17 @@ class CSVLoader():
                     #get amount
                     amount = None
                     if (self.amount_column != None):
-                        amount = row[self.gender_column]
+                        amount = row[self.amount_column]
                     # get payment_method
                     payment_method = None
                     if (self.payment_method_column != None):
                         payment_method = row[self.payment_method_column]
+                        payment_method = payment_method.strip()
                     # get offering types
                     offering_type = None
                     if (self.offering_type_column != None):
                         offering_type = row[self.offering_type_column]
+                        offering_type =  offering_type.strip()
                     # get phone_number
                     phone_number = None
                     if (self.phone_number_column != None):
@@ -472,30 +513,65 @@ class CSVLoader():
                     date = None
                     if (self.date_column != None):
                         date = row[self.date_column]
+                        date = date.split("/")
+                        year = date[2]
+                        month = date[1]
+                        day = date[0]
+                        date = datetime.datetime(int(year),int(month),int(day))
                     # get names
                     names =  row[self.names_column].strip()
                     names =  names.split(" ")
 
                     #try getting user by their phone number.
-                    member = None
                     if phone_number:
                         member = self._member_from_phone_number(phone_number)
                         if member:
-                            #add tithe or offering
+                            self._add_tithe_or_offering(
+                                int(amount),#amount
+                                payment_method,#payment_method
+                                offering_type,#type
+                                date,#date
+                                member,#member
+                                None,#name_if_not_member =
+                                None #phone_if_not_memmber
+                            )
                             return
 
-                    if names:
+                    if len(names) > 1:
                         member = self._member_from_names(names)
                         if member and self.phone_number_column:
-                            #add tithe or offering
-                            #add contact for member if it exists
                             self._create_contact(member,phone_number)
+                            #add tithe or offering
+                            self._add_tithe_or_offering(
+                                int(amount),#amount
+                                payment_method,#payment_method
+                                offering_type,#type
+                                date,#date
+                                member,#member
+                                None,#name_if_not_member =
+                                None #phone_if_not_memmber
+                            )
                             return
-
                         else:
                             pass
                             #add tithe or offering
+                            self._add_tithe_or_offering(
+                                int(amount),#amount
+                                payment_method,#payment_method
+                                offering_type,#type
+                                date,#date
+                                None,#member
+                                names[0] + " " + names[1],#name_if_not_member =
+                                None #phone_if_not_memmber
+                            )
 
-                    if not names:
-                        pass
-                        # add tithe or offering
+                    if len(names) == 1:
+                        self._add_tithe_or_offering(
+                            int(amount),#amount
+                            payment_method,#payment_method
+                            offering_type,#type
+                            date,#date
+                            None,#member
+                            names[0],#name_if_not_member =
+                            None #phone_if_not_memmber
+                        )
