@@ -91,7 +91,7 @@ class TitheSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tithe
         fields = ('member', 'amount','mode_of_payment','mode_of_payment_name',
-                  'name_if_not_member','phone_if_not_member'
+                  'name_if_not_member','phone_if_not_member',
                   'date','service','group', 'narration',
                   'recorded_by', 'total_this_month', 'total_this_year',
                   'user_id','member_full_name','member_gender','service_type_name',
