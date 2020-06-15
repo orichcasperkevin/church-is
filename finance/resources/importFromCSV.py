@@ -206,7 +206,9 @@ class CSVLoader():
                     else:
                         amount = amount.strip()
                         try:
-                            int(int(amount).replace(',', ''))#remove commas and try converting to int
+                            amount = str(amount)
+                            amount = amount.replace(',','')#remove commas and try converting to int
+                            int(int(amount))                    
                         except ValueError:
                             self.errors.append("incorrect amount format ("\
                                                 + amount \
@@ -488,6 +490,9 @@ class CSVLoader():
         if (not self._check_date(file_name)):
             return False
 
+        if (not self._check_amount(file_name)):
+            return False
+
         if (self.phone_number_column != None):
             if (not self._check_phone_number(file_name)):
                 return False
@@ -522,7 +527,8 @@ class CSVLoader():
                     amount = None
                     if (self.amount_column != None):
                         amount = row[self.amount_column]
-                        amount = int(amount).replace(',', '')
+                        amount = str(amount)
+                        amount = int(amount.replace(',',''))
                     # get payment_method
                     payment_method = None
                     if (self.payment_method_column != None):
