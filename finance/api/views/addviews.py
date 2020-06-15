@@ -213,13 +213,22 @@ class CheckCSV(APIView):
             csv_loader.set_base_url(request.get_host())
             file_name = request.data.get('file_name')
             column_config = request.data.get('column_config')
+            csv_loader.configure_CSV(file_name,column_config)
+            csv_loader.check_CSV(file_name)
+
             try:
                 csv_loader.configure_CSV(file_name,column_config)
                 csv_loader.check_CSV(file_name)
                 if (csv_loader.errors):
                     errors = csv_loader.errors
-                    #get only the first 5 errors
-                    return Response(errors[:5])
+                    if len(errors) > 5:
+                        #get only the first 5 errors
+                        errors.insert( 5, " + "
+                                        + str((len(errors)-5))
+                                        + " similar errors")
+
+                    errors = errors[:6]
+                    return Response(errors)
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -236,7 +245,7 @@ class ImportDataFromCsv(APIView):
             column_config = request.data.get('column_config')
 
             csv_loader.set_base_url(request.get_host())
-            csv_loader.configure_CSV(file_name,column_config)            
+            csv_loader.configure_CSV(file_name,column_config)
             try:
                 csv_loader.load(file_name)
             except:

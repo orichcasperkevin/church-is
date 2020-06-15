@@ -12,9 +12,10 @@ class GroupOfChurchGroupSerializer(serializers.ModelSerializer):
 
 
 class ChurchGroupSerializer(serializers.ModelSerializer):
+    folder_name = serializers.CharField(source='group.name',default="others")
     class Meta:
         model = ChurchGroup
-        fields = ('id', 'group', 'name', 'description','number_of_members')
+        fields = ('id', 'group','folder_name', 'name', 'description','number_of_members')
         extra_kwargs = {'id': {'read_only': True}}
 
 

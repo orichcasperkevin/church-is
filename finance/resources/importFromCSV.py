@@ -32,10 +32,11 @@ class CSVLoader():
             line_count = 0
             self.errors = []
             for row in csv_reader:
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    line_count += 1
+                if any(row):
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        line_count += 1
 
             if line_count > 250:
                 self.errors.append("File has too many rows ("\
@@ -60,16 +61,19 @@ class CSVLoader():
             line_count = 0
             self.errors = []
             for row in csv_reader:
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    names =  row[self.names_column].strip()
-                    names =  names.split(" ")
-                    if (len(names) == 1):
-                        self.errors.append("only one name given  at line "\
-                                            + str(line_count + 1)\
-                                            + " expected two or more")
-                    line_count += 1
+                if any(row):
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        names =  row[self.names_column].strip()
+                        names =  names.split(" ")
+                        if (len(names) == 1):
+                            self.errors.append("got only one name ("\
+                                                + names[0] \
+                                                + " ) at line "\
+                                                + str(line_count + 1)\
+                                                + " expected two or more")
+                        line_count += 1
 
             if (len(self.errors) > 0):
                 return False
@@ -88,30 +92,35 @@ class CSVLoader():
             line_count = 0
             self.errors = []
             for row in csv_reader:
-                date = row[self.date_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    date = date.strip()
-                    #ignore all white spaces
-                    if (len(date) != 10 and len(date) != 0):
-                        self.errors.append("incorrect date format at line "\
+                if any(row):
+                    date = row[self.date_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        date = date.strip()
+                        #ignore all white spaces
+                        if (len(date) != 10 and len(date) != 0):
+                            self.errors.append("incorrect date format ("\
+                                                + date \
+                                                + " ) at line "\
                                                 + str(line_count + 1) \
                                                 + " use format DD/MM/YYYY")
-                    #if it is corrects length
-                    if (len(date) == 10):
-                        date = date.split("/")
-                        year = date[2]
-                        month = date[1]
-                        day = date[0]
-                        try:
-                            datetime.datetime(int(year),int(month),int(day))
-                        except:
-                            self.errors.append("incorrect date format at line "\
+                        #if it is corrects length
+                        if (len(date) == 10):
+                            date = date.split("/")
+                            year = date[2]
+                            month = date[1]
+                            day = date[0]
+                            try:
+                                datetime.datetime(int(year),int(month),int(day))
+                            except:
+                                self.errors.append("incorrect date format ("\
+                                                    + date \
+                                                    + " ) at line "\
                                                     + str(line_count + 1)\
                                                     + " use format DD/MM/YYYY")
-                    #increment line count
-                    line_count += 1
+                        #increment line count
+                        line_count += 1
 
             if (len(self.errors) > 0):
                 return False
@@ -130,38 +139,48 @@ class CSVLoader():
             line_count = 0
             self.errors = []
             for row in csv_reader:
-                phone_number = row[self.phone_number_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    phone_number = phone_number.strip()
-                    #ignore all white spaces
-                    if (    len(phone_number) != 10
-                        and len(phone_number) != 9#when the leading zero was left out
-                        and len(phone_number) != 0):
-                        self.errors.append("incorrect phone number format at line "\
+                if any(row):
+                    phone_number = row[self.phone_number_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        phone_number = phone_number.strip()
+                        #ignore all white spaces
+                        if (    len(phone_number) != 10
+                            and len(phone_number) != 9#when the leading zero was left out
+                            and len(phone_number) != 0):
+                            self.errors.append("incorrect phone number format ("\
+                                                + phone_number \
+                                                + " ) at line "\
                                                 + str(line_count + 1) \
                                                 + " use format 0712345678")
-                    if (len(phone_number) == 10):
-                        if(phone_number[0] != "0"):
-                            self.errors.append("incorrect phone number format at line "\
+
+                        if (len(phone_number) == 10):
+                            if(phone_number[0] != "0"):
+                                self.errors.append("incorrect phone number format ("\
+                                                    + phone_number \
+                                                    + " ) at line "\
                                                     + str(line_count + 1)\
                                                     + " use format 0712345678")
-                        # check that they are all numbers
-                        try:
-                            int(int(phone_number[1:10]))
-                        except ValueError:
-                            self.errors.append("incorrect phone number format at line "\
+                            # check that they are all numbers
+                            try:
+                                int(int(phone_number[1:10]))
+                            except ValueError:
+                                self.errors.append("incorrect phone number format ("\
+                                                    + phone_number \
+                                                    + " ) at line "\
                                                     + str(line_count + 1)\
                                                     + " use format 0712345678")
-                    if (len(phone_number) == 9):
-                        try:
-                            int(int(phone_number[0:8]))
-                        except ValueError:
-                            self.errors.append("incorrect phone number format at line "\
+                        if (len(phone_number) == 9):
+                            try:
+                                int(int(phone_number[0:8]))
+                            except ValueError:
+                                self.errors.append("incorrect phone number format ("\
+                                                    + phone_number \
+                                                    + " ) at line "\
                                                     + str(line_count + 1) \
                                                     + " use format 712345678")
-                    line_count += 1
+                        line_count += 1
 
             if (len(self.errors) > 0):
                 return False
@@ -180,18 +199,21 @@ class CSVLoader():
             line_count = 0
             self.errors = []
             for row in csv_reader:
-                amount = row[self.amount_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    amount = amount.strip()
-                    try:
-                        int(int(amount))
-                    except ValueError:
-                        self.errors.append("incorrect amount format at line "\
+                if any(row):
+                    amount = row[self.amount_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        amount = amount.strip()
+                        try:
+                            int(int(amount).replace(',', ''))#remove commas and try converting to int
+                        except ValueError:
+                            self.errors.append("incorrect amount format ("\
+                                                + amount \
+                                                + " )at line "\
                                                 + str(line_count + 1)\
                                                 + " use integer format for amounts")
-                    line_count += 1
+                        line_count += 1
 
             if (len(self.errors) > 0):
                 return False
@@ -210,17 +232,20 @@ class CSVLoader():
             line_count = 0
             self.errors = []
             for row in csv_reader:
-                payment_method = row[self.payment_method_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    payment_method = payment_method.strip()
-                    # if a mode of payment with this name does not exist
-                    if not ModeOfPayment.objects.filter(name__icontains = payment_method).exists():
-                        self.errors.append("payment method does not exist, line"\
+                if any(row):
+                    payment_method = row[self.payment_method_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        payment_method = payment_method.strip()
+                        # if a mode of payment with this name does not exist
+                        if not ModeOfPayment.objects.filter(name__icontains = payment_method).exists():
+                            self.errors.append("payment method ( "\
+                                                + payment_method \
+                                                + " )does not exist, line"\
                                                 + str(line_count + 1)\
                                                 + " You may need to add this payment method")
-                    line_count += 1
+                        line_count += 1
 
             if (len(self.errors) > 0):
                 return False
@@ -252,9 +277,11 @@ class CSVLoader():
                         # if an offering type with this name does not exist
                         if not OfferingType.objects.filter(name__icontains = offering_type)\
                                                    .exists():
-                            self.errors.append("envelope Type does not exist, line"\
-                                                    + str(line_count + 1)\
-                                                    + " You may need to add envelope type")
+                            self.errors.append("envelope Type ( "\
+                                                + offering_type\
+                                                + " ) does not exist, line"\
+                                                + str(line_count + 1)\
+                                                + " You may need to add envelope type")
                     line_count += 1
 
             if (len(self.errors) > 0):
@@ -402,7 +429,7 @@ class CSVLoader():
             row = {}
             count = 0
             for row in csv_reader:
-                if count < 5:
+                if count < 200:
                     row = row
                     data.append(row)
                     count += 1
@@ -461,12 +488,12 @@ class CSVLoader():
         if (not self._check_date(file_name)):
             return False
 
-        if (not self._check_offering_type(file_name)):
-            return False
-
         if (self.phone_number_column != None):
             if (not self._check_phone_number(file_name)):
                 return False
+
+        if (not self._check_offering_type(file_name)):
+            return False
 
         if (self.payment_method_column != None):
             if (not self._check_payment_method(file_name)):
@@ -495,6 +522,7 @@ class CSVLoader():
                     amount = None
                     if (self.amount_column != None):
                         amount = row[self.amount_column]
+                        amount = int(amount).replace(',', '')
                     # get payment_method
                     payment_method = None
                     if (self.payment_method_column != None):
