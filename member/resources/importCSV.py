@@ -32,14 +32,15 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    names =  row[self.names_column].strip()
-                    names =  names.split(" ")
-                    if (len(names) == 1):
-                        CSVLoader.errors.append("only one name given  at line " + str(line_count + 1))
-                    line_count += 1
+                if any(row):
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        names =  row[self.names_column].strip()
+                        names =  names.split(" ")
+                        if (len(names) == 1):
+                            CSVLoader.errors.append("only one name given  at line " + str(line_count + 1))
+                        line_count += 1
             if (len(CSVLoader.errors) > 0):
                 return False
             else:
@@ -54,15 +55,16 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                gender = row[self.gender_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    for data in gender.split(" "):
-                        #ignore all white spaces
-                        if (data != "M" and data != "F" and len(data) != 0):
-                            CSVLoader.errors.append("expected M or F at line " + str(line_count + 1))
-                    line_count += 1
+                if any(row):
+                    gender = row[self.gender_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        for data in gender.split(" "):
+                            #ignore all white spaces
+                            if (data != "M" and data != "F" and len(data) != 0):
+                                CSVLoader.errors.append("expected M or F at line " + str(line_count + 1))
+                        line_count += 1
             if (len(CSVLoader.errors) > 0):
                 return False
             else:
@@ -80,24 +82,36 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                d_o_b = row[self.date_of_birth_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    for data in d_o_b.split(" "):
+                if any(row):
+                    date = row[self.date_of_birth_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        date = date.strip()
                         #ignore all white spaces
-                        if (len(data) != 10 and len(data) != 0):
-                            CSVLoader.errors.append("incorrect date format at line " + str(line_count + 1) + " use format YYYY-MM-DD")
-                        if (len(data) == 10):
+                        if (len(date) != 10 and len(date) != 0):
+                            self.errors.append("incorrect date format ("\
+                                                + date \
+                                                + " ) at line "\
+                                                + str(line_count + 1) \
+                                                + " use format DD/MM/YYYY")
+                        #if it is corrects length
+                        if (len(date) == 10):
+                            date = date.split("/")
+                            year = date[2]
+                            month = date[1]
+                            day = date[0]
                             try:
-                                date = data.split("-")
-                                year = date[0]
-                                month = date[1]
-                                day = date[2]
                                 datetime.datetime(int(year),int(month),int(day))
                             except:
-                                CSVLoader.errors.append("incorrect date format at line " + str(line_count + 1) + " use format YYYY-MM-DD")
-                    line_count += 1
+                                self.errors.append("incorrect date format ("\
+                                                    + date \
+                                                    + " ) at line "\
+                                                    + str(line_count + 1)\
+                                                    + " use format DD/MM/YYYY")
+                        #increment line count
+                        line_count += 1
+
             if (len(CSVLoader.errors) > 0):
                 return False
             else:
@@ -115,31 +129,49 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                phone_number = row[self.phone_number_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    for data in phone_number.split(" "):
+                if any(row):
+                    phone_number = row[self.phone_number_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        phone_number = phone_number.strip()
                         #ignore all white spaces
-                        if (len(data) != 10 and len(data) != 13 and len(data) != 0):
-                            CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format 0712345678")
-                        if (len(data) == 10):
-                            if(data[0] != "0"):
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format 0712345678")
-                            try:
-                                int(int(data[1:10]))
-                            except ValueError:
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format 0712345678")
+                        if (    len(phone_number) != 10
+                            and len(phone_number) != 9#when the leading zero was left out
+                            and len(phone_number) != 0):
+                            self.errors.append("incorrect phone number format ("\
+                                                + phone_number \
+                                                + " ) at line "\
+                                                + str(line_count + 1) \
+                                                + " use format 0712345678")
 
-                        if (len(data) == 13):
-                            if(data[0] != "+"):
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format +254712345678")
+                        if (len(phone_number) == 10):
+                            if(phone_number[0] != "0"):
+                                self.errors.append("incorrect phone number format ("\
+                                                    + phone_number \
+                                                    + " ) at line "\
+                                                    + str(line_count + 1)\
+                                                    + " use format 0712345678")
+                            # check that they are all numbers
                             try:
-                                int(int(data[1:10]))
+                                int(int(phone_number[1:10]))
                             except ValueError:
-                                CSVLoader.errors.append("incorrect phone number format at line " + str(line_count + 1) + " use format +254712345678")
+                                self.errors.append("incorrect phone number format ("\
+                                                    + phone_number \
+                                                    + " ) at line "\
+                                                    + str(line_count + 1)\
+                                                    + " use format 0712345678")
+                        if (len(phone_number) == 9):
+                            try:
+                                int(int(phone_number[0:8]))
+                            except ValueError:
+                                self.errors.append("incorrect phone number format ("\
+                                                    + phone_number \
+                                                    + " ) at line "\
+                                                    + str(line_count + 1) \
+                                                    + " use format 712345678")
+                        line_count += 1
 
-                    line_count += 1
             if (len(CSVLoader.errors) > 0):
                 return False
             else:
@@ -154,15 +186,16 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                status = row[self.marital_status_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    for data in status.split(" "):
-                        #ignore all white spaces
-                        if (data != "M" and data != "S" and data != "D" and data != "W" and len(data) != 0):
-                            CSVLoader.errors.append("expected M,S,D or W at line " + str(line_count + 1))
-                    line_count += 1
+                if any(row):
+                    status = row[self.marital_status_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        for data in status.split(" "):
+                            #ignore all white spaces
+                            if (data != "M" and data != "S" and data != "D" and data != "W" and len(data) != 0):
+                                CSVLoader.errors.append("expected M,S,D or W at line " + str(line_count + 1))
+                        line_count += 1
             if (len(CSVLoader.errors) > 0):
                 return False
             else:
@@ -181,15 +214,16 @@ class CSVLoader():
             line_count = 0
             CSVLoader.errors = []
             for row in csv_reader:
-                email = row[self.email_column]
-                if line_count == 0:
-                    line_count += 1
-                else:
-                    for data in email.split(" "):
-                        #ignore all white spaces
-                        if (len(data) < 1 and len(data) != 0):
-                            CSVLoader.errors.append("incorrect email format at line " + str(line_count + 1) + " use format example@nano.com")
-                    line_count += 1
+                if any(row):
+                    email = row[self.email_column]
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        for data in email.split(" "):
+                            #ignore all white spaces
+                            if (len(data) < 1 and len(data) != 0):
+                                CSVLoader.errors.append("incorrect email format at line " + str(line_count + 1) + " use format example@nano.com")
+                        line_count += 1
             if (len(CSVLoader.errors) > 0):
                 return False
             else:
@@ -254,9 +288,13 @@ class CSVLoader():
             create contact for a member
         '''
         # ignore all spaces, commas or full stops that may be placed
-        for data in phone_number.split(" "):
-            if (len(data)==10 or len(data)==13):
-                phone_number = data
+        phone_number =  phone_number.strip()
+        if len(phone_number)==10 or len(phone_number) == 13 :
+            phone_number = str(phone_number)
+
+        if len(phone_number) == 9:
+            phone_number = '0'+ str(phone_number)
+
         member = Member.objects.get(id=member_id)
         contact = MemberContact.objects.create(member=member, phone=phone_number)
         return contact
@@ -388,7 +426,13 @@ class CSVLoader():
 
                     d_o_b = None
                     if (self.date_of_birth_column != None):
-                        d_o_b = row[self.date_of_birth_column]
+                        date = row[self.date_of_birth_column]
+                        date = date.split("/")
+                        year = date[2]
+                        month = date[1]
+                        day = date[0]
+                        date = datetime.datetime(int(year),int(month),int(day))
+                        d_o_b = date
 
                     phone_number = None
                     if (self.phone_number_column != None):
