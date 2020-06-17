@@ -208,7 +208,7 @@ class CSVLoader():
                         try:
                             amount = str(amount)
                             amount = amount.replace(',','')#remove commas and try converting to int
-                            int(int(amount))                    
+                            int(int(amount))
                         except ValueError:
                             self.errors.append("incorrect amount format ("\
                                                 + amount \
@@ -390,7 +390,7 @@ class CSVLoader():
             or type == 'Tithes'):
             try:
                 Tithe.objects.create(
-                    mode_of_payment = ModeOfPayment.objects.filter(name__icontains=payment_method)[0],
+                    mode_of_payment = payment_method,
                     amount = amount,
                     member = member,
                     name_if_not_member = name_if_not_member,
@@ -401,9 +401,14 @@ class CSVLoader():
                 pass
         else:
             try:
+                offering_type = OfferingType.objects.filter(name__icontains=type).first()
+                if offering_type:
+                    offering_type = offering_type
+                else:
+                    offering_type = None
                 Offering.objects.create(
-                    type = OfferingType.objects.filter(name__icontains=type)[0],
-                    mode_of_payment = ModeOfPayment.objects.filter(name__icontains=payment_method)[0],
+                    type = offering_type,
+                    mode_of_payment = payment_method,
                     amount = amount,
                     member = member,
                     name_if_not_member = name_if_not_member,
@@ -534,6 +539,12 @@ class CSVLoader():
                     if (self.payment_method_column != None):
                         payment_method = row[self.payment_method_column]
                         payment_method = payment_method.strip()
+                        if len(payment_method):
+                            payment_method = ModeOfPayment.objects.filter(name__icontains=payment_method).first()
+                            if payment_method:
+                                payment_method = payment_method
+                        else:
+                            payment_method = None
                     # get offering types
                     offering_type = None
                     if (self.offering_type_column != None):
@@ -569,7 +580,7 @@ class CSVLoader():
                                 None,#name_if_not_member =
                                 None #phone_if_not_memmber
                             )
-                            return
+                            continue
 
                     if len(names) > 1:
                         member = self._member_from_names(names)
@@ -585,10 +596,8 @@ class CSVLoader():
                                 None,#name_if_not_member =
                                 None #phone_if_not_memmber
                             )
-                            return
+                            continue
                         else:
-                            pass
-                            #add tithe or offering
                             self._add_tithe_or_offering(
                                 int(amount),#amount
                                 payment_method,#payment_method
@@ -598,6 +607,7 @@ class CSVLoader():
                                 names[0] + " " + names[1],#name_if_not_member =
                                 None #phone_if_not_memmber
                             )
+                            continue
 
                     if len(names) == 1:
                         self._add_tithe_or_offering(

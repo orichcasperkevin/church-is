@@ -246,6 +246,7 @@ class ImportDataFromCsv(APIView):
 
             csv_loader.set_base_url(request.get_host())
             csv_loader.configure_CSV(file_name,column_config)
+            csv_loader.load(file_name)
             try:
                 csv_loader.load(file_name)
             except:
