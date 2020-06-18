@@ -20,7 +20,8 @@ class OfferingType(generics.ListCreateAPIView) :
     '''
         a list of all offering types.
     '''
-    queryset = OfferingType.objects.all().order_by('id')
+    #TODO name__icontains rose was a quick fix ...add endpoint for deleting offering type
+    queryset = OfferingType.objects.all().exclude(name__icontains="rose").order_by('id')
     serializer_class = OfferingTypeSerializer
 
 class IncomeTypeList(generics.ListCreateAPIView):

@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -25,6 +26,24 @@ class Member(models.Model):
         contact =  MemberContact.objects.filter(member_id=self.id).first()
         if contact:
             return contact.phone
+        else:
+            return ''
+
+    @property
+    def age(self):
+        age = MemberAge.objects.filter(member__id=self.id).first()
+        if age:
+            today = date.today()
+            age = today.year - age.d_o_b.year - ((today.month, today.day) < (age.d_o_b.month, age.d_o_b.day))            
+            return age
+        else:
+            return ''
+
+    @property
+    def marital_status(self):
+        status = MemberMaritalStatus.objects.filter(member__id=self.id).first()
+        if status:
+            return status.status
         else:
             return ''
 

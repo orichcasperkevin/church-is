@@ -104,9 +104,9 @@ class GetMaritalStatusForMemberWithId(APIView):
     '''
 
     def get(self, request, id):
-        residence = MemberMaritalStatus.objects.filter(member__member__id=id)
+        status = MemberMaritalStatus.objects.filter(member__member__id=id)
 
-        data = MemberMaritalStatusSerializer(residence, many=True).data
+        data = MemberMaritalStatusSerializer(status, many=True).data
         return Response(data)
 
 class GetFamilyForMemberWithId(APIView):
