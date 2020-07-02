@@ -406,6 +406,7 @@ class CSVLoader():
                     offering_type = offering_type
                 else:
                     offering_type = None
+
                 Offering.objects.create(
                     type = offering_type,
                     mode_of_payment = payment_method,

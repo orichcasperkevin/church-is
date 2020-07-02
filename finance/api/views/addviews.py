@@ -212,9 +212,7 @@ class CheckCSV(APIView):
     def post(self, request):
             csv_loader.set_base_url(request.get_host())
             file_name = request.data.get('file_name')
-            column_config = request.data.get('column_config')
-            csv_loader.configure_CSV(file_name,column_config)
-            csv_loader.check_CSV(file_name)
+            column_config = request.data.get('column_config')            
 
             try:
                 csv_loader.configure_CSV(file_name,column_config)
@@ -245,7 +243,7 @@ class ImportDataFromCsv(APIView):
             column_config = request.data.get('column_config')
 
             csv_loader.set_base_url(request.get_host())
-            csv_loader.configure_CSV(file_name,column_config)            
+            csv_loader.configure_CSV(file_name,column_config)
             try:
                 csv_loader.load(file_name)
             except:

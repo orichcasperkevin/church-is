@@ -128,9 +128,9 @@ class GetRolesForMemberWithId(APIView):
     '''
 
     def get(self, request, id):
-        role_membership = RoleMembership.objects.filter(member__member__id=id)
+        role_membership = MemberRole.objects.filter(member__member__id=id)
 
-        data = RoleMemberShipSerializer(role_membership, many=True).data
+        data = MemberRoleSerializer(role_membership, many=True).data
         return Response(data)
 
 class PreviewCSV(APIView):

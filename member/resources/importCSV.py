@@ -139,6 +139,7 @@ class CSVLoader():
                         if (    len(phone_number) != 10
                             and len(phone_number) != 9#when the leading zero was left out
                             and len(phone_number) != 0):
+                            print(self.errors)
                             self.errors.append("incorrect phone number format ("\
                                                 + phone_number \
                                                 + " ) at line "\
@@ -326,7 +327,7 @@ class CSVLoader():
             row = {}
             count = 0
             for row in csv_reader:
-                if count < 5:
+                if count < 250:
                     row = row
                     data.append(row)
                     count += 1

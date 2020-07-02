@@ -20,7 +20,7 @@ class MesageFormatter(ChurchSysMesageFormatter):
         how this message is formated
     '''
     def formated_message(self):
-        return  self.message + "\n" + self.church.domain_url
+        return  self.message # + "\n" + self.church.domain_ur
 
 class CustomMesageFormatter(ChurchSysMesageFormatter):
     '''
@@ -68,11 +68,11 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
             replace data in '[]' with appropriate member data
         '''
         self.message = self.message.replace("[name]",self.first_name)
-        self.message = self.message.replace("[amount]",self.this_amount)    
+        self.message = self.message.replace("[amount]",self.this_amount)
         self.message = self.message.replace("[date]",self.this_date)
 
     def formated_message(self):
-        return  self.message +   "\n\n" + self.church.domain_url
+        return  self.message #+   "\n\n" + self.church.domain_url
 
 class addSMS(APIView):
     '''
