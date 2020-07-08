@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'widget_tweaks',
     'djrichtextfield',
+    'rest_framework_swagger',
 
     'Clients',
     'member',
@@ -94,7 +95,7 @@ INSTALLED_APPS = [
     'sms',
     'Resources',
     'church_social',
-    'bootstrap4',
+    'bootstrap4',    
 
 ]
 

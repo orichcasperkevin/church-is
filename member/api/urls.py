@@ -31,15 +31,15 @@ urlpatterns = [
 
     # adding
     path('add-member/', addviews.addMember.as_view()),
-    path('upload-csv/', addviews.UploadCSV.as_view()),
-    re_path(r'^preview-csv/(?P<file_name>.*)/$', detailviews.PreviewCSV.as_view()),
-    path('check-csv/', addviews.CheckCSV.as_view()),
-    path('import-data-from-csv/', addviews.ImportDataFromCsv.as_view()),
     path('add-member-contact/', addviews.AddMemberContact.as_view()),
     path('add-member-d_o_b/', addviews.AddMemberD_O_B.as_view()),
     path('add-member-residence/', addviews.AddMemberResidence.as_view()),
     path('add-member-marital-status/', addviews.AddMemberMaritalStatus.as_view()),
     path('add-role-for-member/', addviews.AddRoleMemberShip.as_view()),
+    path('upload-csv/', addviews.UploadCSV.as_view()),
+    re_path(r'^preview-csv/(?P<file_name>.*)/$', detailviews.PreviewCSV.as_view()),
+    path('check-csv/', addviews.CheckCSV.as_view()),
+    path('import-data-from-csv/', addviews.ImportDataFromCsv.as_view()),
 
     #updating
     path('update-member-detail/',updateviews.UpdateMemberData.as_view()),

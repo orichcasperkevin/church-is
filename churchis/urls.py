@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
+from rest_framework_swagger.views import get_swagger_view
+schema_view = get_swagger_view(title='church API')
 from rest_framework_simplejwt import views as jwt_views
 from Clients import views as site_views
 
@@ -42,7 +44,7 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     # apps
-    path('api/clients/', include('Clients.api.urls')),
+    path('api/clients/', include(('Clients.api.urls','Clients'),namespace="clients")),
     path('api/members/', include('member.api.urls')),
     path('api/groups/', include('groups.api.urls')),
     path('api/events/', include('events.api.urls')),
@@ -53,4 +55,19 @@ urlpatterns = [
     path('api/services/', include('services.api.urls')),
     path('api/sms/', include('sms.api.urls')),
     path('api/social/', include('church_social.api.urls')),
+
+    # duplicate to facilitate documentation groups
+    path('api_clients/', include(('Clients.api.urls','Clients'))),
+    path('api_members/', include('member.api.urls')),
+    path('api_groups/', include('groups.api.urls')),
+    path('api_events/', include('events.api.urls')),
+    path('api_projects/', include('projects.api.urls')),
+    path('api_finance/', include('finance.api.urls')),
+    path('api_news/', include('news.api.urls')),
+    path('api_sermons/', include('sermons.api.urls')),
+    path('api_services/', include('services.api.urls')),
+    path('api_sms/', include('sms.api.urls')),
+    path('api_social/', include('church_social.api.urls')),
+
+    path('docs/', schema_view,)
 ]

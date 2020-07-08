@@ -150,13 +150,22 @@ class TitheStatsForMember(APIView):
 
 class Tithes(APIView):
     '''
-        tithes as given by members (the last 50)
+        tithes as given by members
     '''
 
     def get(self, request):
-        tithe = Tithe.objects.all().order_by('-date')[:50]
-        data = TitheSerializer(tithe, many=True).data
-        return Response(data)
+        params = dict(request.GET)
+        if not len(params):
+            tithe = Tithe.objects.all().order_by('-date')[:200]
+            data = TitheSerializer(tithe, many=True).data
+            return Response(data)
+        else:
+            tithe = Tithe.objects.filter(date__gte=params['from_date'][0],
+                                        date__lte=params['to_date'][0])\
+                                .order_by('-date')
+            data = TitheSerializer(tithe, many=True).data
+            return Response(data)
+
 
 
 class TitheStats(APIView):
@@ -181,7 +190,6 @@ class TitheStats(APIView):
 
         return Response(stat_dict)
 
-
 class OfferingByMember(APIView):
     '''
         offerings as given by member with id <id>
@@ -191,7 +199,6 @@ class OfferingByMember(APIView):
         offering = Offering.objects.filter(member__member_id=id).order_by('-date')
         data = OfferingSerializer(offering, many=True).data
         return Response(data)
-
 
 class OfferingStatsForMember(APIView):
     '''
@@ -203,16 +210,22 @@ class OfferingStatsForMember(APIView):
         data = OfferingSerializer(offering, many=True).data
         return Response(data)
 
-
 class OfferingThisMonth(APIView):
     '''
         offerings this month
     '''
-
     def get(self, request):
-        offering = Offering.objects.all().order_by('-timestamp')[:50]
-        data = OfferingSerializer(offering, many=True).data
-        return Response(data)
+        params = dict(request.GET)
+        if not len(params):
+            offering = Offering.objects.all().order_by('-timestamp')[:50]
+            data = OfferingSerializer(offering, many=True).data
+            return Response(data)
+        else:
+            offerings = Offering.objects.filter(date__gte=params['from_date'][0],
+                                        date__lte=params['to_date'][0])\
+                                .order_by('-date')
+            data = OfferingSerializer(offerings, many=True).data
+            return Response(data)
 
 
 class OfferingStats(APIView):
