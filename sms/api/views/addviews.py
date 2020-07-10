@@ -26,37 +26,68 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
     '''
         for sending custom messages after recording member finances
     '''
-    def __init__(self,message,schema_name,member_id,context):
+    def __init__(self,message,schema_name,id,context):
         super().__init__(message,schema_name)#initialize message and schema_name
-        self.member = Member.objects.get(member_id=member_id)
-        self.first_name = self.member.member.first_name
+        self.member = None
+        self.first_name = None
         self.this_amount = ''
         self.this_date = ''
         self.recent_giving = ''
+        self.this_type = ''
+
+        if context == "All":
+            if (id['type'] == "Tithe"):
+                tithe = Tithe.objects.get(id=id['id'])
+                tithe.notified = True
+                tithe.save()
+                self.member = tithe.member
+                self.this_amount = str(tithe.amount)
+                self.this_date = str(tithe.date)
+                self.this_type = "Tithe"
+                self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
+                "total this year is : " + str(tithe.total_this_month)
+            else:
+                offering = Offering.objects.get(id=id['id'])
+                offering.notified = True
+                offering.save()
+                self.member = offering.member
+                self.this_amount = str(offering.amount)
+                self.this_date = str(offering.date)
+                self.this_type = id['type']
+                self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
+                "total this year is : " + str(offering.total_this_month)
 
         if context == "Tithe":
-            tithe = Tithe.objects.filter(member=self.member).latest('id')
-            self.this_amount = str(tithe.amount)
-            self.this_date = str(tithe.date)
-            self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
-            "total this year is : " + str(tithe.total_this_month)
+                tithe = Tithe.objects.get(id=id)
+                tithe.notified = True
+                tithe.save()
+                self.member = tithe.member
+                self.this_amount = str(tithe.amount)
+                self.this_date = str(tithe.date)
+                self.this_type = "Tithe"
+                self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
+                "total this year is : " + str(tithe.total_this_month)
 
         if context == "Offering":
-            offering = Offering.objects.filter(member=self.member).latest('id')
-            self.this_amount = str(offering.amount)
-            self.this_date = str(offering.date)
-            self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
-            "total this year is : " + str(offering.total_this_month)
+                offering = Offering.objects.get(id=id)
+                offering.notified = True
+                offering.save()
+                self.member = offering.member
+                self.this_amount = str(offering.amount)
+                self.this_date = str(offering.date)
+                self.this_type = offering.type.name
+                self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
+                "total this year is : " + str(offering.total_this_month)
 
         if context == "Pledge":
-            pledge = Pledge.objects.filter(member=self.member).latest('id')
+            pledge = Pledge.objects.filter(member_id=id).latest('id')
             self.this_amount =  str(pledge.amount) + " towards project " + pledge.project.name
             self.this_date = str(pledge.date)
             self.recent_giving = "amount so far is " + str(pledge.amount_so_far) + ", "+\
             "remaining amount is "+ str(pledge.remaining_amount) + " (" + str(pledge.percentage_funded) +")"
 
         if context == "Contribution":
-            contribution = Contribution.objects.filter(member=self.member).latest('id')
+            contribution = Contribution.objects.filter(member_id=id).latest('id')
             self.this_amount =  str(contribution.amount) + " towards project " + contribution.project.name
             self.this_date = str(contribution.recorded_at)
 
@@ -67,12 +98,16 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
         '''
             replace data in '[]' with appropriate member data
         '''
-        self.message = self.message.replace("[name]",self.first_name)
+        self.message = self.message.replace("[name]",self.member.member.first_name)
         self.message = self.message.replace("[amount]",self.this_amount)
         self.message = self.message.replace("[date]",self.this_date)
+        self.message = self.message.replace("[type]",self.this_type)
 
     def formated_message(self):
         return  self.message #+   "\n\n" + self.church.domain_url
+
+    def member_id(self):
+        return self.member.id
 
 class addSMS(APIView):
     '''
@@ -128,7 +163,7 @@ class addCustomSMS(APIView):
                 message_formatter = CustomMesageFormatter(message,schema,id,context)
 
                 messenger.set_message_formatter(message_formatter)
-                receipient = messenger.receipients_phone_numbers([id])
+                receipient = messenger.receipients_phone_numbers([message_formatter.member_id()])
                 messenger.send_message(receipient,message)
 
                 queryset = Member.objects.filter(member_id=sending_member_id)

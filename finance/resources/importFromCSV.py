@@ -5,7 +5,6 @@ import datetime
 
 from django.contrib.auth.models import User
 from member.models import *
-
 from finance.models import ModeOfPayment,OfferingType,Offering,Tithe
 
 class CSVLoader():
@@ -323,8 +322,6 @@ class CSVLoader():
 
         if (len(var_tuple) > 1):
             middle_name = var_tuple[1]
-
-            user = User.objects.get(id = user_id)
             member = Member.objects.create(member=user,middle_name=middle_name)
             return member
 
@@ -583,7 +580,7 @@ class CSVLoader():
                             )
                             continue
 
-                    if len(names) > 1:
+                    if len(names) == 2 or len(names) == 3:
                         member = self._member_from_names(names)
                         if member and self.phone_number_column:
                             self._create_contact(member,phone_number)
@@ -610,7 +607,7 @@ class CSVLoader():
                             )
                             continue
 
-                    if len(names) == 1:
+                    if len(names) == 1 or len(names) > 3:
                         self._add_tithe_or_offering(
                             int(amount),#amount
                             payment_method,#payment_method

@@ -65,6 +65,7 @@ class Offering(models.Model):
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='offering_recorded_by')
 
     timestamp = models.DateTimeField(auto_now_add=True)
+    notified = models.BooleanField(default=False)
 
     @property
     def total_this_month(self):
@@ -114,6 +115,7 @@ class Tithe(models.Model):
     recorded_by = models.ForeignKey(Member, null=True, on_delete=models.SET_NULL, related_name='tithe_recorded_by')
 
     timestamp = models.DateTimeField(auto_now_add=True,null=True)
+    notified = models.BooleanField(default=False)
 
     @property
     def total_this_month(self):

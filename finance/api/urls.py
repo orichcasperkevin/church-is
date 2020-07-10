@@ -13,6 +13,8 @@ urlpatterns = [
     path('income-of-type/<int:id>/', listviews.IncomeOfType.as_view()),
     path('income-stats/', listviews.IncomeStats.as_view()),
 
+    path('tithes-and-offerings/', listviews.TithesAndOfferings.as_view()),
+
     path('tithe-for-member/<int:id>/', listviews.TitheForMember.as_view()),
     path('tithe-stats-for-member/<int:id>/', listviews.TitheStatsForMember.as_view()),
     path('tithes-by-members/', listviews.Tithes.as_view()),

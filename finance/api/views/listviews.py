@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -148,6 +149,36 @@ class TitheStatsForMember(APIView):
         return Response(data)
 
 
+class TithesAndOfferings(APIView):
+    '''
+        get both tithes and offerings
+    '''
+    def get(self, request):
+        params = dict(request.GET)
+        if not len(params):
+            #tithes
+            tithe = Tithe.objects.all().order_by('-date')[:50]
+            data = TitheSerializer(tithe, many=True).data
+            #offerings
+            offering = Offering.objects.all().order_by('-timestamp')[:50]
+            data += OfferingSerializer(offering, many=True).data
+
+            data.sort(reverse=True,key = lambda x: datetime.strptime(x['date'], '%Y-%m-%d'))
+            return Response(data)
+        else:
+            # tithes
+            tithe = Tithe.objects.filter(date__gte=params['from_date'][0],
+                                        date__lte=params['to_date'][0])\
+                                .order_by('-date')
+            data = TitheSerializer(tithe, many=True).data
+            #offerings
+            offerings = Offering.objects.filter(date__gte=params['from_date'][0],
+                                        date__lte=params['to_date'][0])\
+                                .order_by('-date')
+            data += OfferingSerializer(offerings, many=True).data
+            data.sort(reverse=True,key = lambda x: datetime.strptime(x['date'], '%Y-%m-%d'))
+            return Response(data)
+
 class Tithes(APIView):
     '''
         tithes as given by members
@@ -156,7 +187,7 @@ class Tithes(APIView):
     def get(self, request):
         params = dict(request.GET)
         if not len(params):
-            tithe = Tithe.objects.all().order_by('-date')[:200]
+            tithe = Tithe.objects.all().order_by('-date')[:50]
             data = TitheSerializer(tithe, many=True).data
             return Response(data)
         else:
