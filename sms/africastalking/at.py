@@ -58,7 +58,7 @@ class ChurchSysMessenger():
             phone_numbers = []
             for data in receipient_member_ids:
                 try:
-                    contact = MemberContact.objects.filter(member__member_id = data)[0]
+                    contact = MemberContact.objects.filter(member__member__id = data)[0]
                     member_phone_number = contact.phone
                     if not member_phone_number:
                         continue
@@ -66,7 +66,7 @@ class ChurchSysMessenger():
                         member_phone_number = member_phone_number.replace('0','+254',1)
                     if member_phone_number[:3] == '254':
                         member_phone_number = member_phone_number.replace('254','+254',1)
-                    phone_numbers.append(member_phone_number)
+                    phone_numbers.append(member_phone_number)                    
                 except:
                     pass #TODO add a mechanism to generate this as a send sms error
             return phone_numbers

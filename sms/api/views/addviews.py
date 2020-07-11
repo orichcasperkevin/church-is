@@ -34,7 +34,6 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
         self.this_date = ''
         self.recent_giving = ''
         self.this_type = ''
-
         if context == "All":
             if (id['type'] == "Tithe"):
                 try:
@@ -76,6 +75,7 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
                 self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
                 "total this year is : " + str(tithe.total_this_month)
             except Tithe.DoesNotExist:
+                print("passed")
                 pass
 
         if context == "Offering":
@@ -122,7 +122,7 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
         return  self.message #+   "\n\n" + self.church.domain_url
 
     def member_id(self):
-        return self.member.id
+        return self.member.member.id
 
 class addSMS(APIView):
     '''
@@ -180,16 +180,17 @@ class addCustomSMS(APIView):
                 if message_formatter.member:
 
                     messenger.set_message_formatter(message_formatter)
-                    receipient = messenger.receipients_phone_numbers([message_formatter.member_id()])                    
-                    messenger.send_message(receipient,message_formatter.formated_message())
+                    receipient = messenger.receipients_phone_numbers([message_formatter.member_id()])
+                    if len(receipient):                                        
+                        messenger.send_message(receipient,message_formatter.formated_message())
 
-                    queryset = Member.objects.filter(member_id=sending_member_id)
-                    sending_member = getSerializerData(queryset,MemberSerializer)
+                        queryset = Member.objects.filter(member_id=sending_member_id)
+                        sending_member = getSerializerData(queryset,MemberSerializer)
 
-                    data = {'sending_member': sending_member, 'app': app, 'message': message, 'website': website}
-                    serializer = SmsSerializer(data=data)
-                    if serializer.is_valid():
-                        created = serializer.save()
+                        data = {'sending_member': sending_member, 'app': app, 'message': message, 'website': website}
+                        serializer = SmsSerializer(data=data)
+                        if serializer.is_valid():
+                            created = serializer.save()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
         except:
