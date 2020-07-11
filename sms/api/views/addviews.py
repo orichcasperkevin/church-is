@@ -37,27 +37,35 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
 
         if context == "All":
             if (id['type'] == "Tithe"):
-                tithe = Tithe.objects.get(id=id['id'])
-                tithe.notified = True
-                tithe.save()
-                self.member = tithe.member
-                self.this_amount = str(tithe.amount)
-                self.this_date = str(tithe.date)
-                self.this_type = "Tithe"
-                self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
-                "total this year is : " + str(tithe.total_this_month)
+                try:
+                    tithe = Tithe.objects.get(id=id['id'])
+                    tithe.notified = True
+                    tithe.save()
+                    self.member = tithe.member
+                    self.this_amount = str(tithe.amount)
+                    self.this_date = str(tithe.date)
+                    self.this_type = "Tithe"
+                    self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
+                    "total this year is : " + str(tithe.total_this_month)
+                except Tithe.DoesNotExist:
+                    pass
             else:
-                offering = Offering.objects.get(id=id['id'])
-                offering.notified = True
-                offering.save()
-                self.member = offering.member
-                self.this_amount = str(offering.amount)
-                self.this_date = str(offering.date)
-                self.this_type = id['type']
-                self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
-                "total this year is : " + str(offering.total_this_month)
+                try:
+                    offering = Offering.objects.get(id=id['id'])
+                    offering.notified = True
+                    offering.save()
+                    self.member = offering.member
+                    self.this_amount = str(offering.amount)
+                    self.this_date = str(offering.date)
+                    if offering.type:
+                        self.this_type = offering.type.name
+                    self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
+                    "total this year is : " + str(offering.total_this_month)
+                except Offering.DoesNotExist:
+                    pass
 
         if context == "Tithe":
+            try:
                 tithe = Tithe.objects.get(id=id)
                 tithe.notified = True
                 tithe.save()
@@ -67,17 +75,23 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
                 self.this_type = "Tithe"
                 self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
                 "total this year is : " + str(tithe.total_this_month)
+            except Tithe.DoesNotExist:
+                pass
 
         if context == "Offering":
-                offering = Offering.objects.get(id=id)
-                offering.notified = True
-                offering.save()
-                self.member = offering.member
-                self.this_amount = str(offering.amount)
-                self.this_date = str(offering.date)
-                self.this_type = offering.type.name
-                self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
-                "total this year is : " + str(offering.total_this_month)
+                try:
+                    offering = Offering.objects.get(id=id)
+                    offering.notified = True
+                    offering.save()
+                    self.member = offering.member
+                    self.this_amount = str(offering.amount)
+                    self.this_date = str(offering.date)
+                    if offering.type:
+                        self.this_type = offering.type.name
+                    self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
+                    "total this year is : " + str(offering.total_this_month)
+                except Offering.DoesNotExist:
+                    pass
 
         if context == "Pledge":
             pledge = Pledge.objects.filter(member_id=id).latest('id')
@@ -98,7 +112,8 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
         '''
             replace data in '[]' with appropriate member data
         '''
-        self.message = self.message.replace("[name]",self.member.member.first_name)
+        if self.member:
+            self.message = self.message.replace("[name]",self.member.member.first_name)
         self.message = self.message.replace("[amount]",self.this_amount)
         self.message = self.message.replace("[date]",self.this_date)
         self.message = self.message.replace("[type]",self.this_type)
@@ -162,19 +177,20 @@ class addCustomSMS(APIView):
                 #create a message formater.
                 message_formatter = CustomMesageFormatter(message,schema,id,context)
 
-                messenger.set_message_formatter(message_formatter)
-                receipient = messenger.receipients_phone_numbers([message_formatter.member_id()])
-                messenger.send_message(receipient,message)
+                if message_formatter.member:
 
-                queryset = Member.objects.filter(member_id=sending_member_id)
-                sending_member = getSerializerData(queryset,MemberSerializer)
+                    messenger.set_message_formatter(message_formatter)
+                    receipient = messenger.receipients_phone_numbers([message_formatter.member_id()])                    
+                    messenger.send_message(receipient,message_formatter.formated_message())
 
-                data = {'sending_member': sending_member, 'app': app, 'message': message_formatter.formated_message(), 'website': website}
-                serializer = SmsSerializer(data=data)
-                if serializer.is_valid():
-                    created = serializer.save()
+                    queryset = Member.objects.filter(member_id=sending_member_id)
+                    sending_member = getSerializerData(queryset,MemberSerializer)
+
+                    data = {'sending_member': sending_member, 'app': app, 'message': message, 'website': website}
+                    serializer = SmsSerializer(data=data)
+                    if serializer.is_valid():
+                        created = serializer.save()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except:#Exception as e:
-            #raise
+        except:
             return Response(status=status.HTTP_400_BAD_REQUEST)

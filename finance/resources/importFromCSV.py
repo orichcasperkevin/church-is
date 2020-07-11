@@ -97,27 +97,14 @@ class CSVLoader():
                         line_count += 1
                     else:
                         date = date.strip()
-                        #ignore all white spaces
-                        if (len(date) != 10 and len(date) != 0):
+                        try:
+                            datetime.datetime.strptime(date,'%d %B %Y')
+                        except:
                             self.errors.append("incorrect date format ("\
                                                 + date \
                                                 + " ) at line "\
                                                 + str(line_count + 1) \
-                                                + " use format DD/MM/YYYY")
-                        #if it is corrects length
-                        if (len(date) == 10):
-                            date = date.split("/")
-                            year = date[2]
-                            month = date[1]
-                            day = date[0]
-                            try:
-                                datetime.datetime(int(year),int(month),int(day))
-                            except:
-                                self.errors.append("incorrect date format ("\
-                                                    + date \
-                                                    + " ) at line "\
-                                                    + str(line_count + 1)\
-                                                    + " use format DD/MM/YYYY")
+                                                + " use format '31 March 2020'")
                         #increment line count
                         line_count += 1
 
@@ -556,11 +543,8 @@ class CSVLoader():
                     date = None
                     if (self.date_column != None):
                         date = row[self.date_column]
-                        date = date.split("/")
-                        year = date[2]
-                        month = date[1]
-                        day = date[0]
-                        date = datetime.datetime(int(year),int(month),int(day))
+                        date = date.strip()
+                        date = datetime.datetime.strptime(date,'%d %B %Y')
                     # get names
                     names =  row[self.names_column].strip()
                     names =  names.split(" ")
