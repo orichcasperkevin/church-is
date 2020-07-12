@@ -113,10 +113,17 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
             replace data in '[]' with appropriate member data
         '''
         if self.member:
-            self.message = self.message.replace("[name]",self.member.member.first_name)
+            self.message = self.message.replace("[name]",self.member.member.get_full_name())
         self.message = self.message.replace("[amount]",self.this_amount)
         self.message = self.message.replace("[date]",self.this_date)
         self.message = self.message.replace("[type]",self.this_type)
+
+        #capital letters
+        if self.member:
+            self.message = self.message.replace("[Name]",self.member.member.get_full_name())
+        self.message = self.message.replace("[Amount]",self.this_amount)
+        self.message = self.message.replace("[Date]",self.this_date)
+        self.message = self.message.replace("[Type]",self.this_type)
 
     def formated_message(self):
         return  self.message #+   "\n\n" + self.church.domain_url
@@ -181,8 +188,8 @@ class addCustomSMS(APIView):
 
                     messenger.set_message_formatter(message_formatter)
                     receipient = messenger.receipients_phone_numbers([message_formatter.member_id()])
-                    if len(receipient):                                        
-                        messenger.send_message(receipient,message_formatter.formated_message())
+                    if len(receipient):
+                        messenger.send_message(receipient,message_formatter.formated_message())                    
 
                         queryset = Member.objects.filter(member_id=sending_member_id)
                         sending_member = getSerializerData(queryset,MemberSerializer)
