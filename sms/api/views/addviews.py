@@ -1,3 +1,4 @@
+from django.contrib.humanize.templatetags.humanize import intcomma
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -41,8 +42,8 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
                     tithe.notified = True
                     tithe.save()
                     self.member = tithe.member
-                    self.this_amount = str(tithe.amount)
-                    self.this_date = str(tithe.date)
+                    self.this_amount = tithe.amount
+                    self.this_date = tithe.date
                     self.this_type = "Tithe"
                     self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
                     "total this year is : " + str(tithe.total_this_month)
@@ -54,8 +55,8 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
                     offering.notified = True
                     offering.save()
                     self.member = offering.member
-                    self.this_amount = str(offering.amount)
-                    self.this_date = str(offering.date)
+                    self.this_amount = offering.amount
+                    self.this_date = offering.date
                     if offering.type:
                         self.this_type = offering.type.name
                     self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
@@ -69,8 +70,8 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
                 tithe.notified = True
                 tithe.save()
                 self.member = tithe.member
-                self.this_amount = str(tithe.amount)
-                self.this_date = str(tithe.date)
+                self.this_amount = tithe.amount
+                self.this_date = tithe.date
                 self.this_type = "Tithe"
                 self.recent_giving = "total this month is : " + str(tithe.total_this_month) + ", " +\
                 "total this year is : " + str(tithe.total_this_month)
@@ -84,8 +85,8 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
                     offering.notified = True
                     offering.save()
                     self.member = offering.member
-                    self.this_amount = str(offering.amount)
-                    self.this_date = str(offering.date)
+                    self.this_amount = offering.amount
+                    self.this_date = offering.date
                     if offering.type:
                         self.this_type = offering.type.name
                     self.recent_giving = "total this month is : " + str(offering.total_this_month) + ", " +\
@@ -114,15 +115,15 @@ class CustomMesageFormatter(ChurchSysMesageFormatter):
         '''
         if self.member:
             self.message = self.message.replace("[name]",self.member.member.get_full_name())
-        self.message = self.message.replace("[amount]",self.this_amount)
-        self.message = self.message.replace("[date]",self.this_date)
+        self.message = self.message.replace("[amount]",intcomma(int(self.this_amount)))
+        self.message = self.message.replace("[date]",self.this_date.strftime("%d/%b/%y"))
         self.message = self.message.replace("[type]",self.this_type)
 
         #capital letters
         if self.member:
             self.message = self.message.replace("[Name]",self.member.member.get_full_name())
-        self.message = self.message.replace("[Amount]",self.this_amount)
-        self.message = self.message.replace("[Date]",self.this_date)
+        self.message = self.message.replace("[Amount]",intcomma(int(self.this_amount)))
+        self.message = self.message.replace("[Date]",self.this_date.strftime("%d/%b/%y"))
         self.message = self.message.replace("[Type]",self.this_type)
 
     def formated_message(self):
@@ -188,8 +189,8 @@ class addCustomSMS(APIView):
 
                     messenger.set_message_formatter(message_formatter)
                     receipient = messenger.receipients_phone_numbers([message_formatter.member_id()])
-                    if len(receipient):
-                        messenger.send_message(receipient,message_formatter.formated_message())                    
+                    if len(receipient):                        
+                        messenger.send_message(receipient,message_formatter.formated_message())
 
                         queryset = Member.objects.filter(member_id=sending_member_id)
                         sending_member = getSerializerData(queryset,MemberSerializer)
