@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 
-from services.api.serializers import (ServiceTypeSerializer ,ServiceItemSerializer, ServiceSerializer)
+from services.api.serializers import *
 
-from services.models import (ServiceType, ServiceItem, Service )
+from services.models import *
 
 today = date.today()
 day = today.day
@@ -24,6 +24,7 @@ class ServiceOnDateOfType(APIView):
         service = Service.objects.filter(date=date, type_id=type_id)
         data = ServiceSerializer(service, many=True).data
         return Response(data)
+
 class ServiceItemsForService(APIView):
     '''
         get:
@@ -33,4 +34,15 @@ class ServiceItemsForService(APIView):
     def get(self, request, service_id):
         item = ServiceItem.objects.filter( service_id=service_id)
         data = ServiceItemSerializer(item, many=True).data
+        return Response(data)
+
+class GetBookingForMember(APIView):
+    '''
+        get:
+        get booking for member.
+    '''
+
+    def get(self, request, phone_number):
+        booking = Booking.objects.filter(phone_number=phone_number)[:100]
+        data = BookingSerializer(booking, many=True).data
         return Response(data)

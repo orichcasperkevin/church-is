@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 
-from services.api.serializers import (ServiceTypeSerializer ,ServiceItemSerializer, ServiceSerializer, AddServiceSerializer)
+from services.api.serializers import *
 
-from services.models import (ServiceType, ServiceItem, Service )
+from services.models import *
 
 class AddService(APIView):
     '''
@@ -58,6 +58,20 @@ class AddServiceItem(APIView):
         data = {'service': service, 'action': action, 'value': value }
         serializer = ServiceItemSerializer(data=data)
 
+        if serializer.is_valid():
+            created = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AddBooking(APIView):
+    '''
+        add booking
+    '''
+
+    def post(self, request):
+        data = request.data
+        serializer = BookingSerializer(data=data,partial=True)
         if serializer.is_valid():
             created = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -12,9 +12,13 @@ urlpatterns = [
 
     path('service-on-date/<slug:date>/of-type/<int:type_id>/', detailviews.ServiceOnDateOfType.as_view()),
     path('service-items-for-service/<int:service_id>/', detailviews.ServiceItemsForService.as_view()),
+    path('bookings-by-phone-number/<slug:phone_number>/', detailviews.GetBookingForMember.as_view()),
+
 
     path('add-service/', addviews.AddService.as_view()),
     path('add-service-item/', addviews.AddServiceItem.as_view()),
+    path('add-booking/', addviews.AddBooking.as_view()),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
