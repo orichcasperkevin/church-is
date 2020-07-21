@@ -27,12 +27,16 @@ class Command(BaseCommand):
                 unique_list = []
                 for contact in contacts:
                     if contact.member:
-                        id = contact.member.member.id
-                        if id not in unique_list:
-                            unique_list.append(id)
+                        phone = contact.phone
+                        # full_name =  contact.member.member.get_full_name()
+                        if phone not in unique_list:
+                            print(phone)
+                            unique_list.append(phone)
                         else:
+                            print(phone + "---> phone number duplicated ")
                             count += 1
                             contact.delete()
                             contact.member.member.delete()
-                    print("\n")
-            self.stdout.write("removed " + str(count) + " duplicates")
+                print("\n")
+
+            self.stdout.write("removed " + str(count) + " duplicates")            
