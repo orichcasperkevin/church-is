@@ -36,6 +36,17 @@ class ServiceItemsForService(APIView):
         data = ServiceItemSerializer(item, many=True).data
         return Response(data)
 
+class GetBookingsForService(APIView):
+    '''
+        get:
+        get bookings for a service
+    '''
+
+    def get(self, request, service_id):
+        booking = Booking.objects.filter(service_id=service_id)
+        data = BookingSerializer(booking, many=True).data
+        return Response(data)
+
 class GetBookingForMember(APIView):
     '''
         get:

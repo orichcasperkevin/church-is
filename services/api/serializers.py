@@ -59,9 +59,10 @@ class ServiceItemSerializer(serializers.ModelSerializer):
 
 class BookingSerializer(serializers.ModelSerializer):
     service_type_name = serializers.CharField(source='service.type.name',default="None")
+    service_date = serializers.CharField(source='service.date',default="None")
     service_start = serializers.CharField(source='service.start',default="None")
     service_end = serializers.CharField(source='service.end',default="None")
     class Meta:
         model = Booking
-        fields = ('id','service','service_type_name','service_start','service_end',
+        fields = ('id','service','service_type_name','service_date','service_start','service_end',
                     'names', 'phone_number', 'timestamp','waiting')

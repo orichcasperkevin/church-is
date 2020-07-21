@@ -88,29 +88,17 @@ class CSVLoader():
                         line_count += 1
                     else:
                         date = date.strip()
-                        #ignore all white spaces
-                        if (len(date) != 10 and len(date) != 0):
-                            self.errors.append("incorrect date format ("\
-                                                + date \
-                                                + " ) at line "\
-                                                + str(line_count + 1) \
-                                                + " use format DD/MM/YYYY")
-                        #if it is corrects length
-                        if (len(date) == 10):
-                            date = date.split("/")
-                            year = date[2]
-                            month = date[1]
-                            day = date[0]
+                        if len(date):
                             try:
-                                datetime.datetime(int(year),int(month),int(day))
+                                datetime.datetime.strptime(date,'%d %B %Y')
                             except:
                                 self.errors.append("incorrect date format ("\
                                                     + date \
                                                     + " ) at line "\
-                                                    + str(line_count + 1)\
-                                                    + " use format DD/MM/YYYY")
-                        #increment line count
-                        line_count += 1
+                                                    + str(line_count + 1) \
+                                                    + " use format '31 March 2020'")
+                            #increment line count
+                            line_count += 1
 
             if (len(CSVLoader.errors) > 0):
                 return False
@@ -277,12 +265,10 @@ class CSVLoader():
             set a date of birth from data from the CSV
         '''
         #ignore all spaces, commas or full stops that may have been placed
-        for data in d_o_b.split(" "):
-            if (len(data)==10):
-                d_o_b = data
-                member = Member.objects.get(id=member_id)
-                d_o_b = MemberAge.objects.create(member=member, d_o_b=d_o_b)
-                break
+        date = d_o_b.strip()
+        d_o_b = datetime.datetime.strptime(date,'%d %B %Y')
+        member = Member.objects.get(id=member_id)
+        d_o_b = MemberAge.objects.create(member=member, d_o_b=d_o_b)
 
     def _create_contact(self,member_id,phone_number):
         '''
@@ -428,12 +414,8 @@ class CSVLoader():
                     d_o_b = None
                     if (self.date_of_birth_column != None):
                         date = row[self.date_of_birth_column]
-                        date = date.split("/")
-                        year = date[2]
-                        month = date[1]
-                        day = date[0]
-                        date = datetime.datetime(int(year),int(month),int(day))
-                        d_o_b = date
+                        if len(date):
+                            d_o_b = datetime.datetime.strptime(date,'%d %B %Y')
 
                     phone_number = None
                     if (self.phone_number_column != None):
@@ -446,6 +428,11 @@ class CSVLoader():
                     marital_status = None
                     if (self.marital_status_column != None):
                         marital_status = row[self.marital_status_column]
+
+                    if (self.phone_number_column != None):
+                        contact = MemberContact.objects.filter(phone = phone_number)
+                        if len(contact) > 0:
+                            continue
 
                     if ( len(names) == 2 ):
                         first_name = names[0]
