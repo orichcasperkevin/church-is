@@ -16,7 +16,7 @@ class MemberList(generics.ListCreateAPIView):
         post:
         create a new member
     '''
-    queryset = Member.objects.all().order_by('-member__date_joined')
+    queryset = Member.objects.all().order_by('member__first_name')
     serializer_class = MemberSerializer
 
 class MemberWhereFirstNameLikePattern(APIView):

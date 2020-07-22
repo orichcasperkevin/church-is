@@ -43,7 +43,7 @@ class GetBookingsForService(APIView):
     '''
 
     def get(self, request, service_id):
-        booking = Booking.objects.filter(service_id=service_id)
+        booking = Booking.objects.filter(service_id=service_id).order_by('names')
         data = BookingSerializer(booking, many=True).data
         return Response(data)
 
